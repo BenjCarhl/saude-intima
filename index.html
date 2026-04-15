@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="Portal interativo de triagem e educação sobre saúde reprodutiva e Infeções Sexualmente Transmissíveis (ISTs). Projeto de saúde pública.">
+    <meta name="keywords" content="Saúde íntima, ISTs, Moçambique, Triagem de sintomas, Vaginose, Gonorreia, Sífilis, Saúde Reprodutiva, Benj Carhl">
+    <meta name="author" content="Benj Carhl">
+    
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';">
+    
+    <title>Um bem estar à sua saúde íntima | Benj Carhl</title>
+    
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #0ea5e9;
+            --secondary-dark: #0284c7;
+            --accent: #e11d48;
+            --success: #10b981;
+            --whatsapp: #25D366;
+            --text-main: #334155;
+            --text-dark: #0f172a;
+            --border: rgba(226, 232, 240, 0.8);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-main);
+            margin: 0;
+            line-height: 1.7;
+            font-size: 16px;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            background-color: #f1f5f9;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(225, 29, 72, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* Acessibilidade: Foco visível para navegação por teclado */
+        :focus-visible {
+            outline: 3px solid var(--secondary);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), #1e3a8a, var(--secondary-dark));
+            color: white;
+            padding: 5rem 1.5rem 7rem 1.5rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 { 
+            font-size: clamp(2.2rem, 6vw, 3.5rem); 
+            margin-bottom: 15px; 
+            letter-spacing: -1px; 
+            font-weight: 800;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        
+        header p { 
+            font-size: clamp(1.1rem, 3vw, 1.3rem); 
+            opacity: 0.95; 
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .container { 
+            max-width: 1200px; 
+            margin: -80px auto 4rem; 
+            padding: 0 20px; 
+            position: relative;
+            z-index: 10;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: clamp(2rem, 5vw, 3.5rem);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.08), 0 0 0 1px rgba(255,255,255,0.5) inset;
+            margin-bottom: 2.5rem;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        h2 {
+            color: var(--text-dark);
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        p { font-size: 1.1rem; }
+
+        .ideia-primordial {
+            background: linear-gradient(to right, rgba(240, 249, 255, 0.8), transparent);
+            border-left: 6px solid var(--secondary);
+            padding: 1.5rem 2rem;
+            border-radius: 0 16px 16px 0;
+            margin: 2rem 0;
+            font-style: italic;
+            color: #0369a1;
+            font-size: 1.1rem;
+        }
+
+        .category-title {
+            font-size: 1.25rem;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .symptoms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .symptom-item {
+            background: rgba(248, 250, 252, 0.8);
+            border: 2px solid var(--border);
+            padding: 1.2rem;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 1.05rem;
+            color: var(--text-dark);
+        }
+
+        .symptom-item:hover, .symptom-item:active { 
+            border-color: var(--secondary); 
+            background: #e0f2fe; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1);
+        }
+        
+        .symptom-item input { 
+            margin-right: 15px; 
+            width: 24px; 
+            height: 24px; 
+            accent-color: var(--secondary); 
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .action-bar { 
+            display: flex; 
+            gap: 1.5rem; 
+            margin-top: 3.5rem; 
+            flex-wrap: wrap; 
+        }
+        
+        .btn {
+            flex: 1 1 100%;
+            padding: 1.3rem;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        @media (min-width: 600px) { .btn { flex: 1; } }
+
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark)); 
+            color: white; 
+            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.3); 
+        }
+        .btn-primary:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 12px 25px rgba(14, 165, 233, 0.4); 
+        }
+        .btn-clear { background: #e2e8f0; color: var(--text-main); }
+        .btn-clear:hover { background: #cbd5e1; }
+
+        #results-area { display: none; margin-top: 3rem; animation: fadeIn 0.6s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .diagnosis-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-top: 6px solid var(--secondary);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 12px 20px -5px rgba(0,0,0,0.05);
+        }
+
+        .diagnosis-header { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-start; 
+            margin-bottom: 1.5rem; 
+            border-bottom: 1px solid var(--border); 
+            padding-bottom: 1.5rem; 
+            gap: 10px; 
+        }
+        
+        @media (min-width: 600px) {
+            .diagnosis-header { flex-direction: row; justify-content: space-between; align-items: center; }
+        }
+
+        .diagnosis-header h3 { margin: 0; font-size: 1.6rem; color: var(--text-dark); }
+        
+        .badge { padding: 6px 14px; border-radius: 30px; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; text-align: center; display: inline-block;}
+        .badge-ist { background: #fee2e2; color: #9f1239; }
+        .badge-flora { background: #dcfce7; color: #166534; }
+        .badge-viral { background: #fef08a; color: #854d0e; }
+        .match-badge { background: #e0f2fe; color: #0369a1; margin-top: 8px; border: 1px solid #bae6fd;}
+
+        .section-title { font-weight: bold; color: var(--secondary-dark); text-transform: uppercase; font-size: 0.9rem; margin-top: 1.5rem; display: block; letter-spacing: 0.5px; }
+        .diagnosis-card p { font-size: 1.05rem; margin-top: 8px; color: #475569; }
+        
+        .treatment-box { 
+            background: #f0fdf4; 
+            border-left: 5px solid var(--success); 
+            padding: 1.5rem; 
+            border-radius: 0 12px 12px 0; 
+            color: #166534; 
+            margin-top: 1rem; 
+            font-weight: 500; 
+            font-size: 1.05rem; 
+        }
+
+        .disclaimer { 
+            background: #fff1f2; 
+            border: 1px solid #fda4af; 
+            color: #be123c; 
+            padding: 1.5rem; 
+            border-radius: 16px; 
+            font-weight: bold; 
+            margin-bottom: 2rem; 
+            text-align: center; 
+            font-size: 1.05rem;
+        }
+
+        /* Lista de Hospitais / Ajuda */
+        .help-list {
+            font-size: 1.1rem;
+            color: #475569;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .help-list li { margin-bottom: 0.5rem; }
+
+        /* APOIO E CONTACTO */
+        .support-contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+
+        @media (min-width: 800px) {
+            .support-contact-wrapper { grid-template-columns: 1fr 1fr; }
+        }
+
+        .support-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-top: 6px solid var(--success);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .support-card h3 { color: var(--success); font-size: 1.5rem; margin-top: 0; }
+        .payment-methods { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 12px; }
+        .method {
+            background: #f8fafc;
+            padding: 1.2rem;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #e2e8f0;
+            transition: 0.3s;
+        }
+        .method:hover { border-color: var(--success); transform: translateY(-2px); }
+        .method strong { color: var(--text-dark); letter-spacing: 1px; font-size: 1.3rem; }
+
+        .contact-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-top: 6px solid var(--whatsapp);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .contact-card h3 { color: var(--whatsapp); font-size: 1.5rem; margin-top: 0; }
+        .btn-whatsapp {
+            background: var(--whatsapp);
+            color: white;
+            text-decoration: none;
+            padding: 1.2rem;
+            border-radius: 14px;
+            font-weight: bold;
+            font-size: 1.15rem;
+            display: inline-block;
+            margin-top: 1.5rem;
+            transition: 0.3s;
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+        }
+        .btn-whatsapp:hover { background: #20b858; transform: translateY(-3px); box-shadow: 0 12px 25px rgba(37, 211, 102, 0.4); }
+
+        footer { background: var(--primary); color: #cbd5e1; padding: 4rem 1.5rem; text-align: center; }
+        .references { font-size: 0.95rem; max-width: 900px; margin: 2rem auto; text-align: left; border-top: 1px solid #334155; padding-top: 2rem; line-height: 1.8; color: #94a3b8; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Um bem estar à sua saúde íntima</h1>
+    <p>O seu portal seguro, profissional e interativo para triagem e informação sobre saúde reprodutiva e ISTs.</p>
+</header>
+
+<main class="container">
+    <section class="card" aria-labelledby="visao-projeto">
+        <h2 id="visao-projeto">A Visão do Projeto</h2>
+        <div class="ideia-primordial">
+            "Desenvolvida para atuar como uma ferramenta de saúde pública, esta plataforma cruza sintomas com protocolos médicos internacionais (OMS/CDC). O objetivo é desmistificar as infeções do trato genital feminino e ISTs sistémicas, orientando o paciente na busca precoce por tratamento adequado e travando cadeias de transmissão."
+            <br><br><strong style="color: var(--primary);">— Benj Carhl</strong>
+        </div>
+        <p>Abaixo encontra o nosso sistema de triagem clínica. Assinale todos os sintomas que apresenta para obter uma avaliação baseada em evidências científicas.</p>
+    </section>
+
+    <section class="card" aria-labelledby="sistema-triagem">
+        <h2 id="sistema-triagem">Sistema Integrado de Triagem</h2>
+        
+        <div id="symptoms-form">
+            <div class="category-title">💧 Fluxos e Odores (Corrimentos)</div>
+            <div class="symptoms-grid">
+                <label class="symptom-item"><input type="checkbox" value="odor-peixe" aria-label="Odor fétido tipo peixe"> Odor fétido (tipo peixe)</label>
+                <label class="symptom-item"><input type="checkbox" value="corrimento-cinza" aria-label="Corrimento acinzentado"> Corrimento acinzentado</label>
+                <label class="symptom-item"><input type="checkbox" value="branco-espesso" aria-label="Corrimento branco espesso"> Corrimento branco/grumoso</label>
+                <label class="symptom-item"><input type="checkbox" value="purulento" aria-label="Corrimento amarelado ou verde"> Corrimento amarelado/verde (Pus)</label>
+                <label class="symptom-item"><input type="checkbox" value="espumoso" aria-label="Corrimento espumoso"> Corrimento espumoso</label>
+                <label class="symptom-item"><input type="checkbox" value="sangramento" aria-label="Sangramento fora da menstruação"> Sangramento fora da menstruação</label>
+            </div>
+
+            <div class="category-title">🔥 Dores, Desconforto e Sinais Gerais</div>
+            <div class="symptoms-grid">
+                <label class="symptom-item"><input type="checkbox" value="prurido" aria-label="Coceira intensa"> Prurido (coceira) intenso</label>
+                <label class="symptom-item"><input type="checkbox" value="dor-urinar" aria-label="Dor ao urinar"> Dor ou ardor ao urinar</label>
+                <label class="symptom-item"><input type="checkbox" value="dor-pelvica" aria-label="Dor pélvica intensa"> Dor pélvica/abdominal intensa</label>
+                <label class="symptom-item"><input type="checkbox" value="febre" aria-label="Febre ou mal-estar"> Febre ou mal-estar geral</label>
+                <label class="symptom-item"><input type="checkbox" value="fadiga" aria-label="Fadiga extrema"> Fadiga extrema constante</label>
+                <label class="symptom-item"><input type="checkbox" value="ictericia" aria-label="Olhos ou pele amarelada"> Olhos ou pele amarelada</label>
+            </div>
+
+            <div class="category-title">🦠 Lesões Genitais e Pele</div>
+            <div class="symptoms-grid">
+                <label class="symptom-item"><input type="checkbox" value="vesiculas" aria-label="Bolhas dolorosas"> Bolhas pequenas e dolorosas</label>
+                <label class="symptom-item"><input type="checkbox" value="ferida-indolor" aria-label="Ferida que não dói"> Ferida única que NÃO dói</label>
+                <label class="symptom-item"><input type="checkbox" value="ferida-dolorosa" aria-label="Ferida dolorosa com pus"> Ferida/Úlcera que dói e tem pus</label>
+                <label class="symptom-item"><input type="checkbox" value="verrugas" aria-label="Verrugas aspecto couve-flor"> Verrugas ("couve-flor")</label>
+                <label class="symptom-item"><input type="checkbox" value="ganglios" aria-label="Ínguas na virilha"> Ínguas (gânglios) na virilha</label>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn btn-primary" onclick="gerarDiagnostico()">Gerar Relatório Preliminar</button>
+            <button class="btn btn-clear" onclick="limparDados()">Limpar Seleções</button>
+        </div>
+
+        <div id="results-area" aria-live="polite">
+            <div class="disclaimer">⚠️ AVISO: Esta análise é meramente educativa. Não substitui exames laboratoriais (VDRL, PCR, etc.) nem a consulta médica presencial.</div>
+            <div id="diagnosticos-container"></div>
+        </div>
+    </section>
+
+    <section class="card" aria-labelledby="ajuda-profissional">
+        <h2 id="ajuda-profissional">🏥 Onde procurar ajuda profissional?</h2>
+        <p style="font-size: 1.1rem; color: var(--text-dark); margin-bottom: 1.5rem;">Se identificou sintomas ou se teve uma relação sexual desprotegida, procure acompanhamento clínico. Se estiver em Maputo, pode dirigir-se a:</p>
+        
+        <ul class="help-list">
+            <li><strong>Centro de Saúde de Albazine</strong></li>
+            <li><strong>Hospital Central de Maputo</strong> (Serviços de Dermatologia/Urologia)</li>
+            <li>Qualquer Unidade Sanitária com serviços de <strong>ATV (Aconselhamento e Testagem Voluntária)</strong>.</li>
+        </ul>
+        
+        <div class="treatment-box" style="margin-top: 1.5rem;">
+            ✅ Os testes para HIV, Sífilis e Hepatites são rápidos e gratuitos no Sistema Nacional de Saúde. O sigilo médico é garantido.
+        </div>
+    </section>
+
+    <section class="support-contact-wrapper" aria-label="Apoio e Contacto">
+        <div class="support-card">
+            <h3>🤝 Apoie o Desenvolvedor</h3>
+            <p style="font-size: 1.05rem; color: #475569; margin-top: 15px;">Este projeto foi criado com dedicação para ajudar a comunidade. Se considera esta ferramenta útil para a saúde pública, apoie o seu desenvolvimento com o valor que lhe for possível.</p>
+            <div class="payment-methods">
+                <div class="method">
+                    <span style="color: #64748b; font-weight: bold;">M-pesa:</span>
+                    <strong>+258 85 072 75 07</strong>
+                </div>
+                <div class="method">
+                    <span style="color: #e11d48; font-weight: bold;">E-mola:</span>
+                    <strong>+258 86 346 02 82</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-card">
+            <h3>💬 Dúvidas ou Sugestões?</h3>
+            <p style="font-size: 1.05rem; color: #475569; margin-top: 15px;">Gostaria de ver novas funcionalidades? Tem sugestões para melhorar o site ou precisa de mais informações sobre o projeto? Entre em contacto direto comigo.</p>
+            <a href="https://wa.me/258850727507" class="btn-whatsapp" target="_blank" rel="noopener noreferrer">
+                <span style="font-size: 1.3rem;">📱</span> WhatsApp: 85 072 75 07
+            </a>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <h2 style="color: white; margin-bottom: 5px;">Benj Carhl</h2>
+    <p style="font-size: 1.1rem; opacity: 0.8; margin-top: 0;">Desenvolvedor e Idealizador</p>
+    
+    <div class="references">
+        <strong style="color: white;">Base Científica e Epidemiológica Consultada:</strong><br><br>
+        • WHO (2021). Global guidelines for the management of STIs.<br>
+        • CDC (2023). Sexually Transmitted Infections Treatment Guidelines.<br>
+        • Ministério da Saúde: Protocolos de Aconselhamento e Testagem em Saúde.<br>
+        • Literatura Médica: Vaginose Bacteriana (Muzny & Schwebke, 2016), Candidíase (Sobel, 2016).
+    </div>
+</footer>
+
+<script>
+    const baseDados = [
+        {
+            nome: "Cervicite", tipo: "ist",
+            fisiopatologia: "Inflamação do colo do útero, frequentemente causada por Neisseria gonorrhoeae ou Chlamydia trachomatis, tornando o tecido friável (fácil de sangrar).",
+            transmissao: "Predominantemente contacto sexual sem preservativo.",
+            sintomas_lista: "Corrimento purulento, sangramento após a relação sexual ou entre as menstruações, dor pélvica.",
+            tratamento: "Antibioticoterapia para Gonorreia e Clamídia (Ceftriaxona IM + Azitromicina/Doxiciclina oral).",
+            triggers: ["purulento", "sangramento"]
+        },
+        {
+            nome: "Doença Inflamatória Pélvica (DIP)", tipo: "ist",
+            fisiopatologia: "Infeção polimicrobiana grave do trato genital superior (útero, trompas, ovários), geralmente ascendente a partir de uma cervicite.",
+            transmissao: "Ascensão de patógenos transmitidos sexualmente; risco de infertilidade se não tratada.",
+            sintomas_lista: "Dor pélvica intensa, febre, corrimento anormal, dor durante a relação sexual.",
+            tratamento: "Esquema agressivo: Ceftriaxona + Doxiciclina + Metronidazol. Pode exigir internamento.",
+            triggers: ["dor-pelvica", "febre", "purulento"]
+        },
+        {
+            nome: "Vaginite Aeróbica", tipo: "flora",
+            fisiopatologia: "Inflamação com atrofia epitelial e proliferação de bactérias aeróbias do trato intestinal (E. coli, S. aureus).",
+            transmissao: "Desequilíbrio da microbiota endógena. Não é considerada uma IST clássica.",
+            sintomas_lista: "Corrimento amarelado pegajoso, ardor intenso, prurido e desconforto.",
+            tratamento: "Antibióticos locais (Canamicina ou Clindamicina creme) e eventualmente estrogénio tópico.",
+            triggers: ["purulento", "dor-urinar", "prurido"]
+        },
+        {
+            nome: "Hepatite B (VHB)", tipo: "viral",
+            fisiopatologia: "Infeção viral que ataca o fígado, podendo evoluir silenciosamente para cronicidade.",
+            transmissao: "Sexual, parenteral (contacto com sangue) e vertical (mãe-filho).",
+            sintomas_lista: "Fase aguda: Icterícia (pele amarela), fadiga extrema, urina escura, febre.",
+            tratamento: "Controla-se com antivirais (Tenofovir). A Vacinação é a prevenção primária.",
+            triggers: ["ictericia", "fadiga", "febre"]
+        },
+        {
+            nome: "Vírus da Imunodeficiência Humana (HIV)", tipo: "viral",
+            fisiopatologia: "O vírus ataca o sistema imunológico (células T-CD4+), levando à imunossupressão severa.",
+            transmissao: "Sexual, partilha de seringas, vertical.",
+            sintomas_lista: "Pode ser assintomático. Fase inicial: febre, ínguas (gânglios), fadiga (síndrome retroviral).",
+            tratamento: "Terapia Antirretroviral (TARV). Paciente indetetável não transmite o vírus (I=I).",
+            triggers: ["febre", "ganglios", "fadiga"]
+        },
+        {
+            nome: "Cancro Mole", tipo: "ist",
+            fisiopatologia: "Infeção pela bactéria Haemophilus ducreyi que causa necrose tecidual localizada.",
+            transmissao: "Contacto sexual direto com as lesões ativas.",
+            sintomas_lista: "Múltiplas úlceras genitais muito dolorosas com fundo purulento e ínguas na virilha.",
+            tratamento: "Azitromicina 1g (dose única oral) ou Ceftriaxona IM.",
+            triggers: ["ferida-dolorosa", "ganglios"]
+        },
+        {
+            nome: "Tricomoníase", tipo: "ist",
+            fisiopatologia: "O protozoário T. vaginalis adere ao epitélio provocando inflamação severa (colpite).",
+            transmissao: "Contacto sexual.",
+            sintomas_lista: "Corrimento espumoso, odor desagradável, prurido.",
+            tratamento: "Metronidazol 2g (Dose única). Tratar o parceiro obrigatoriamente.",
+            triggers: ["espumoso", "odor-peixe"]
+        },
+        {
+            nome: "Gonorreia e Clamídia", tipo: "ist",
+            fisiopatologia: "Infeção bacteriana do epitélio mucoso. Têm elevada resistência antimicrobiana.",
+            transmissao: "Contacto sexual.",
+            sintomas_lista: "Corrimento purulento, dor ao urinar.",
+            tratamento: "Ceftriaxona 500mg IM + Azitromicina 1g oral.",
+            triggers: ["purulento", "dor-urinar"]
+        },
+        {
+            nome: "Vaginose Bacteriana (VB)", tipo: "flora",
+            fisiopatologia: "Disbiose: diminuição de lactobacilos e aumento de Gardnerella vaginalis.",
+            transmissao: "Desequilíbrio ecológico endógeno.",
+            sintomas_lista: "Corrimento acinzentado fino e odor a peixe (piora após sexo).",
+            tratamento: "Metronidazol oral ou tópico por 7 dias.",
+            triggers: ["odor-peixe", "corrimento-cinza"]
+        },
+        {
+            nome: "Candidíase Vulvovaginal", tipo: "flora",
+            fisiopatologia: "Proliferação do fungo Candida albicans devido a baixa imunidade ou uso de antibióticos.",
+            transmissao: "Desequilíbrio endógeno (oportunista).",
+            sintomas_lista: "Prurido intenso, corrimento grumoso branco.",
+            tratamento: "Fluconazol 150mg dose única.",
+            triggers: ["prurido", "branco-espesso"]
+        },
+        {
+            nome: "Sífilis", tipo: "ist",
+            fisiopatologia: "Infeção sistémica pelo Treponema pallidum. Muito perigosa para gestantes.",
+            transmissao: "Sexual e Vertical.",
+            sintomas_lista: "Ferida única e indolor (cancro duro).",
+            tratamento: "Penicilina Benzatina (injeção).",
+            triggers: ["ferida-indolor"]
+        },
+        {
+            nome: "Herpes Genital", tipo: "viral",
+            fisiopatologia: "Vírus HSV com latência em gânglios nervosos.",
+            transmissao: "Contacto direto com lesões.",
+            sintomas_lista: "Bolhas (vesículas) agrupadas dolorosas.",
+            tratamento: "Aciclovir 400mg durante as crises.",
+            triggers: ["vesiculas"]
+        },
+        {
+            nome: "HPV", tipo: "viral",
+            fisiopatologia: "Vírus que infeta queratinócitos. Alguns serotipos causam cancro.",
+            transmissao: "Contacto sexual ou pele com pele.",
+            sintomas_lista: "Verrugas genitais (crista de galo).",
+            tratamento: "Remoção de lesões (Crioterapia) e vacinação.",
+            triggers: ["verrugas"]
+        }
+    ];
+
+    function getBadge(tipo) {
+        if(tipo === 'ist') return '<span class="badge badge-ist">⚠️ IST Bacteriana/Parasitária</span>';
+        if(tipo === 'viral') return '<span class="badge badge-viral">🦠 Viral Sistémica</span>';
+        return '<span class="badge badge-flora">🌱 Desequilíbrio Flora</span>';
+    }
+
+    /* Função segura para prevenir ataques XSS (Cross-Site Scripting) */
+    function sanitizeText(text) {
+        const temp = document.createElement('div');
+        temp.textContent = text;
+        return temp.innerHTML;
+    }
+
+    function gerarDiagnostico() {
+        const checkboxes = document.querySelectorAll('#symptoms-form input[type="checkbox"]:checked');
+        const selecionados = Array.from(checkboxes).map(i => i.value);
+        
+        const container = document.getElementById('diagnosticos-container');
+        const resultsArea = document.getElementById('results-area');
+        
+        if (selecionados.length === 0) {
+            alert("Para gerar o relatório, assinale pelo menos um sintoma.");
+            return;
+        }
+
+        container.innerHTML = "";
+        
+        let matches = baseDados.map(doenca => {
+            let matchCount = doenca.triggers.filter(t => selecionados.includes(t)).length;
+            return { ...doenca, matchCount };
+        }).filter(doenca => doenca.matchCount > 0);
+
+        matches.sort((a, b) => b.matchCount - a.matchCount);
+
+        if (matches.length > 0) {
+            matches.forEach((d, index) => {
+                let probabilidadeBadge = index === 0 && d.matchCount > 1 
+                    ? `<div class="badge match-badge">🔥 Maior Correlação</div>` 
+                    : '';
+
+                const htmlTemplate = `
+                    <div class="diagnosis-card">
+                        <div class="diagnosis-header">
+                            <div>
+                                <h3>${sanitizeText(d.nome)}</h3>
+                                ${probabilidadeBadge}
+                            </div>
+                            <div>${getBadge(d.tipo)}</div>
+                        </div>
+                        
+                        <span class="section-title">Fisiopatologia</span>
+                        <p>${sanitizeText(d.fisiopatologia)}</p>
+                        
+                        <span class="section-title">Modo de Transmissão</span>
+                        <p>${sanitizeText(d.transmissao)}</p>
+                        
+                        <span class="section-title">Sintomas Comuns</span>
+                        <p>${sanitizeText(d.sintomas_lista)}</p>
+                        
+                        <span class="section-title">Ação e Protocolo</span>
+                        <div class="treatment-box">${sanitizeText(d.tratamento)}</div>
+                    </div>`;
+                    
+                container.insertAdjacentHTML('beforeend', htmlTemplate);
+            });
+        } else {
+            container.innerHTML = "<div class='diagnosis-card'><h3>Nenhum padrão exato encontrado</h3><p>Os sintomas assinalados são muito diversificados. Sugerimos vivamente a realização de exames laboratoriais no centro de saúde mais próximo.</p></div>";
+        }
+
+        resultsArea.style.display = "block";
+        
+        setTimeout(() => {
+            resultsArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
+    }
+
+    function limparDados() {
+        const checkboxes = document.querySelectorAll('#symptoms-form input[type="checkbox"]');
+        checkboxes.forEach(cb => cb.checked = false);
+        document.getElementById('results-area').style.display = "none";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+</body>
+</html>
+</html>
