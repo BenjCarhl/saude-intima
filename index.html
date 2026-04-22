@@ -1,15 +1,28 @@
 <!DOCTYPE html>
-<html lang="pt-pt">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Portal interativo de triagem e educação sobre saúde reprodutiva e Infeções Sexualmente Transmissíveis (ISTs). Projeto de saúde pública — Benj Carhl.">
-    <meta name="keywords" content="Saúde íntima, ISTs, Moçambique, Triagem de sintomas, Vaginose, Gonorreia, Sífilis, Saúde Reprodutiva, Benj Carhl">
+    <meta name="keywords" content="Saúde íntima, ISTs, Moçambique, Triagem de sintomas, Vaginose, Gonorreia, Sífilis, Saúde Reprodutiva, PrEP injetável, Lenacapavir, Benj Carhl">
     <meta name="author" content="Benj Carhl">
 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; img-src 'self' data: https://www.google-analytics.com; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com;">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' https://www.googletagmanager.com 'unsafe-inline';
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com;
+        connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com;
+        frame-ancestors 'none';
+        base-uri 'self';
+        form-action 'self';
+        object-src 'none';
+    ">
+
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=(), payment=()">
 
     <title>Saúde Íntima | Portal de Triagem — Benj Carhl</title>
 
@@ -24,11 +37,12 @@
       gtag('js', new Date());
       gtag('config', 'G-CLMQGQVDK5', {
         page_title: 'Portal de Saúde Íntima',
-        page_location: window.location.href
+        page_location: window.location.href,
+        anonymize_ip: true
       });
 
-      // Helper para eventos
       function gaEvent(action, category, label, value) {
+        if (typeof gtag !== 'function') return;
         gtag('event', action, {
           event_category: category,
           event_label: label,
@@ -55,6 +69,10 @@
             --gold-light: #fdf6e0;
             --purple: #6b3fa0;
             --purple-light: #ede8f5;
+            --prep-blue: #0d4f8f;
+            --prep-blue-bright: #1976d2;
+            --prep-blue-light: #e3f0fb;
+            --prep-blue-dark: #08326b;
             --slate: #5a6580;
             --slate-light: #eaecf3;
             --border: rgba(12,14,22,0.09);
@@ -71,10 +89,10 @@
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        html { 
-            scroll-behavior: smooth; 
-            scroll-padding-top: 80px; /* Offset para o menu fixo não tapar conteúdo */
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 68px;
         }
 
         body {
@@ -172,6 +190,7 @@
             position: absolute;
             inset: 0;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='1' cy='1' r='1' fill='rgba(255,255,255,0.025)'/%3E%3C/svg%3E");
+            pointer-events: none;
         }
 
         .hero::after {
@@ -181,6 +200,7 @@
             height: 100px;
             background: var(--paper);
             clip-path: ellipse(55% 100% at 50% 100%);
+            pointer-events: none;
         }
 
         .hero-badge {
@@ -278,7 +298,6 @@
 
         /* ── LAYOUT ── */
         .container { max-width: 1060px; margin: 0 auto; padding: 0 1.25rem; }
-
         .main-content { margin-top: -50px; padding-bottom: 6rem; position: relative; z-index: 10;}
 
         /* ── TABS DE SECÇÃO ── */
@@ -325,7 +344,7 @@
 
         .tab-panel { display: none; animation: fadeIn 0.4s ease; }
         .tab-panel.active { display: block; }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -422,6 +441,7 @@
         .ib-rose   { background: var(--rose-light); }
         .ib-gold   { background: var(--gold-light); }
         .ib-purple { background: var(--purple-light); }
+        .ib-blue   { background: var(--prep-blue-light); }
 
         .infobox-text h4 {
             font-size: 0.88rem;
@@ -679,12 +699,18 @@
             box-shadow: 0 4px 20px rgba(11,140,114,0.35);
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 8px 28px rgba(11,140,114,0.45);
         }
 
-        .btn-primary:active { transform: scale(0.98); }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-primary:active:not(:disabled) { transform: scale(0.98); }
 
         .btn-ghost {
             background: transparent;
@@ -742,10 +768,10 @@
             overflow: hidden;
             box-shadow: var(--shadow-sm);
             transition: box-shadow 0.2s;
+            animation: fadeIn 0.4s ease both;
         }
 
         .diagnosis-card:hover { box-shadow: var(--shadow-md); }
-
         .diagnosis-card.top-match { border-color: var(--teal-bright); border-width: 1.5px; }
 
         .diagnosis-top-bar {
@@ -1127,9 +1153,8 @@
             line-height: 1.75;
         }
 
-        /* CORREÇÃO DO CORTE DA INFORMAÇÃO NO FAQ */
         .faq-answer.open {
-            max-height: 1500px; 
+            max-height: 2000px;
             padding: 0 1.25rem 1.1rem;
         }
 
@@ -1150,6 +1175,400 @@
 
         .gloss-term { font-size: 0.92rem; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
         .gloss-def  { font-size: 0.82rem; color: var(--slate); line-height: 1.5; }
+
+        /* ═══════════════════════════════════════════════════════
+           SECÇÃO: PrEP INJETÁVEL (LENACAPAVIR)
+           ═══════════════════════════════════════════════════════ */
+
+        .prep-hero {
+            background: linear-gradient(135deg, var(--prep-blue-dark) 0%, var(--prep-blue) 50%, #1565c0 100%);
+            border-radius: var(--r);
+            padding: clamp(2rem, 5vw, 3.5rem);
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .prep-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='35' fill='none' stroke='rgba(255,255,255,0.04)' stroke-width='1'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .prep-hero-eyebrow {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 0.5rem;
+        }
+
+        .prep-hero h2 {
+            font-family: var(--font-d);
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .prep-hero h2 em {
+            font-style: italic;
+            color: #7ec8f7;
+        }
+
+        .prep-hero-sub {
+            font-size: 1.05rem;
+            color: rgba(255,255,255,0.75);
+            max-width: 650px;
+            line-height: 1.75;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .prep-stats-row {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .prep-stat {
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .prep-stat-num {
+            font-family: var(--font-d);
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #7ec8f7;
+            line-height: 1;
+        }
+
+        .prep-stat-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            margin-top: 4px;
+        }
+
+        .prep-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(126,200,247,0.15);
+            border: 1px solid rgba(126,200,247,0.35);
+            color: #7ec8f7;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 40px;
+            margin-bottom: 1.5rem;
+        }
+
+        .prep-badge::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: #7ec8f7;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .prep-compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 600px) { .prep-compare { grid-template-columns: 1fr; } }
+
+        .prep-compare-card {
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            overflow: hidden;
+        }
+
+        .prep-compare-header {
+            padding: 0.85rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .prep-compare-header.oral {
+            background: var(--slate-light);
+        }
+
+        .prep-compare-header.inj {
+            background: var(--prep-blue-light);
+        }
+
+        .prep-compare-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .prep-compare-sub {
+            font-size: 0.73rem;
+            color: var(--slate);
+            margin-top: 1px;
+        }
+
+        .prep-compare-body {
+            padding: 1rem 1.25rem;
+            background: var(--paper-warm);
+        }
+
+        .prep-compare-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .prep-compare-list li {
+            display: flex;
+            gap: 8px;
+            font-size: 0.83rem;
+            color: var(--slate);
+            align-items: flex-start;
+            line-height: 1.5;
+        }
+
+        .prep-compare-list li span.check { color: var(--teal); font-weight: 700; flex-shrink: 0; }
+        .prep-compare-list li span.cross  { color: var(--rose); font-weight: 700; flex-shrink: 0; }
+
+        .prep-benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .prep-benefit-card {
+            background: var(--prep-blue-light);
+            border: 1px solid rgba(13,79,143,0.15);
+            border-radius: var(--r-sm);
+            padding: 1.2rem 1.25rem;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .prep-benefit-card:hover {
+            border-color: var(--prep-blue-bright);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .prep-benefit-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--prep-blue);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            color: #fff;
+        }
+
+        .prep-benefit-text h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--prep-blue-dark);
+            margin-bottom: 3px;
+        }
+
+        .prep-benefit-text p {
+            font-size: 0.81rem;
+            color: var(--slate);
+            line-height: 1.5;
+        }
+
+        .prep-timeline {
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .prep-timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--prep-blue-bright), var(--prep-blue-light));
+            border-radius: 2px;
+        }
+
+        .prep-timeline-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            align-items: flex-start;
+        }
+
+        .prep-timeline-dot {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--prep-blue);
+            border: 3px solid var(--paper-card);
+            box-shadow: 0 0 0 2px var(--prep-blue-bright);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 800;
+            z-index: 1;
+        }
+
+        .prep-timeline-content {
+            background: var(--paper-warm);
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            padding: 0.9rem 1.1rem;
+            flex: 1;
+        }
+
+        .prep-timeline-content h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--prep-blue-dark);
+            margin-bottom: 3px;
+        }
+
+        .prep-timeline-content p {
+            font-size: 0.82rem;
+            color: var(--slate);
+            line-height: 1.55;
+        }
+
+        .prep-alert {
+            background: var(--prep-blue-light);
+            border: 1px solid rgba(13,79,143,0.2);
+            border-left: 4px solid var(--prep-blue-bright);
+            border-radius: 0 var(--r-sm) var(--r-sm) 0;
+            padding: 1.1rem 1.25rem;
+            font-size: 0.9rem;
+            color: var(--prep-blue-dark);
+            font-weight: 500;
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .prep-eligibility {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .prep-elig-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: var(--paper-warm);
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            padding: 0.85rem 1rem;
+        }
+
+        .prep-elig-icon {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: var(--prep-blue);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .prep-elig-text {
+            font-size: 0.83rem;
+            color: var(--slate);
+            line-height: 1.5;
+        }
+
+        .prep-elig-text strong {
+            color: var(--ink);
+            font-weight: 700;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* ── BOTÃO BACK TO TOP ── */
+        #back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 200;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--ink);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(12,14,22,0.3);
+            opacity: 0;
+            transform: translateY(16px) scale(0.85);
+            transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s;
+            pointer-events: none;
+        }
+
+        #back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        #back-to-top:hover {
+            background: var(--teal);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 28px rgba(11,140,114,0.4);
+        }
+
+        #back-to-top:active {
+            transform: scale(0.96);
+        }
+
+        #back-to-top svg {
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+        }
+
+        @media (max-width: 480px) {
+            #back-to-top {
+                bottom: 1.25rem;
+                right: 1.25rem;
+                width: 44px;
+                height: 44px;
+            }
+        }
 
         /* ── FOOTER ── */
         footer {
@@ -1191,7 +1610,12 @@
         }
 
         .footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-        .footer-links a { color: rgba(255,255,255,0.45); text-decoration: none; font-size: 0.87rem; transition: color 0.2s; }
+        .footer-links a {
+            color: rgba(255,255,255,0.45);
+            text-decoration: none;
+            font-size: 0.87rem;
+            transition: color 0.2s;
+        }
         .footer-links a:hover { color: #fff; }
 
         .footer-bottom {
@@ -1234,20 +1658,19 @@
             border-top: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* ── RESPONSIVE ── */
         @media (max-width: 480px) {
             .hero { padding: 4rem 1rem 8rem; }
             .symptoms-grid { grid-template-columns: 1fr; }
             .diagnosis-top-bar { flex-direction: column; align-items: flex-start; }
             .btn { flex: 1 1 100%; }
             .hero-stats { gap: 1.5rem; }
+            .prep-stats-row { gap: 1.25rem; }
         }
 
         @media (min-width: 900px) {
             .symptoms-grid { grid-template-columns: repeat(3, 1fr); }
         }
 
-        /* ── SCROLL REVEAL ── */
         .reveal {
             opacity: 0;
             transform: translateY(20px);
@@ -1258,20 +1681,29 @@
 </head>
 <body>
 
+<button id="back-to-top" aria-label="Voltar ao topo da página" title="Voltar ao topo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M18 15l-6-6-6 6"/>
+    </svg>
+</button>
+
+<div id="page-top" aria-hidden="true"></div>
+
 <nav class="topnav" role="navigation" aria-label="Navegação principal">
     <div class="topnav-inner">
-        <a href="#" class="nav-logo">Saúde<span>Íntima</span></a>
+        <a href="#page-top" class="nav-logo">Saúde<span>Íntima</span></a>
         <ul class="nav-links">
             <li><a href="#triagem" data-nav-tab="triagem">Triagem</a></li>
             <li><a href="#guia" data-nav-tab="guia">Guia ISTs</a></li>
             <li><a href="#prevencao" data-nav-tab="prevencao">Prevenção</a></li>
+            <li><a href="#prep-injetavel" data-nav-tab="prep">PrEP Injetável</a></li>
             <li><a href="#recursos">Recursos</a></li>
             <li><a href="#triagem" class="nav-cta" data-nav-tab="triagem">Fazer Triagem →</a></li>
         </ul>
     </div>
 </nav>
 
-<header class="hero" role="banner">
+<header class="hero" role="banner" id="hero-section">
     <div class="container">
         <span class="hero-badge">Projeto de Saúde Pública · Moçambique 🇲🇿</span>
         <h1>O seu guia para<br>uma saúde <em>íntima</em> informada</h1>
@@ -1320,15 +1752,15 @@
         </div>
 
         <div class="section-tabs" role="tablist" aria-label="Secções do portal" id="tabs-container">
-            <button class="tab-btn active" role="tab" aria-selected="true" data-tab="triagem">🔬 Triagem Clínica</button>
+            <button class="tab-btn active" role="tab" aria-selected="true"  data-tab="triagem">🔬 Triagem Clínica</button>
             <button class="tab-btn" role="tab" aria-selected="false" data-tab="guia">📖 Guia de ISTs</button>
             <button class="tab-btn" role="tab" aria-selected="false" data-tab="prevencao">🛡️ Prevenção</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="prep">💉 PrEP Injetável</button>
             <button class="tab-btn" role="tab" aria-selected="false" data-tab="faq">❓ Perguntas Frequentes</button>
             <button class="tab-btn" role="tab" aria-selected="false" data-tab="glossario">📚 Glossário</button>
         </div>
 
         <div id="tab-triagem" class="tab-panel active" role="tabpanel">
-
             <section class="card reveal" aria-labelledby="visao-titulo">
                 <p class="eyebrow">Missão do Projeto</p>
                 <h2 id="visao-titulo">A Visão por Detrás da Plataforma</h2>
@@ -1370,13 +1802,12 @@
                 </div>
             </section>
 
-            <section id="triagem" class="card reveal" aria-labelledby="triagem-titulo">
+            <section id="triagem-form" class="card reveal" aria-labelledby="triagem-titulo">
                 <p class="eyebrow">Triagem Clínica Interativa</p>
                 <h2 id="triagem-titulo">Sistema Integrado de Triagem de Sintomas</h2>
                 <p class="lead" style="margin-bottom: 0.5rem;">Assinale <strong>todos</strong> os sintomas que apresenta atualmente. Quanto mais sintomas marcar, mais precisa será a análise.</p>
 
                 <div id="symptoms-form">
-
                     <div class="category-label">
                         <div class="cat-icon cat-blue" aria-hidden="true">💧</div>
                         Corrimentos, Fluxos e Odores
@@ -1605,7 +2036,9 @@
                         </label>
                     </div>
 
-                </div><div class="selection-bar">
+                </div>
+
+                <div class="selection-bar">
                     <div class="sel-count">
                         Sintomas selecionados: <span id="sel-count-num">0</span>
                     </div>
@@ -1639,16 +2072,15 @@
                     <div id="diagnosticos-container"></div>
                 </div>
             </section>
+        </div>
 
-        </div><div id="tab-guia" class="tab-panel" role="tabpanel">
-
+        <div id="tab-guia" class="tab-panel" role="tabpanel">
             <section class="card reveal" aria-labelledby="guia-titulo">
                 <p class="eyebrow">Enciclopédia Clínica</p>
                 <h2 id="guia-titulo">Guia Completo de ISTs e Infeções Genitais</h2>
                 <p class="lead">Uma referência baseada em evidências científicas internacionais. Cada entrada inclui o agente etiológico, mecanismo de transmissão, apresentação clínica e protocolo de tratamento recomendado.</p>
 
                 <div class="guide-grid">
-
                     <div class="guide-card">
                         <div class="guide-card-header" style="background: linear-gradient(135deg,#7a1828,#c0344a);">
                             <div>
@@ -1771,7 +2203,7 @@
                         </div>
                         <div class="guide-card-body">
                             <div class="guide-row">
-                                <div class="guide-fact"><span class="guide-fact-label">Agente:</span><span>Papilomavírus Humano — >200 subtipos</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Agente:</span><span>Papilomavírus Humano — &gt;200 subtipos</span></div>
                                 <div class="guide-fact"><span class="guide-fact-label">Oncogénicos:</span><span>Serotipos 16 e 18 responsáveis por ~70% dos cancros cervicais</span></div>
                                 <div class="guide-fact"><span class="guide-fact-label">Clínica:</span><span>Verrugas genitais (serotipos 6 e 11) ou assintomático (alto risco)</span></div>
                                 <div class="guide-fact"><span class="guide-fact-label">Tratamento:</span><span>Remoção de lesões; vigilância citológica (Pap anual)</span></div>
@@ -1841,7 +2273,6 @@
         </div>
 
         <div id="tab-prevencao" class="tab-panel" role="tabpanel">
-
             <section class="card reveal" aria-labelledby="prev-titulo">
                 <p class="eyebrow">Prevenção Baseada em Evidências</p>
                 <h2 id="prev-titulo">Como Proteger a Sua Saúde Sexual</h2>
@@ -1878,7 +2309,7 @@
                         <div class="prev-num">4</div>
                         <div class="prev-text">
                             <h4>Profilaxia Pré-Exposição (PrEP)</h4>
-                            <p>Medicação diária que reduz o risco de contrair HIV em >99% em indivíduos HIV-negativos de alto risco. Disponível no SNS em Moçambique.</p>
+                            <p>Medicação (oral diária ou injetável semestral) que reduz o risco de contrair HIV em quase 100% em indivíduos de alto risco. Disponível em Moçambique.</p>
                         </div>
                     </div>
                     <div class="prev-item">
@@ -1917,6 +2348,254 @@
             </section>
         </div>
 
+        <div id="tab-prep" class="tab-panel" role="tabpanel">
+
+            <div class="prep-hero reveal">
+                <span class="prep-badge">Inovação em Prevenção · Lenacapavir</span>
+                <div class="prep-hero-eyebrow">PrEP Injetável Semestral</div>
+                <h2>A revolução na prevenção<br>do <em>HIV</em> já chegou</h2>
+                <p class="prep-hero-sub">O Lenacapavir é uma inovadora injeção semestral que demonstrou eficácia superior à PrEP oral diária, com ensaios recentes em África evidenciando 100% de proteção em mulheres jovens. A prevenção agora necessita de apenas duas administrações por ano.</p>
+                <div class="prep-stats-row">
+                    <div class="prep-stat">
+                        <div class="prep-stat-num">100%</div>
+                        <div class="prep-stat-label">Eficácia no Ensaio Purpose 1</div>
+                    </div>
+                    <div class="prep-stat">
+                        <div class="prep-stat-num">6 meses</div>
+                        <div class="prep-stat-label">Entre injeções</div>
+                    </div>
+                    <div class="prep-stat">
+                        <div class="prep-stat-num">2</div>
+                        <div class="prep-stat-label">Injeções por ano</div>
+                    </div>
+                    <div class="prep-stat">
+                        <div class="prep-stat-num">0</div>
+                        <div class="prep-stat-label">Comprimidos por dia</div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="card reveal" aria-labelledby="cab-titulo">
+                <p class="eyebrow">Farmacologia e Mecanismo</p>
+                <h2 id="cab-titulo">O que é o Lenacapavir Injetável?</h2>
+                <p class="lead">O Lenacapavir é o primeiro inibidor da cápside do HIV de ação prolongada. Administrado através de injeções a cada <strong>6 meses</strong>, este medicamento representa um marco global histórico, tendo demonstrado recentemente proteção total na prevenção da infeção por HIV em ensaios com mulheres jovens em África, incluindo em Moçambique.</p>
+
+                <div class="callout" style="border-color: var(--prep-blue-bright); background: var(--prep-blue-light);">
+                    <p style="color: var(--prep-blue-dark);">"Os resultados do ensaio clínico PURPOSE 1 demonstraram que o Lenacapavir semestral teve 100% de eficácia na prevenção do HIV, superando de forma significativa a eficácia da PrEP oral diária."</p>
+                    <cite style="color: var(--prep-blue-bright);">— Ensaios Clínicos PURPOSE (2024)</cite>
+                </div>
+
+                <div class="infobox">
+                    <div class="infobox-item">
+                        <div class="infobox-icon ib-blue">💉</div>
+                        <div class="infobox-text">
+                            <h4>Injeção Semestral</h4>
+                            <p>Administração de longa duração a cada 6 meses (duas vezes por ano). Substitui integralmente a necessidade da toma diária de comprimidos.</p>
+                        </div>
+                    </div>
+                    <div class="infobox-item">
+                        <div class="infobox-icon ib-teal">🛡️</div>
+                        <div class="infobox-text">
+                            <h4>Inibidor da Cápside</h4>
+                            <p>Atua bloqueando a proteção proteica (cápside) do HIV, interferindo em múltiplas etapas vitais do ciclo de replicação do vírus no organismo.</p>
+                        </div>
+                    </div>
+                    <div class="infobox-item">
+                        <div class="infobox-icon ib-gold">⚗️</div>
+                        <div class="infobox-text">
+                            <h4>Ação Ultra Prolongada</h4>
+                            <p>Graças ao seu perfil farmacocinético único, o medicamento permanece ativo e em níveis de proteção máxima durante 24 semanas.</p>
+                        </div>
+                    </div>
+                    <div class="infobox-item">
+                        <div class="infobox-icon ib-rose">📊</div>
+                        <div class="infobox-text">
+                            <h4>Ensaios de Alto Impacto</h4>
+                            <p>Os ensaios clínicos PURPOSE foram desenvolvidos ativamente em África do Sul e Uganda, comprovando adequação à realidade subsaariana.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card reveal" aria-labelledby="beneficios-titulo">
+                <p class="eyebrow">Evidência Científica</p>
+                <h2 id="beneficios-titulo">Benefícios do Lenacapavir</h2>
+                <p class="lead">O Lenacapavir resolve o maior desafio histórico da prevenção do HIV: a dificuldade na toma regular de comprimidos, oferecendo uma proteção praticamente invulnerável com um esforço logístico mínimo.</p>
+
+                <div class="prep-benefits-grid">
+                    <div class="prep-benefit-card">
+                        <div class="prep-benefit-icon">✓</div>
+                        <div class="prep-benefit-text">
+                            <h4>Eficácia Máxima Comprovada</h4>
+                            <p>Nos ensaios de fase III (PURPOSE 1), obteve-se o registo de zero infeções no grupo de estudo, estabelecendo uma eficácia de proteção ímpar em relação aos métodos orais.</p>
+                        </div>
+                    </div>
+                    <div class="prep-benefit-card">
+                        <div class="prep-benefit-icon">📅</div>
+                        <div class="prep-benefit-text">
+                            <h4>Apenas 2 Vezes por Ano</h4>
+                            <p>Elimina o peso mental e prático da toma diária. Com uma injeção a cada semestre, a adesão ao tratamento deixa de ser a principal barreira para o sucesso profilático.</p>
+                        </div>
+                    </div>
+                    <div class="prep-benefit-card">
+                        <div class="prep-benefit-icon">🔒</div>
+                        <div class="prep-benefit-text">
+                            <h4>Discrição e Privacidade</h4>
+                            <p>Totalmente invisível. Não sendo necessários frascos de comprimidos em casa, minimiza o risco de estigmatização por parte de parceiros, família ou comunidade.</p>
+                        </div>
+                    </div>
+                    <div class="prep-benefit-card">
+                        <div class="prep-benefit-icon">🌍</div>
+                        <div class="prep-benefit-text">
+                            <h4>Otimizado para a Nossa Realidade</h4>
+                            <p>Estudado especificamente na população mais afetada da África Subsaariana (mulheres e jovens raparigas), focando em contextos onde a negociação do preservativo é difícil.</p>
+                        </div>
+                    </div>
+                    <div class="prep-benefit-card">
+                        <div class="prep-benefit-icon">🤝</div>
+                        <div class="prep-benefit-text">
+                            <h4>Empoderamento Individual</h4>
+                            <p>Um método preventivo e profilático sob o controlo estrito do utente, garantindo saúde e segurança sem depender do consentimento da parceria sexual.</p>
+                        </div>
+                    </div>
+                    <div class="prep-benefit-card">
+                        <div class="prep-benefit-icon">⚡</div>
+                        <div class="prep-benefit-text">
+                            <h4>Eficácia Constante</h4>
+                            <p>Sem flutuações. Protege o paciente contra riscos súbitos, não previstos ou violência, com a segurança de um fármaco robusto ativo no corpo em qualquer instante dos 6 meses.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card reveal" aria-labelledby="compare-titulo">
+                <p class="eyebrow">Comparação Clínica</p>
+                <h2 id="compare-titulo">PrEP Oral vs. Lenacapavir</h2>
+                <p class="lead">Ambas as formas de profilaxia são aprovadas e oferecem proteção. A escolha deverá assentar no conforto, estilo de vida e nas diretrizes nacionais e disponibilidade atual.</p>
+
+                <div class="prep-compare">
+                    <div class="prep-compare-card">
+                        <div class="prep-compare-header oral">
+                            <div>
+                                <div class="prep-compare-title">💊 PrEP Oral Clássica</div>
+                                <div class="prep-compare-sub">Tenofovir/Emtricitabina · Toma Diária</div>
+                            </div>
+                        </div>
+                        <div class="prep-compare-body">
+                            <ul class="prep-compare-list">
+                                <li><span class="check">✓</span> Ampla disponibilidade no SNS em Moçambique</li>
+                                <li><span class="check">✓</span> Eficácia &gt;99% mas APENAS com adesão diária rigorosa</li>
+                                <li><span class="check">✓</span> Pode ser descontinuado imediatamente em casa</li>
+                                <li><span class="cross">✗</span> Toma obrigatória todos os 365 dias do ano</li>
+                                <li><span class="cross">✗</span> Alta taxa de abandono clínico por fadiga da medicação</li>
+                                <li><span class="cross">✗</span> Quebra a privacidade em domicílios partilhados</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="prep-compare-card">
+                        <div class="prep-compare-header inj">
+                            <div>
+                                <div class="prep-compare-title">💉 PrEP Injetável (Lenacapavir)</div>
+                                <div class="prep-compare-sub">Lenacapavir · Injeção Semestral (A cada 6 meses)</div>
+                            </div>
+                        </div>
+                        <div class="prep-compare-body">
+                            <ul class="prep-compare-list">
+                                <li><span class="check">✓</span> Injeção espaçada a cada 6 meses</li>
+                                <li><span class="check">✓</span> Demonstrou superioridade de eficácia (Purpose 1)</li>
+                                <li><span class="check">✓</span> Requer apenas 2 visitas por ano ao centro clínico</li>
+                                <li><span class="check">✓</span> Privacidade garantida — método invisível a parceiros</li>
+                                <li><span class="cross">✗</span> Necessita da presença física de técnico de saúde na toma</li>
+                                <li><span class="cross">✗</span> Em processo faseado de disponibilidade generalizada no país</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prep-alert">
+                    <span style="font-size:1.1rem; flex-shrink:0;">ℹ️</span>
+                    <span><strong>Cobertura Prolongada:</strong> Devido à elevada persistência farmacológica, se não desejar renovar a dose após o fim dos 6 meses do Lenacapavir, o seu médico planeará a transição correta e rastreio para assegurar que continua em segurança. O acompanhamento contínuo é fundamental.</span>
+                </div>
+            </section>
+
+            <section class="card reveal" aria-labelledby="protocolo-titulo">
+                <p class="eyebrow">Protocolo Clínico</p>
+                <h2 id="protocolo-titulo">Dinâmica de Início com Lenacapavir</h2>
+                <p class="lead">Para assegurar os índices de 100% de eficácia dos ensaios clínicos, o Lenacapavir deve ser sempre administrado por profissionais qualificados, com despistes essenciais de rotina.</p>
+
+                <div class="prep-timeline">
+                    <div class="prep-timeline-item">
+                        <div class="prep-timeline-dot">1</div>
+                        <div class="prep-timeline-content">
+                            <h4>Aconselhamento e Rastreio</h4>
+                            <p>Teste rápido de HIV (obrigatoriamente negativo) e avaliação médica. A PrEP exige garantias de ausência prévia da infeção, prevenindo a criação de resistências virais.</p>
+                        </div>
+                    </div>
+                    <div class="prep-timeline-item">
+                        <div class="prep-timeline-dot">2</div>
+                        <div class="prep-timeline-content">
+                            <h4>Primeira Injeção (Mês 0)</h4>
+                            <p>Após o rastreio, procede-se à administração injetável controlada. Esta dose começa a construir o escudo protetor semestral.</p>
+                        </div>
+                    </div>
+                    <div class="prep-timeline-item">
+                        <div class="prep-timeline-dot">3</div>
+                        <div class="prep-timeline-content">
+                            <h4>Injeção de Manutenção (Mês 6 em diante)</h4>
+                            <p>Ao final exato de 24 semanas (6 meses), fará um novo teste HIV de controlo rápido e receberá a injeção renovadora de proteção. O ciclo simples repete-se de 6 em 6 meses.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card reveal" aria-labelledby="elig-titulo">
+                <p class="eyebrow">Critérios de Elegibilidade</p>
+                <h2 id="elig-titulo">Quem Pode Usar o Lenacapavir?</h2>
+                <p class="lead">O Lenacapavir é desenhado para adultos ou jovens com atividade sexual frequente, sem HIV, especialmente em cenários onde os métodos orais ou de barreira tradicionalmente falham.</p>
+
+                <div class="prep-eligibility">
+                    <div class="prep-elig-item">
+                        <div class="prep-elig-icon">✓</div>
+                        <div class="prep-elig-text">
+                            <strong>Mulheres Jovens Africanas</strong>
+                            Foi clinicamente validado como altamente eficaz nesta população específica (onde reside o maior fardo das novas infeções em Moçambique).
+                        </div>
+                    </div>
+                    <div class="prep-elig-item">
+                        <div class="prep-elig-icon">✓</div>
+                        <div class="prep-elig-text">
+                            <strong>Relações Serodiscordantes</strong>
+                            Para prevenir que parceiros soronegativos adquiram o vírus de parcerias com HIV que ainda não atingiram o nível "indetectável" (I=I).
+                        </div>
+                    </div>
+                    <div class="prep-elig-item">
+                        <div class="prep-elig-icon">✓</div>
+                        <div class="prep-elig-text">
+                            <strong>Intolerância Oral</strong>
+                            Para doentes com problemas ou fortes aversões à terapêutica oral contínua ou reações adversas diárias ao Tenofovir.
+                        </div>
+                    </div>
+                    <div class="prep-elig-item">
+                        <div class="prep-elig-icon">✓</div>
+                        <div class="prep-elig-text">
+                            <strong>Profissionais em Risco</strong>
+                            Trabalhadores do sexo e populações cuja vulnerabilidade impossibilita uma negociação sexual segura regular.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prep-alert" style="margin-top: 1.5rem;">
+                    <span style="font-size:1.1rem; flex-shrink:0;">⚠️</span>
+                    <span><strong>Aviso:</strong> A administração do Lenacapavir em utentes portadores de HIV (mesmo que com diagnóstico recente ou tardio) de forma monoterápica (sozinho sem TARV complementar) pode potenciar vírus resistentes, pelo que o teste pré-PrEP e durante as visitas aos 6 meses é lei intransigente.</span>
+                </div>
+
+                <div class="notice-green" style="margin-top: 1rem;">
+                    ✔ <strong>Situação em Moçambique:</strong> Graças a pressões científicas e parcerias, medicamentos de longa duração como o Lenacapavir constam das grelhas de expansão acelerada do Ministério da Saúde para unidades de saúde chave.
+                </div>
+            </section>
+        </div>
+
         <div id="tab-faq" class="tab-panel" role="tabpanel">
             <section class="card reveal" aria-labelledby="faq-titulo">
                 <p class="eyebrow">Perguntas Frequentes</p>
@@ -1924,7 +2603,6 @@
                 <p class="lead">Respostas baseadas em evidências científicas para as questões mais comuns sobre saúde sexual e ISTs.</p>
 
                 <div class="faq-list" id="faq-list">
-
                     <div class="faq-item">
                         <button class="faq-question" aria-expanded="false">
                             Posso ter uma IST sem apresentar nenhum sintoma?
@@ -2005,6 +2683,15 @@
                         </div>
                     </div>
 
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            A PrEP injetável (Lenacapavir) protege contra outras ISTs para além do HIV?
+                            <span class="faq-chevron" aria-hidden="true">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            Não. O Lenacapavir é estritamente específico para impedir a infeção viral do HIV. Ele não fornece nenhuma camada imunitária ou antibiótica contra a sífilis, clamídia, gonorreia, HPV ou tricomoníase. É obrigatório manter o uso contínuo de preservativo para cobrir esse amplo espetro de outras infeções transmitidas pelo sexo. A rotina de PrEP é apenas uma camada complementar (e eficaz) focada exclusivamente no vírus HIV.
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
@@ -2046,7 +2733,11 @@
                     </div>
                     <div class="gloss-item">
                         <div class="gloss-term">PrEP</div>
-                        <div class="gloss-def">Profilaxia Pré-Exposição. Medicamento (Tenofovir/Emtricitabina) tomado por HIV-negativos para prevenir a infeção pelo HIV.</div>
+                        <div class="gloss-def">Profilaxia Pré-Exposição. Pode ser oral diária (TDF/FTC) ou injetável de ação prolongada, usada preventivamente.</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">Lenacapavir</div>
+                        <div class="gloss-def">Inibidor de cápside para o HIV usado como profilaxia (PrEP). Exige administração apenas 2 vezes por ano, ou seja, a cada 6 meses.</div>
                     </div>
                     <div class="gloss-item">
                         <div class="gloss-term">PEP</div>
@@ -2075,10 +2766,6 @@
                     <div class="gloss-item">
                         <div class="gloss-term">DIP (Doença Inflamatória Pélvica)</div>
                         <div class="gloss-def">Infeção grave do aparelho reprodutor feminino superior (útero, trompas, ovários). Pode causar infertilidade.</div>
-                    </div>
-                    <div class="gloss-item">
-                        <div class="gloss-term">Sífilis congénita</div>
-                        <div class="gloss-def">Transmissão de sífilis da mãe para o bebé durante a gravidez. Causa graves malformações ou morte fetal.</div>
                     </div>
                 </div>
             </section>
@@ -2115,7 +2802,7 @@
                     <div class="hospital-dot" aria-hidden="true"></div>
                     <div>
                         <p class="hospital-name">Hospital Geral José Macamo</p>
-                        <p class="hospital-sub">Consultas de saúde reprodutiva · TARV</p>
+                        <p class="hospital-sub">Consultas de saúde reprodutiva · TARV · PrEP</p>
                     </div>
                 </div>
                 <div class="hospital-item">
@@ -2129,7 +2816,7 @@
                     <div class="hospital-dot" aria-hidden="true"></div>
                     <div>
                         <p class="hospital-name">Hospital de Mavalane</p>
-                        <p class="hospital-sub">Ginecologia · Saúde da mulher</p>
+                        <p class="hospital-sub">Ginecologia · Saúde da mulher · PrEP injetável</p>
                     </div>
                 </div>
             </div>
@@ -2158,9 +2845,7 @@
                     <h3>Dúvidas ou Sugestões?</h3>
                     <p class="sub">Tem sugestões de melhoria ou precisa de mais informações sobre o projeto? Entre em contacto direto com o desenvolvedor.</p>
                 </div>
-                <a href="https://wa.me/258850727507" class="btn-whatsapp" target="_blank" rel="noopener noreferrer"
-                   aria-label="Contactar por WhatsApp"
-                   onclick="gaEvent('contact_click', 'engagement', 'whatsapp_button')">
+                <a href="https://wa.me/258850727507" class="btn-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp — abre em nova janela" onclick="gaEvent('contact_click', 'engagement', 'whatsapp_button')">
                     <svg xmlns="http://www.w3.org/2000/svg" class="wa-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                     WhatsApp · 85 072 75 07
                 </a>
@@ -2181,11 +2866,12 @@
             <div class="footer-col">
                 <h4>Secções</h4>
                 <ul class="footer-links">
-                    <li><a href="#triagem" data-nav-tab="triagem">Triagem Clínica</a></li>
-                    <li><a href="#guia" data-nav-tab="guia">Guia de ISTs</a></li>
-                    <li><a href="#prevencao" data-nav-tab="prevencao">Prevenção</a></li>
-                    <li><a href="#faq" data-nav-tab="faq">Perguntas Frequentes</a></li>
-                    <li><a href="#glossario" data-nav-tab="glossario">Glossário Médico</a></li>
+                    <li><a href="#tabs-container" data-nav-tab="triagem">Triagem Clínica</a></li>
+                    <li><a href="#tabs-container" data-nav-tab="guia">Guia de ISTs</a></li>
+                    <li><a href="#tabs-container" data-nav-tab="prevencao">Prevenção</a></li>
+                    <li><a href="#tabs-container" data-nav-tab="prep">PrEP Injetável</a></li>
+                    <li><a href="#tabs-container" data-nav-tab="faq">Perguntas Frequentes</a></li>
+                    <li><a href="#tabs-container" data-nav-tab="glossario">Glossário Médico</a></li>
                     <li><a href="#recursos">Recursos em Maputo</a></li>
                 </ul>
             </div>
@@ -2193,8 +2879,8 @@
                 <h4>Apoio</h4>
                 <ul class="footer-links">
                     <li><a href="https://wa.me/258850727507" target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
-                    <li><a href="#">M-Pesa: +258 85 072 75 07</a></li>
-                    <li><a href="#">E-Mola: +258 86 346 02 82</a></li>
+                    <li><a href="javascript:void(0)" aria-label="M-Pesa: mais 258 85 072 75 07">M-Pesa: +258 85 072 75 07</a></li>
+                    <li><a href="javascript:void(0)" aria-label="E-Mola: mais 258 86 346 02 82">E-Mola: +258 86 346 02 82</a></li>
                 </ul>
             </div>
         </div>
@@ -2216,7 +2902,7 @@
                 </div>
                 <div class="ref-item">
                     <div class="ref-num">[4] Muzny & Schwebke · 2016</div>
-                    <div class="ref-text"><strong>Muzny CA, Schwebke JR.</strong> Pathogenesis of Bacterial Vaginosis: Discussion of Current Hypotheses. J Infect Dis. 2016;214(S1):S1–S5.</div>
+                    <div class="ref-text"><strong>Muzny CA, Schwebke JR.</strong> Pathogenesis of Bacterial Vaginosis. J Infect Dis. 2016;214(S1):S1–S5.</div>
                 </div>
                 <div class="ref-item">
                     <div class="ref-num">[5] Sobel · 2016</div>
@@ -2228,11 +2914,11 @@
                 </div>
                 <div class="ref-item">
                     <div class="ref-num">[7] Looker et al. · 2015</div>
-                    <div class="ref-text"><strong>Looker KJ, et al.</strong> Global and regional estimates of prevalent and incident herpes simplex virus type 1 and 2. PLOS ONE. 2015.</div>
+                    <div class="ref-text"><strong>Looker KJ, et al.</strong> Global estimates of HSV-1 and HSV-2. PLOS ONE. 2015.</div>
                 </div>
                 <div class="ref-item">
                     <div class="ref-num">[8] Bruni et al. · 2023</div>
-                    <div class="ref-text"><strong>Bruni L, et al.</strong> Global and regional estimates of genital human papillomavirus prevalence. Lancet Glob Health. 2023.</div>
+                    <div class="ref-text"><strong>Bruni L, et al.</strong> Global HPV prevalence and vaccination. Lancet Glob Health. 2023.</div>
                 </div>
                 <div class="ref-item">
                     <div class="ref-num">[9] Kissinger · 2015</div>
@@ -2241,6 +2927,14 @@
                 <div class="ref-item">
                     <div class="ref-num">[10] WHO · 2022b</div>
                     <div class="ref-text"><strong>World Health Organization.</strong> Hepatitis B Fact Sheet. Global Hepatitis Programme. Geneva: WHO, 2022.</div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-num">[11] PURPOSE 1 Trial · 2024</div>
+                    <div class="ref-text"><strong>Bekker L-G, et al.</strong> Twice-Yearly Lenacapavir or Daily F/TAF for HIV Prevention in Cisgender Women. N Engl J Med. 2024.</div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-num">[12] UNAIDS · 2024</div>
+                    <div class="ref-text"><strong>UNAIDS.</strong> Statement on the results of the PURPOSE 1 trial of twice-yearly lenacapavir for HIV prevention. Geneva, 2024.</div>
                 </div>
             </div>
             <p class="footer-copy">© 2026 Benj Carhl · Portal de Saúde Pública · Moçambique · Informação educativa — não substitui consulta médica</p>
@@ -2252,8 +2946,27 @@
 (function () {
     'use strict';
 
-    // ── Base de dados clínica expandida ──
-    const baseDados = [
+    // ══════════════════════════════════════════════════════════════
+    // SEGURANÇA — SANITIZAÇÃO DE SAÍDA
+    // ══════════════════════════════════════════════════════════════
+    function escapeHtml(str) {
+        const m = { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' };
+        return String(str).replace(/[&<>"']/g, function(c) { return m[c]; });
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // NOVO: Proteção contra clickjacking em runtime
+    // ══════════════════════════════════════════════════════════════
+    if (window.top !== window.self) {
+        try {
+            window.top.location = window.self.location;
+        } catch (e) {
+            document.body.innerHTML = '<div style="padding:2rem;font-family:sans-serif;text-align:center;"><h1>Acesso inválido</h1><p>Esta página não pode ser incorporada noutros sites.</p></div>';
+        }
+    }
+
+    // ── Base de dados clínica ──
+    var baseDados = [
         {
             nome: "Vaginose Bacteriana (VB)",
             patogeno: "Gardnerella vaginalis e anaeróbios",
@@ -2272,7 +2985,7 @@
             fisiopatologia: "Proliferação fúngica oportunista por desequilíbrio imunológico. O fungo transita de comensal a patogénico. Fatores precipitantes: antibioterapia, diabetes, gravidez, imunossupressão.",
             transmissao: "Infeção endógena (oportunista). Não é classicamente uma IST.",
             sintomasLista: "Prurido intenso (cardinal), corrimento branco grumoso (aspeto de coalho), eritema e edema vulvar, ardor na micção.",
-            tratamento: "Fluconazol 150 mg oral dose única (1ª linha). Clotrimazol creme 1% ou óvulos por 7 dias (topicamente). Formas recorrentes (≥4 episódios/ano): fluconazol semanal por 6 meses.",
+            tratamento: "Fluconazol 150 mg oral dose única (1ª linha). Clotrimazol creme 1% ou óvulos por 7 dias (topicamente). Formas recorrentes: fluconazol semanal por 6 meses.",
             triggers: ["prurido", "branco-espesso", "vermelhidao"],
             cite: "Sobel JD, Lancet 2007 (rev. 2016); CDC STI Guidelines 2021"
         },
@@ -2283,8 +2996,8 @@
             fisiopatologia: "Infeção bacteriana do epitélio mucoso da uretra, colo do útero ou reto. A clamídia é intracelular obrigatória; a gonorreia tem resistência antimicrobiana crescente. Co-infeção frequente (~40% dos casos).",
             transmissao: "Contacto sexual (vaginal, oral, anal). A clamídia é a IST bacteriana mais notificada no mundo.",
             sintomasLista: "Corrimento purulento uretral ou cervical, disúria, sangramento intermenstrual. 70-80% das mulheres com clamídia são assintomáticas.",
-            tratamento: "Ceftriaxona 500 mg IM + Azitromicina 1 g oral (dose única, cobertura combinada para gonorreia e clamídia). Parceiro tratado obrigatoriamente.",
-            triggers: ["purulento", "dor-urinar", "corrimento-transparente", "urinario-freq"],
+            tratamento: "Ceftriaxona 500 mg IM + Azitromicina 1 g oral (dose única, cobertura combinada). Parceiro tratado obrigatoriamente.",
+            triggers: ["purulento", "dor-urinar", "corrimento-transparente", "urinario-freq", "dor-garganta"],
             cite: "Workowski et al., MMWR 2021; WHO STI Guidelines 2021"
         },
         {
@@ -2293,7 +3006,7 @@
             tipo: "ist",
             fisiopatologia: "O protozoário adere ao epitélio vaginal, provocando inflamação severa (colpite). IST não viral mais comum no mundo, com ~156 milhões de casos anuais.",
             transmissao: "Contacto sexual. Incubação: 4-28 dias.",
-            sintomasLista: "Corrimento espumoso verde-amarelado, odor fétido acentuado, prurido vulvar e ardor. 'Colo em morango' na colposcopia.",
+            sintomasLista: "Corrimento espumoso verde-amarelado, odor fétido acentuado, prurido vulvar e ardor.",
             tratamento: "Metronidazol 2 g oral dose única (1ª linha). Tratar o parceiro obrigatoriamente. Evitar álcool durante tratamento.",
             triggers: ["espumoso", "odor-peixe", "prurido"],
             cite: "Kissinger PJ, Curr Infect Dis Rep 2015; WHO 2021"
@@ -2303,9 +3016,9 @@
             patogeno: "Treponema pallidum (espiroqueta)",
             tipo: "ist",
             fisiopatologia: "Infeção sistémica progressiva em 4 fases. Primária: cancro duro (úlcera indolor). Secundária: rash generalizado (palmas/plantas). Latente: sem sintomas. Terciária: comprometimento cardiovascular e neurológico.",
-            transmissao: "Contacto sexual com lesões ativas. Transmissão vertical causa sífilis congénita (grave malformações ou morte fetal).",
-            sintomasLista: "Primária: úlcera genital única, indolor, de base endurecida. Secundária: erupção cutânea no corpo, incluindo palmas das mãos e plantas dos pés.",
-            tratamento: "Penicilina Benzatina 2.4 MU IM (dose única para sífilis primária/secundária). Altamente eficaz. Controlo com VDRL aos 3, 6 e 12 meses.",
+            transmissao: "Contacto sexual com lesões ativas. Transmissão vertical causa sífilis congénita.",
+            sintomasLista: "Primária: úlcera genital única, indolor, de base endurecida. Secundária: erupção cutânea no corpo, incluindo palmas e plantas dos pés.",
+            tratamento: "Penicilina Benzatina 2.4 MU IM (dose única para sífilis primária/secundária). Controlo com VDRL aos 3, 6 e 12 meses.",
             triggers: ["ferida-indolor", "erupcao-cutanea", "ganglios"],
             cite: "MISAU 2021; Workowski et al., MMWR 2021"
         },
@@ -2313,10 +3026,10 @@
             nome: "Herpes Genital",
             patogeno: "Herpes Simplex Vírus tipo 2 (HSV-2)",
             tipo: "viral",
-            fisiopatologia: "Após a primoinfecção, o vírus estabelece latência permanente nos gânglios sacrais (S2-S4). Reativações periódicas com excreção viral — mesmo sem lesões visíveis. 70% das transmissões ocorrem em períodos assintomáticos.",
+            fisiopatologia: "Após a primoinfecção, o vírus estabelece latência permanente nos gânglios sacrais. Reativações periódicas com excreção viral — mesmo sem lesões visíveis.",
             transmissao: "Contacto direto com lesões ativas ou excreção viral assintomática. Sem cura disponível.",
-            sintomasLista: "Bolhas (vesículas) agrupadas, muito dolorosas. Primoinfecção: febre, linfadenopatia inguinal, disúria. Crises recorrentes geralmente mais leves.",
-            tratamento: "Aciclovir 400 mg 3×/dia por 7-10 dias (crise aguda). Supressão contínua (400 mg 2×/dia) para reduzir recorrências e transmissão.",
+            sintomasLista: "Bolhas (vesículas) agrupadas, muito dolorosas. Primoinfecção: febre, linfadenopatia inguinal, disúria.",
+            tratamento: "Aciclovir 400 mg 3×/dia por 7-10 dias (crise aguda). Supressão contínua (400 mg 2×/dia) para reduzir recorrências.",
             triggers: ["vesiculas", "ganglios", "febre"],
             cite: "Looker et al., PLOS ONE 2015; CDC 2021"
         },
@@ -2324,10 +3037,10 @@
             nome: "HPV (Papilomavírus Humano)",
             patogeno: "Human Papillomavirus — serotipos 6, 11 (verrugas), 16, 18 (oncogénicos)",
             tipo: "viral",
-            fisiopatologia: "O vírus infeta os queratinócitos basais. Serotipos de baixo risco (6, 11) causam condilomas. Serotipos de alto risco (16, 18) causam lesões displásicas que podem progredir para carcinoma cervical.",
-            transmissao: "Contacto sexual e pele-com-pele. IST mais prevalente globalmente. Maioria das infeções resolve espontaneamente em 1-2 anos.",
-            sintomasLista: "Verrugas genitais (condilomas acuminados): excrescências carnosas únicas ou múltiplas, não dolorosas, aspeto de 'crista de galo'.",
-            tratamento: "Remoção de lesões: ácido tricloroacético, crioterapia ou laser. Sem tratamento específico para o vírus. Vacinação HPV (Gardasil 9) previne 90% dos condilomas e 70% dos cancros cervicais.",
+            fisiopatologia: "O vírus infeta os queratinócitos basais. Serotipos de baixo risco causam condilomas. Serotipos de alto risco causam lesões displásicas que podem progredir para carcinoma cervical.",
+            transmissao: "Contacto sexual e pele-com-pele. IST mais prevalente globalmente.",
+            sintomasLista: "Verrugas genitais (condilomas acuminados): excrescências carnosas, não dolorosas, aspeto de 'crista de galo'.",
+            tratamento: "Remoção de lesões: ácido tricloroacético, crioterapia ou laser. Vacinação HPV (Gardasil 9) previne 90% dos condilomas.",
             triggers: ["verrugas"],
             cite: "Bruni et al., Lancet Glob Health 2023; WHO 2022"
         },
@@ -2338,7 +3051,7 @@
             fisiopatologia: "Inflamação do epitélio endocervical tornando o tecido friável. Pode ser assintomática. A cervicite não tratada é porta de entrada para DIP.",
             transmissao: "Contacto sexual sem preservativo.",
             sintomasLista: "Corrimento mucopurulento cervical, sangramento após relação sexual ou entre menstruações, por vezes dor pélvica leve.",
-            tratamento: "Ceftriaxona + Azitromicina/Doxiciclina (cobertura dupla). Confirmação por exame especular e testes de NAAT (PCR) para gonorreia/clamídia.",
+            tratamento: "Ceftriaxona + Azitromicina/Doxiciclina (cobertura dupla). Confirmação por exame especular e testes NAAT (PCR).",
             triggers: ["purulento", "sangramento", "dor-coito"],
             cite: "Workowski et al., MMWR 2021"
         },
@@ -2346,9 +3059,9 @@
             nome: "Doença Inflamatória Pélvica (DIP)",
             patogeno: "Polimicrobiano (Gonorreia, Clamídia, anaeróbios)",
             tipo: "ist",
-            fisiopatologia: "Infeção ascendente do trato genital superior, afetando útero (endometrite), trompas (salpingite) e ovários (ooforite). Pode complicar com abcesso tubo-ovárico.",
+            fisiopatologia: "Infeção ascendente do trato genital superior, afetando útero, trompas e ovários. Pode complicar com abcesso tubo-ovárico.",
             transmissao: "Ascensão de patógenos sexualmente transmitidos. Maior risco em jovens com múltiplos parceiros.",
-            sintomasLista: "Dor pélvica bilateral intensa, febre > 38°C, corrimento anormal, dor à mobilização do colo (sinal de Chandelier). Pode causar infertilidade se não tratada.",
+            sintomasLista: "Dor pélvica bilateral intensa, febre > 38°C, corrimento anormal, dor à mobilização do colo.",
             tratamento: "Ceftriaxona 500 mg IM + Doxiciclina 100 mg 2×/dia + Metronidazol 500 mg 2×/dia por 14 dias. Internamento se grave.",
             triggers: ["dor-pelvica", "febre", "purulento", "dor-coito"],
             cite: "Ross J, Sex Transm Infect 2014; MISAU 2021"
@@ -2357,10 +3070,10 @@
             nome: "Cancro Mole (Cancróide)",
             patogeno: "Haemophilus ducreyi",
             tipo: "ist",
-            fisiopatologia: "Infeção bacteriana que causa necrose tecidual localizada. Facilitador da transmissão de HIV (aumenta risco 3-5×). Raro nos países desenvolvidos mas prevalente em África Subsaariana.",
+            fisiopatologia: "Infeção bacteriana que causa necrose tecidual localizada. Facilitador da transmissão de HIV (aumenta risco 3-5×). Prevalente em África Subsaariana.",
             transmissao: "Contacto sexual direto com lesões ativas.",
-            sintomasLista: "Múltiplas úlceras genitais dolorosas (ao contrário da sífilis) com fundo purulento. Adenopatia inguinal dolorosa (bubão) em 50% dos casos.",
-            tratamento: "Azitromicina 1 g oral dose única (1ª linha). Alternativa: Ceftriaxona 250 mg IM ou Ciprofloxacina 500 mg 2×/dia por 3 dias.",
+            sintomasLista: "Múltiplas úlceras genitais dolorosas com fundo purulento. Adenopatia inguinal dolorosa (bubão) em 50% dos casos.",
+            tratamento: "Azitromicina 1 g oral dose única (1ª linha). Alternativa: Ceftriaxona 250 mg IM.",
             triggers: ["ferida-dolorosa", "ganglios"],
             cite: "Workowski et al., MMWR 2021; OMS 2021"
         },
@@ -2368,10 +3081,10 @@
             nome: "Hepatite B (VHB)",
             patogeno: "Vírus da Hepatite B (hepadnavirus)",
             tipo: "viral",
-            fisiopatologia: "Infeção viral do fígado. 90% dos adultos eliminam o vírus espontaneamente. 10% desenvolvem infeção crónica com risco de cirrose e carcinoma hepatocelular. 50-100× mais infecioso que HIV.",
-            transmissao: "Sexual (especialmente anal), parenteral (sangue, seringas), vertical (mãe-filho). Sobrevive fora do corpo até 7 dias.",
-            sintomasLista: "Icterícia (pele/olhos amarelados), fadiga extrema, urina escura (cor de chá), náuseas, dor abdominal. Frequentemente assintomática.",
-            tratamento: "Fase aguda: suporte. Crónica: Tenofovir (antivirais). Vacinação (3 doses, eficácia >95%) é a melhor prevenção. Incluída no PNV de Moçambique.",
+            fisiopatologia: "Infeção viral do fígado. 90% dos adultos eliminam o vírus espontaneamente. 10% desenvolvem infeção crónica com risco de cirrose e carcinoma hepatocelular.",
+            transmissao: "Sexual, parenteral (sangue), vertical. Sobrevive fora do corpo até 7 dias.",
+            sintomasLista: "Icterícia (pele/olhos amarelados), fadiga extrema, urina escura, náuseas, dor abdominal.",
+            tratamento: "Fase aguda: suporte. Crónica: Tenofovir. Vacinação (3 doses, eficácia >95%) incluída no PNV de Moçambique.",
             triggers: ["ictericia", "fadiga", "febre"],
             cite: "WHO Hepatitis B Fact Sheet 2022"
         },
@@ -2379,21 +3092,21 @@
             nome: "HIV / SIDA",
             patogeno: "Vírus da Imunodeficiência Humana (retrovírus)",
             tipo: "viral",
-            fisiopatologia: "O vírus infeta e destrói células T-CD4+, comprometendo progressivamente a imunidade. SIDA é diagnosticada quando CD4 < 200 células/µL ou com doenças oportunistas definidoras.",
-            transmissao: "Sexual (risco por ato: receptivo anal 1.4%, vaginal 0.1%), parenteral, vertical. IST ativa aumenta o risco de transmissão 3-5×.",
-            sintomasLista: "Síndrome retroviral aguda: febre, faringite, linfadenopatia generalizada, rash, fadiga. Depois: período longo assintomático (2-10 anos).",
-            tratamento: "TARV (1ª linha em Moz: Tenofovir + Lamivudina + Dolutegravir). Indetectável = Intransmissível (I=I). PrEP para prevenção em alto risco.",
-            triggers: ["febre", "ganglios", "fadiga", "ganglios-generalizados", "perda-peso", "erupcao-cutanea"],
+            fisiopatologia: "O vírus infeta e destrói células T-CD4+, comprometendo progressivamente a imunidade.",
+            transmissao: "Sexual, parenteral, vertical. IST ativa aumenta o risco de transmissão 3-5×.",
+            sintomasLista: "Síndrome retroviral aguda: febre, faringite, linfadenopatia generalizada, rash, fadiga. Depois período longo assintomático.",
+            tratamento: "TARV (1ª linha: Tenofovir + Lamivudina + Dolutegravir). Indetectável = Intransmissível (I=I). PrEP para prevenção.",
+            triggers: ["febre", "ganglios", "fadiga", "ganglios-generalizados", "perda-peso", "erupcao-cutanea", "dor-garganta"],
             cite: "UNAIDS 2023; MISAU Protocolo TARV 2022"
         },
         {
             nome: "Vaginite Aeróbica",
             patogeno: "Escherichia coli, Streptococcus agalactiae, Staphylococcus aureus",
             tipo: "flora",
-            fisiopatologia: "Inflamação vaginal com atrofia epitelial por bactérias aeróbias intestinais. Diferente da VB: pH elevado, leucócitos presentes (inflamação real), sem odor a aminas.",
+            fisiopatologia: "Inflamação vaginal com atrofia epitelial por bactérias aeróbias intestinais. pH elevado, leucócitos presentes (inflamação real), sem odor a aminas.",
             transmissao: "Desequilíbrio da microbiota endógena. Não é classicamente uma IST.",
             sintomasLista: "Corrimento amarelado pegajoso, ardor e prurido intenso, dispareunia, eritema vaginal.",
-            tratamento: "Canamicina 250 mg vaginal (1ª linha). Clindamicina creme. Estrogénio tópico se atrofia epitelial presente (peri/pós-menopausa).",
+            tratamento: "Canamicina 250 mg vaginal (1ª linha). Clindamicina creme. Estrogénio tópico se atrofia epitelial presente.",
             triggers: ["purulento", "prurido", "dor-urinar", "vermelhidao"],
             cite: "Donders GG, et al., Am J Obstet Gynecol 2002"
         }
@@ -2401,29 +3114,23 @@
 
     // ── CONTAGEM DE SINTOMAS ──
     function updateCount() {
-        const checked = document.querySelectorAll('#symptoms-form input[type="checkbox"]:checked').length;
-        const el = document.getElementById('sel-count-num');
+        var checked = document.querySelectorAll('#symptoms-form input[type="checkbox"]:checked').length;
+        var el = document.getElementById('sel-count-num');
         if (el) el.textContent = checked;
     }
 
-    // ── VISUAL FEEDBACK ──
-    document.querySelectorAll('.symptom-item input[type="checkbox"]').forEach(cb => {
-        cb.addEventListener('change', function () {
+    // ── VISUAL FEEDBACK NOS CHECKBOXES ──
+    document.querySelectorAll('.symptom-item input[type="checkbox"]').forEach(function(cb) {
+        cb.addEventListener('change', function() {
             this.closest('.symptom-item').classList.toggle('selected', this.checked);
             updateCount();
-            // GA: evento por sintoma
             gaEvent('symptom_toggle', 'triagem', this.value + (this.checked ? '_checked' : '_unchecked'));
         });
     });
 
     // ── BADGE HELPERS ──
-    function escapeHtml(str) {
-        const m = { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' };
-        return String(str).replace(/[&<>"']/g, c => m[c]);
-    }
-
     function getBadge(tipo) {
-        const b = {
+        var b = {
             ist:   '<span class="badge badge-ist">IST Bacteriana</span>',
             viral: '<span class="badge badge-viral">Viral / Sistémica</span>',
             flora: '<span class="badge badge-flora">Flora Vaginal</span>'
@@ -2431,107 +3138,99 @@
         return b[tipo] || '';
     }
 
-    // ── GERAR DIAGNÓSTICO ──
-    function gerarDiagnostico() {
-        const selecionados = Array.from(
-            document.querySelectorAll('#symptoms-form input[type="checkbox"]:checked')
-        ).map(i => i.value);
+    // ── DEBOUNCE PARA GERAÇÃO ──
+    var isGenerating = false;
 
-        const container = document.getElementById('diagnosticos-container');
-        const area = document.getElementById('results-area');
+    function gerarDiagnostico() {
+        if (isGenerating) return;
+
+        var selecionados = Array.from(
+            document.querySelectorAll('#symptoms-form input[type="checkbox"]:checked')
+        ).map(function(i) { return i.value; });
+
+        var container = document.getElementById('diagnosticos-container');
+        var area = document.getElementById('results-area');
 
         if (selecionados.length === 0) {
             alert('Para gerar o relatório, assinale pelo menos um sintoma.');
             return;
         }
 
-        // GA: evento de triagem
+        isGenerating = true;
+        var btnGerar = document.getElementById('btn-gerar');
+        btnGerar.disabled = true;
+        btnGerar.textContent = '⏳ A analisar...';
+
         gaEvent('triagem_gerada', 'triagem', 'sintomas_count_' + selecionados.length, selecionados.length);
         gaEvent('generate_report', 'engagement', selecionados.join('|'));
 
-        container.innerHTML = '';
+        setTimeout(function() {
+            container.innerHTML = '';
 
-        const meta = document.getElementById('results-meta');
-        if (meta) {
-            meta.textContent = selecionados.length + ' sintoma(s) analisado(s) · ' + new Date().toLocaleDateString('pt-PT');
-        }
-
-        const matches = baseDados
-            .map(d => ({ ...d, matchCount: d.triggers.filter(t => selecionados.includes(t)).length }))
-            .filter(d => d.matchCount > 0)
-            .sort((a, b) => b.matchCount - a.matchCount);
-
-        if (matches.length === 0) {
-            container.innerHTML = `
-                <div class="diagnosis-card">
-                    <div class="diagnosis-top-bar">
-                        <div class="diag-name-wrap"><p class="diagnosis-name">Nenhum padrão identificado</p></div>
-                    </div>
-                    <div class="diagnosis-body">
-                        <div class="info-block" style="grid-column:1/-1">
-                            <p class="info-text">Os sintomas assinalados não correspondem a um padrão específico na nossa base de dados. Isto não exclui patologia — recomendamos a realização de exames laboratoriais no centro de saúde mais próximo.</p>
-                        </div>
-                    </div>
-                </div>`;
-        } else {
-            matches.forEach((d, idx) => {
-                const isTop = idx === 0 && d.matchCount > 1;
-                const topClass = isTop ? ' top-match' : '';
-                const topBadge = isTop ? '<span class="badge badge-top">✦ Maior correlação</span>' : '';
-                const matchBadge = `<span class="badge badge-match">${d.matchCount} sintoma(s) em comum</span>`;
-                const card = document.createElement('div');
-                card.className = 'diagnosis-card' + topClass;
-                card.style.animationDelay = (idx * 0.08) + 's';
-                card.innerHTML = `
-                    <div class="diagnosis-top-bar${topClass}">
-                        <div class="diag-name-wrap">
-                            <p class="diagnosis-name">${escapeHtml(d.nome)}</p>
-                            <p class="diag-patogen">${escapeHtml(d.patogeno)}</p>
-                        </div>
-                        <div class="badge-row">
-                            ${getBadge(d.tipo)}
-                            ${matchBadge}
-                            ${topBadge}
-                        </div>
-                    </div>
-                    <div class="diagnosis-body">
-                        <div class="info-block">
-                            <span class="info-label">Fisiopatologia</span>
-                            <p class="info-text">${escapeHtml(d.fisiopatologia)}</p>
-                        </div>
-                        <div class="info-block">
-                            <span class="info-label">Transmissão e Epidemiologia</span>
-                            <p class="info-text">${escapeHtml(d.transmissao)}</p>
-                        </div>
-                        <div class="info-block">
-                            <span class="info-label">Apresentação Clínica</span>
-                            <p class="info-text">${escapeHtml(d.sintomasLista)}</p>
-                        </div>
-                        <div class="treatment-block">
-                            <div class="treatment-icon" aria-hidden="true">✚</div>
-                            <div class="treatment-text">
-                                <strong>Protocolo de Tratamento</strong>
-                                ${escapeHtml(d.tratamento)}
-                            </div>
-                        </div>
-                        <div class="diag-cite">📚 Referências: ${escapeHtml(d.cite)}</div>
-                    </div>`;
-                container.appendChild(card);
-            });
-
-            // GA: diagnóstico principal
-            if (matches[0]) {
-                gaEvent('diagnosis_result', 'triagem', matches[0].nome, matches[0].matchCount);
+            var meta = document.getElementById('results-meta');
+            if (meta) {
+                meta.textContent = selecionados.length + ' sintoma(s) analisado(s) · ' + new Date().toLocaleDateString('pt-PT');
             }
-        }
 
-        area.style.display = 'block';
-        setTimeout(() => area.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+            var matches = baseDados
+                .map(function(d) {
+                    return Object.assign({}, d, { matchCount: d.triggers.filter(function(t) { return selecionados.includes(t); }).length });
+                })
+                .filter(function(d) { return d.matchCount > 0; })
+                .sort(function(a, b) { return b.matchCount - a.matchCount; });
+
+            if (matches.length === 0) {
+                var noMatch = document.createElement('div');
+                noMatch.className = 'diagnosis-card';
+                noMatch.innerHTML = '<div class="diagnosis-top-bar"><div class="diag-name-wrap"><p class="diagnosis-name">Nenhum padrão identificado</p></div></div><div class="diagnosis-body"><div class="info-block" style="grid-column:1/-1"><p class="info-text">Os sintomas assinalados não correspondem a um padrão específico na nossa base de dados. Isto não exclui patologia — recomendamos a realização de exames laboratoriais no centro de saúde mais próximo.</p></div></div>';
+                container.appendChild(noMatch);
+            } else {
+                matches.forEach(function(d, idx) {
+                    var isTop = idx === 0 && d.matchCount > 1;
+                    var topClass = isTop ? ' top-match' : '';
+                    var topBadge = isTop ? '<span class="badge badge-top">✦ Maior correlação</span>' : '';
+                    var matchBadge = '<span class="badge badge-match">' + d.matchCount + ' sintoma(s) em comum</span>';
+                    var card = document.createElement('div');
+                    card.className = 'diagnosis-card' + topClass;
+                    card.style.animationDelay = (idx * 0.08) + 's';
+
+                    card.innerHTML =
+                        '<div class="diagnosis-top-bar' + topClass + '">' +
+                            '<div class="diag-name-wrap">' +
+                                '<p class="diagnosis-name">' + escapeHtml(d.nome) + '</p>' +
+                                '<p class="diag-patogen">' + escapeHtml(d.patogeno) + '</p>' +
+                            '</div>' +
+                            '<div class="badge-row">' + getBadge(d.tipo) + matchBadge + topBadge + '</div>' +
+                        '</div>' +
+                        '<div class="diagnosis-body">' +
+                            '<div class="info-block"><span class="info-label">Fisiopatologia</span><p class="info-text">' + escapeHtml(d.fisiopatologia) + '</p></div>' +
+                            '<div class="info-block"><span class="info-label">Transmissão e Epidemiologia</span><p class="info-text">' + escapeHtml(d.transmissao) + '</p></div>' +
+                            '<div class="info-block"><span class="info-label">Apresentação Clínica</span><p class="info-text">' + escapeHtml(d.sintomasLista) + '</p></div>' +
+                            '<div class="treatment-block"><div class="treatment-icon" aria-hidden="true">✚</div><div class="treatment-text"><strong>Protocolo de Tratamento</strong>' + escapeHtml(d.tratamento) + '</div></div>' +
+                            '<div class="diag-cite">📚 Referências: ' + escapeHtml(d.cite) + '</div>' +
+                        '</div>';
+                    container.appendChild(card);
+                });
+
+                if (matches[0]) {
+                    gaEvent('diagnosis_result', 'triagem', matches[0].nome, matches[0].matchCount);
+                }
+            }
+
+            area.style.display = 'block';
+            setTimeout(function() {
+                area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+
+            btnGerar.disabled = false;
+            btnGerar.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Gerar Relatório Preliminar';
+            isGenerating = false;
+
+        }, 200);
     }
 
-    // ── LIMPAR ──
     function limparDados() {
-        document.querySelectorAll('#symptoms-form input[type="checkbox"]').forEach(cb => {
+        document.querySelectorAll('#symptoms-form input[type="checkbox"]').forEach(function(cb) {
             cb.checked = false;
             cb.closest('.symptom-item').classList.remove('selected');
         });
@@ -2545,47 +3244,43 @@
     document.getElementById('btn-limpar').addEventListener('click', limparDados);
 
     // ── TABS E NAVEGAÇÃO ──
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabPanels = document.querySelectorAll('.tab-panel');
+    var tabBtns = document.querySelectorAll('.tab-btn');
+    var tabPanels = document.querySelectorAll('.tab-panel');
 
     function activateTab(tabId) {
-        tabBtns.forEach(b => {
-            const active = b.dataset.tab === tabId;
+        tabBtns.forEach(function(b) {
+            var active = b.dataset.tab === tabId;
             b.classList.toggle('active', active);
-            b.setAttribute('aria-selected', active);
+            b.setAttribute('aria-selected', active ? 'true' : 'false');
         });
-        tabPanels.forEach(p => {
+        tabPanels.forEach(function(p) {
             p.classList.toggle('active', p.id === 'tab-' + tabId);
         });
         gaEvent('tab_click', 'navigation', tabId);
     }
 
-    // Botões nativos das tabs
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
+    tabBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
             activateTab(btn.dataset.tab);
-            // Faz scroll para as tabs ficarem visíveis no mobile quando clica
             btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         });
     });
 
-    // Controlador unificado para todos os links com data-nav-tab (Topo e Footer) e links âncora gerais
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const targetId = this.getAttribute('href').substring(1);
-            
-            // Se for um link que aponta para uma Tab específica
-            if (this.dataset.navTab) {
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+            var navTab = this.dataset.navTab;
+            var href = this.getAttribute('href');
+            var targetId = href && href.length > 1 ? href.substring(1) : null;
+
+            if (navTab) {
                 e.preventDefault();
-                activateTab(this.dataset.navTab);
-                // Faz scroll suave até à área principal
-                const tabsContainer = document.getElementById('tabs-container');
+                activateTab(navTab);
+                var tabsContainer = document.getElementById('tabs-container');
                 if (tabsContainer) {
                     tabsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             } else if (targetId) {
-                // Se for um link âncora normal (ex: #recursos)
-                const targetEl = document.getElementById(targetId);
+                var targetEl = document.getElementById(targetId);
                 if (targetEl) {
                     e.preventDefault();
                     targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2595,14 +3290,13 @@
     });
 
     // ── FAQ ACCORDION ──
-    document.querySelectorAll('.faq-question').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const answer = this.nextElementSibling;
-            const isOpen = answer.classList.contains('open');
+    document.querySelectorAll('.faq-question').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var answer = this.nextElementSibling;
+            var isOpen = answer.classList.contains('open');
 
-            // Fechar todos
-            document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
-            document.querySelectorAll('.faq-question').forEach(b => {
+            document.querySelectorAll('.faq-answer').forEach(function(a) { a.classList.remove('open'); });
+            document.querySelectorAll('.faq-question').forEach(function(b) {
                 b.classList.remove('open');
                 b.setAttribute('aria-expanded', 'false');
             });
@@ -2617,31 +3311,53 @@
     });
 
     // ── SCROLL REVEAL ──
-    const revealEls = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-            if (e.isIntersecting) {
-                e.target.classList.add('visible');
-                observer.unobserve(e.target);
-            }
-        });
-    }, { threshold: 0.1 });
+    var revealEls = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    observer.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        revealEls.forEach(function(el) { observer.observe(el); });
+    } else {
+        revealEls.forEach(function(el) { el.classList.add('visible'); });
+    }
 
-    revealEls.forEach(el => observer.observe(el));
+    // ── BACK TO TOP ──
+    var backToTopBtn = document.getElementById('back-to-top');
+    if (backToTopBtn) {
+        var scrollThreshold = 400;
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > scrollThreshold) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        }, { passive: true });
+
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            gaEvent('back_to_top', 'navigation', 'button_click', Math.round(window.scrollY));
+        });
+    }
 
     // ── GA: Page engagement ──
-    let scrollDepth25 = false, scrollDepth50 = false, scrollDepth75 = false;
-    window.addEventListener('scroll', () => {
-        const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    var scrollDepth25 = false, scrollDepth50 = false, scrollDepth75 = false;
+    window.addEventListener('scroll', function() {
+        var total = document.body.scrollHeight - window.innerHeight;
+        if (total <= 0) return;
+        var pct = (window.scrollY / total) * 100;
         if (!scrollDepth25 && pct >= 25) { scrollDepth25 = true; gaEvent('scroll_depth', 'engagement', '25%', 25); }
         if (!scrollDepth50 && pct >= 50) { scrollDepth50 = true; gaEvent('scroll_depth', 'engagement', '50%', 50); }
         if (!scrollDepth75 && pct >= 75) { scrollDepth75 = true; gaEvent('scroll_depth', 'engagement', '75%', 75); }
     }, { passive: true });
 
-    // ── GA: Tempo na página ──
-    setTimeout(() => gaEvent('time_on_page', 'engagement', '30s'), 30000);
-    setTimeout(() => gaEvent('time_on_page', 'engagement', '90s'), 90000);
-    setTimeout(() => gaEvent('time_on_page', 'engagement', '3min'), 180000);
+    setTimeout(function() { gaEvent('time_on_page', 'engagement', '30s'); }, 30000);
+    setTimeout(function() { gaEvent('time_on_page', 'engagement', '90s'); }, 90000);
+    setTimeout(function() { gaEvent('time_on_page', 'engagement', '3min'); }, 180000);
 
 })();
 </script>
