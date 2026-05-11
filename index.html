@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Portal interativo de triagem e educação sobre saúde reprodutiva e Infeções Sexualmente Transmissíveis (ISTs). Projeto de saúde pública — Benj Carhl.">
-    <meta name="keywords" content="Saúde íntima, ISTs, Moçambique, Triagem de sintomas, Vaginose, Gonorreia, Sífilis, Saúde Reprodutiva, PrEP injetável, Lenacapavir, Benj Carhl">
+    <meta name="keywords" content="Saúde íntima, ISTs, Moçambique, Triagem de sintomas, Vaginose, Gonorreia, Sífilis, Saúde Reprodutiva, PrEP injetável, Lenacapavir, Cofre de Saúde">
     <meta name="author" content="Benj Carhl">
 
     <meta http-equiv="Content-Security-Policy" content="
@@ -23,9 +23,15 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=(), payment=()">
+    <meta name="theme-color" content="#0c0e16">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Saúde Íntima">
 
     <title>Saúde Íntima | Portal de Triagem — Benj Carhl</title>
 
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -169,7 +175,25 @@
         }
         .nav-links .nav-cta:hover { background: var(--teal-bright); }
 
-        @media (max-width: 560px) { .nav-links { display: none; } }
+        .install-btn {
+            display: none;
+            border: 1px solid rgba(18,196,158,0.35);
+            background: rgba(18,196,158,0.12);
+            color: var(--teal-bright);
+            border-radius: 9px;
+            padding: 7px 12px;
+            font-family: var(--font-b);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+
+        .install-btn.show { display: inline-flex; align-items: center; gap: 6px; }
+        .install-btn:hover { background: rgba(18,196,158,0.22); color: #fff; border-color: rgba(18,196,158,0.7); }
+
+        @media (max-width: 800px) { .nav-links { display: none; } }
 
         /* ── HERO ── */
         .hero {
@@ -454,6 +478,27 @@
             font-size: 0.82rem;
             color: var(--slate);
             line-height: 1.5;
+        }
+
+        /* ── RASTREIO DIÁRIO ── */
+        .tracker-btn {
+            background: var(--paper-card);
+            border: 1px solid var(--border);
+            color: var(--slate);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-family: var(--font-b);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .tracker-btn.active {
+            background: var(--teal-light);
+            border-color: var(--teal);
+            color: var(--teal-dark);
+            font-weight: 600;
         }
 
         /* ── IST GUIDE CARDS ── */
@@ -1177,8 +1222,8 @@
         .gloss-def  { font-size: 0.82rem; color: var(--slate); line-height: 1.5; }
 
         /* ═══════════════════════════════════════════════════════
-           SECÇÃO: PrEP INJETÁVEL (LENACAPAVIR)
-           ═══════════════════════════════════════════════════════ */
+            SECÇÃO: PrEP INJETÁVEL (LENACAPAVIR)
+            ═══════════════════════════════════════════════════════ */
 
         .prep-hero {
             background: linear-gradient(135deg, var(--prep-blue-dark) 0%, var(--prep-blue) 50%, #1565c0 100%);
@@ -1516,6 +1561,81 @@
             margin-bottom: 2px;
         }
 
+        /* ── COFRE DE SAÚDE ── */
+        .vault-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        @media (max-width: 768px) { .vault-grid { grid-template-columns: 1fr; } }
+
+        .form-group {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-strong);
+            border-radius: var(--r-xs);
+            font-family: var(--font-b);
+            font-size: 0.95rem;
+            background: var(--paper-card);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-control:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px var(--teal-light);
+            outline: none;
+        }
+        textarea.form-control { resize: vertical; min-height: 80px; }
+
+        .exam-item {
+            background: var(--paper-warm);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--teal);
+            border-radius: var(--r-sm);
+            padding: 1rem 1.25rem;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .exam-item.resultado-positivo { border-left-color: var(--rose); }
+        .exam-item.resultado-aguarda { border-left-color: var(--gold); }
+
+        .exam-info h4 { font-size: 0.95rem; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+        .exam-info .date { font-size: 0.8rem; color: var(--slate); font-weight: 600; margin-bottom: 4px; }
+        .exam-info .notes { font-size: 0.85rem; color: var(--ink-80); margin-top: 6px; }
+        .exam-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: #fff;
+            border: 1px solid var(--border);
+        }
+
+        /* Ocultar elementos desnecessários na impressão (Geração de PDF) */
+        @media print {
+            body { background: #fff; color: #000; }
+            .topnav, .hero, .section-tabs, .action-row, button, footer, #back-to-top { display: none !important; }
+            .tab-panel { display: block !important; }
+            .tab-panel:not(#tab-cofre) { display: none !important; }
+            .card { box-shadow: none; border: 1px solid #ccc; margin-bottom: 2rem; break-inside: avoid; }
+            .container { max-width: 100%; padding: 0; }
+            .main-content { margin-top: 0; }
+        }
+
         /* ── BOTÃO BACK TO TOP ── */
         #back-to-top {
             position: fixed;
@@ -1694,12 +1814,13 @@
         <a href="#page-top" class="nav-logo">Saúde<span>Íntima</span></a>
         <ul class="nav-links">
             <li><a href="#triagem" data-nav-tab="triagem">Triagem</a></li>
-            <li><a href="#guia" data-nav-tab="guia">Guia ISTs</a></li>
-            <li><a href="#prevencao" data-nav-tab="prevencao">Prevenção</a></li>
-            <li><a href="#prep-injetavel" data-nav-tab="prep">PrEP Injetável</a></li>
-            <li><a href="#recursos">Recursos</a></li>
+            <li><a href="#guia" data-nav-tab="guia">Guia ISTs & Prevenção</a></li>
+            <li><a href="#calendario" data-nav-tab="calendario">Diário do Ciclo</a></li>
+            <li><a href="#contracetivos" data-nav-tab="contracetivos">Contracetivos</a></li>
+            <li><a href="#cofre" data-nav-tab="cofre">Cofre de Saúde</a></li>
             <li><a href="#triagem" class="nav-cta" data-nav-tab="triagem">Fazer Triagem →</a></li>
         </ul>
+        <button id="install-app-btn" type="button" class="install-btn" aria-label="Instalar aplicação no dispositivo">📲 Instalar App</button>
     </div>
 </nav>
 
@@ -1751,11 +1872,45 @@
             </div>
         </div>
 
+        <section id="main-dashboard" class="card reveal" aria-labelledby="dashboard-title" style="padding:1.6rem 1.75rem;">
+            <p class="eyebrow">Dashboard Principal</p>
+            <h2 id="dashboard-title" style="font-size:clamp(1.35rem,3vw,2rem);margin-bottom:0.8rem;">Ações do Dia e Alertas Prioritários</h2>
+            <p class="lead" style="font-size:0.95rem;margin-bottom:1rem;">Painel rápido para orientar o que deve ser feito hoje, com prioridade clínica e estado da gravação local dos seus dados.</p>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:0.9rem;">
+                <div class="stat-box"><div class="stat-box-num" id="dash-actions-count">0</div><div class="stat-box-label">Ações recomendadas hoje</div></div>
+                <div class="stat-box"><div class="stat-box-num" id="dash-priority-level">Baixa</div><div class="stat-box-label">Prioridade clínica</div></div>
+                <div class="stat-box"><div class="stat-box-num" id="dash-alert-count">0</div><div class="stat-box-label">Alertas prioritários</div></div>
+                <div class="stat-box"><div class="stat-box-num" id="dash-data-status">OK</div><div class="stat-box-label">Gravação local de dados</div></div>
+            </div>
+
+            <div id="dash-priority-alert" style="display:none;background:var(--rose-light);border:1px solid rgba(192,52,74,0.22);border-left:4px solid var(--rose);border-radius:0 var(--r-xs) var(--r-xs) 0;padding:0.8rem 1rem;margin-bottom:0.9rem;font-size:0.86rem;color:#7a1828;"></div>
+
+            <div class="action-row" style="margin-top:0;">
+                <button type="button" class="btn btn-primary" data-dashboard-tab="calendario" style="flex:1 1 190px;">Registar ciclo/sintomas</button>
+                <button type="button" class="btn btn-ghost" data-dashboard-tab="cofre" style="flex:1 1 190px;">Atualizar cofre de saúde</button>
+                <button type="button" class="btn btn-ghost" data-dashboard-tab="contracetivos" style="flex:1 1 190px;">Rever contracetivos</button>
+                <button type="button" class="btn btn-ghost" data-dashboard-tab="triagem" style="flex:1 1 190px;">Fazer triagem rápida</button>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:1rem;">
+                <div style="background:var(--paper-warm);border:1px solid var(--border);border-radius:var(--r-xs);padding:0.9rem;">
+                    <h4 style="font-size:0.83rem;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:6px;">Ações do dia</h4>
+                    <div id="dash-actions-list" style="font-size:0.84rem;color:var(--ink-80);line-height:1.6;"></div>
+                </div>
+                <div style="background:var(--paper-warm);border:1px solid var(--border);border-radius:var(--r-xs);padding:0.9rem;">
+                    <h4 style="font-size:0.83rem;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:6px;">Alertas prioritários</h4>
+                    <div id="dash-alerts-list" style="font-size:0.84rem;color:var(--ink-80);line-height:1.6;"></div>
+                </div>
+            </div>
+        </section>
+
         <div class="section-tabs" role="tablist" aria-label="Secções do portal" id="tabs-container">
             <button class="tab-btn active" role="tab" aria-selected="true"  data-tab="triagem">🔬 Triagem Clínica</button>
-            <button class="tab-btn" role="tab" aria-selected="false" data-tab="guia">📖 Guia de ISTs</button>
-            <button class="tab-btn" role="tab" aria-selected="false" data-tab="prevencao">🛡️ Prevenção</button>
-            <button class="tab-btn" role="tab" aria-selected="false" data-tab="prep">💉 PrEP Injetável</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="guia">📖 Guia de ISTs & Prevenção</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="calendario">📅 Diário do Ciclo</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="contracetivos">💊 Contracetivos</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="cofre">🔐 Cofre de Saúde</button>
             <button class="tab-btn" role="tab" aria-selected="false" data-tab="faq">❓ Perguntas Frequentes</button>
             <button class="tab-btn" role="tab" aria-selected="false" data-tab="glossario">📚 Glossário</button>
         </div>
@@ -2260,20 +2415,18 @@
                             <div class="guide-row">
                                 <div class="guide-fact"><span class="guide-fact-label">Agente:</span><span>Vírus da Hepatite B (VHB) — hepadnavirus</span></div>
                                 <div class="guide-fact"><span class="guide-fact-label">Transmissão:</span><span>Sexual, parenteral (sangue), vertical. 50-100x mais infecioso que HIV</span></div>
-                                <div class="guide-fact"><span class="guide-fact-label">Clínica:</span><span>Icterícia, fadiga, urina escura; 90% dos adultos resolvem espontaneamente</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Clínica:</span><span>Icterícia, fadiga, urina escura; 90% dos adults resolvem espontaneamente</span></div>
                                 <div class="guide-fact"><span class="guide-fact-label">Crónica:</span><span>Cirrose hepática e carcinoma hepatocelular em casos não tratados</span></div>
                                 <div class="guide-fact"><span class="guide-fact-label">Prevenção:</span><span>Vacinação (3 doses) — eficácia >95%. Incluída no PNV em Moçambique</span></div>
                             </div>
                             <div class="guide-cite">WHO (2022). Hepatitis B Fact Sheet. Global Hepatitis Programme.</div>
                         </div>
                     </div>
-
                 </div>
             </section>
-        </div>
 
-        <div id="tab-prevencao" class="tab-panel" role="tabpanel">
-            <section class="card reveal" aria-labelledby="prev-titulo">
+            <!-- CONTEÚDO MOVIDO: PREVENÇÃO -->
+            <section class="card reveal" aria-labelledby="prev-titulo" style="margin-top: 2rem;">
                 <p class="eyebrow">Prevenção Baseada em Evidências</p>
                 <h2 id="prev-titulo">Como Proteger a Sua Saúde Sexual</h2>
                 <p class="lead">A prevenção eficaz requer uma abordagem combinada. Nenhuma medida isolada é 100% eficaz, mas a combinação das seguintes estratégias reduz o risco em mais de 90% (CDC, 2023).</p>
@@ -2346,11 +2499,9 @@
                     ✔ Em Moçambique, os testes para HIV, Sífilis e Hepatites são gratuitos em qualquer unidade sanitária do Sistema Nacional de Saúde. O sigilo médico é garantido pela Lei n.º 14/2002.
                 </div>
             </section>
-        </div>
 
-        <div id="tab-prep" class="tab-panel" role="tabpanel">
-
-            <div class="prep-hero reveal">
+            <!-- CONTEÚDO MOVIDO: PrEP INJETÁVEL -->
+            <div class="prep-hero reveal" style="margin-top: 2rem;">
                 <span class="prep-badge">Inovação em Prevenção · Lenacapavir</span>
                 <div class="prep-hero-eyebrow">PrEP Injetável Semestral</div>
                 <h2>A revolução na prevenção<br>do <em>HIV</em> já chegou</h2>
@@ -2596,6 +2747,505 @@
             </section>
         </div>
 
+        <div id="tab-calendario" class="tab-panel" role="tabpanel">
+            <section class="card reveal" aria-labelledby="cal-titulo">
+                <p class="eyebrow">Acompanhamento Diário</p>
+                <h2 id="cal-titulo">Calendário Inteligente do Ciclo</h2>
+                <p class="lead">Registe o seu ciclo menstrual e acompanhe previsões de menstruação, ovulação, janela fértil, sintomas e humor com alertas automáticos para padrões irregulares.</p>
+
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:1.5rem;">
+                    <div class="stat-box"><div class="stat-box-num" id="cycle-metric-avg">--</div><div class="stat-box-label">Média do ciclo (dias)</div></div>
+                    <div class="stat-box"><div class="stat-box-num" id="cycle-metric-bleeding">--</div><div class="stat-box-label">Média da menstruação (dias)</div></div>
+                    <div class="stat-box"><div class="stat-box-num" id="cycle-metric-regularity">--</div><div class="stat-box-label">Regularidade do ciclo</div></div>
+                    <div class="stat-box"><div class="stat-box-num" id="cycle-metric-accuracy">--%</div><div class="stat-box-label">Precisão das previsões</div></div>
+                    <div class="stat-box"><div class="stat-box-num" id="cycle-metric-status">--</div><div class="stat-box-label">Estado clínico atual</div></div>
+                </div>
+
+                <div id="cycle-dynamic-dashboard" style="display:none;margin-top:1.75rem;background:var(--paper-card);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;box-shadow:var(--shadow-sm);">
+                    <div style="background:var(--ink);color:#fff;padding:1.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:15px;align-items:end;">
+                        <div>
+                            <p style="font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--teal-bright);font-weight:700;">Dia atual do ciclo</p>
+                            <p style="font-family:var(--font-d);font-size:2.5rem;font-weight:900;line-height:1;margin-top:5px;">#<span id="cycle-current-day">--</span></p>
+                            <p id="cycle-current-phase" style="font-size:0.92rem;color:rgba(255,255,255,0.75);margin-top:8px;">A calcular...</p>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.08);padding:10px 12px;border-radius:var(--r-xs);">
+                            <p style="font-size:0.68rem;text-transform:uppercase;color:rgba(255,255,255,0.65);">Próxima menstruação</p>
+                            <p id="cycle-next-period" style="font-weight:700;font-size:1rem;margin-top:2px;">--/--/----</p>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.08);padding:10px 12px;border-radius:var(--r-xs);">
+                            <p style="font-size:0.68rem;text-transform:uppercase;color:rgba(255,255,255,0.65);">Ovulação prevista</p>
+                            <p id="cycle-next-ovulation" style="font-weight:700;font-size:1rem;margin-top:2px;">--/--/----</p>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.08);padding:10px 12px;border-radius:var(--r-xs);">
+                            <p style="font-size:0.68rem;text-transform:uppercase;color:rgba(255,255,255,0.65);">Janela fértil</p>
+                            <p id="cycle-fertile-window" style="font-weight:700;font-size:0.9rem;margin-top:2px;line-height:1.4;">--</p>
+                        </div>
+                    </div>
+
+                    <div id="cycle-smart-alerts" style="display:none;padding:1rem 1.5rem;background:var(--rose-light);border-top:1px solid rgba(192,52,74,0.2);"></div>
+
+                    <div style="padding:1.5rem;background:var(--paper-warm);border-top:1px solid var(--border);">
+                        <h4 style="font-size:1rem;color:var(--ink);margin-bottom:10px;">Rastreamento de sintomas, humor e emoções (hoje)</h4>
+
+                        <div style="margin-bottom:12px;">
+                            <p style="font-size:0.74rem;text-transform:uppercase;letter-spacing:1px;color:var(--slate);font-weight:700;">Sintomas físicos</p>
+                            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:7px;">
+                                <button type="button" class="tracker-btn" data-group="physical" data-value="colicas">Cólicas</button>
+                                <button type="button" class="tracker-btn" data-group="physical" data-value="dor-cabeca">Dor de cabeça</button>
+                                <button type="button" class="tracker-btn" data-group="physical" data-value="fadiga">Fadiga</button>
+                                <button type="button" class="tracker-btn" data-group="physical" data-value="inchaco">Inchaço</button>
+                                <button type="button" class="tracker-btn" data-group="physical" data-value="acne">Acne</button>
+                                <button type="button" class="tracker-btn" data-group="physical" data-value="dor-seios">Dor mamária</button>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom:12px;">
+                            <p style="font-size:0.74rem;text-transform:uppercase;letter-spacing:1px;color:var(--slate);font-weight:700;">Humor e emoções</p>
+                            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:7px;">
+                                <button type="button" class="tracker-btn" data-group="mood" data-value="calma">Calma</button>
+                                <button type="button" class="tracker-btn" data-group="mood" data-value="ansiosa">Ansiosa</button>
+                                <button type="button" class="tracker-btn" data-group="mood" data-value="irritada">Irritada</button>
+                                <button type="button" class="tracker-btn" data-group="mood" data-value="triste">Triste</button>
+                                <button type="button" class="tracker-btn" data-group="mood" data-value="energica">Enérgica</button>
+                                <button type="button" class="tracker-btn" data-group="mood" data-value="focada">Focada</button>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom:12px;">
+                            <p style="font-size:0.74rem;text-transform:uppercase;letter-spacing:1px;color:var(--slate);font-weight:700;">Sintomas incomuns</p>
+                            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:7px;">
+                                <button type="button" class="tracker-btn" data-group="unusual" data-value="sangramento-intenso">Sangramento muito intenso</button>
+                                <button type="button" class="tracker-btn" data-group="unusual" data-value="coagulos">Coágulos frequentes</button>
+                                <button type="button" class="tracker-btn" data-group="unusual" data-value="dor-incapacitante">Dor incapacitante</button>
+                                <button type="button" class="tracker-btn" data-group="unusual" data-value="tontura">Tontura / desmaio</button>
+                                <button type="button" class="tracker-btn" data-group="unusual" data-value="atraso-importante">Atraso menstrual importante</button>
+                            </div>
+                        </div>
+
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;align-items:end;">
+                            <div>
+                                <label for="cycle-pain" style="font-size:0.8rem;font-weight:700;color:var(--ink);">Intensidade da dor (0-10)</label>
+                                <input id="cycle-pain" type="range" min="0" max="10" value="0" style="width:100%;margin-top:4px;">
+                                <p style="font-size:0.78rem;color:var(--slate);">Valor: <strong id="cycle-pain-value">0</strong></p>
+                            </div>
+                            <div>
+                                <label for="cycle-energy" style="font-size:0.8rem;font-weight:700;color:var(--ink);">Nível de energia (0-10)</label>
+                                <input id="cycle-energy" type="range" min="0" max="10" value="5" style="width:100%;margin-top:4px;">
+                                <p style="font-size:0.78rem;color:var(--slate);">Valor: <strong id="cycle-energy-value">5</strong></p>
+                            </div>
+                            <div>
+                                <label for="cycle-day-note" style="font-size:0.8rem;font-weight:700;color:var(--ink);">Observação do dia</label>
+                                <textarea id="cycle-day-note" class="form-control" placeholder="Ex: dor pélvica mais forte de manhã, stress elevado..." style="min-height:76px;"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="action-row" style="margin-top:1rem;">
+                            <button type="button" id="cycle-save-day" class="btn btn-primary" style="flex:1 1 220px;">Guardar registo do dia</button>
+                            <button type="button" id="btn-pregnant-mode" class="btn" style="flex:1 1 220px;background:linear-gradient(135deg,var(--gold),#e6b822);color:var(--ink);">Descobri que estou grávida</button>
+                        </div>
+                    </div>
+
+                    <div style="padding:1.25rem 1.5rem;border-top:1px solid var(--border);background:var(--paper-card);">
+                        <h4 style="font-size:0.95rem;color:var(--ink);margin-bottom:8px;">Nutrição Feminina Inteligente (hoje)</h4>
+                        <ul id="cycle-nutrition-list" style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:0.86rem;color:var(--ink-80);"></ul>
+                    </div>
+                </div>
+
+                <div id="cycle-calendar-view" style="display:none;margin-top:2rem;background:var(--paper-card);border:1px solid var(--border);border-radius:var(--r-sm);padding:1.5rem;box-shadow:var(--shadow-sm);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                        <button id="cal-prev-month" aria-label="Mês anterior" style="background:none;border:1px solid var(--border);border-radius:var(--r-xs);width:36px;height:36px;font-size:1.2rem;cursor:pointer;color:var(--slate);">&lt;</button>
+                        <h3 id="calendar-month-title" style="font-family:var(--font-d);font-size:1.35rem;color:var(--ink);font-weight:800;">Mês atual</h3>
+                        <button id="cal-next-month" aria-label="Mês seguinte" style="background:none;border:1px solid var(--border);border-radius:var(--r-xs);width:36px;height:36px;font-size:1.2rem;cursor:pointer;color:var(--slate);">&gt;</button>
+                    </div>
+
+                    <p style="font-size:0.88rem;color:var(--slate);line-height:1.6;margin-bottom:1rem;">Calendário menstrual com previsão de menstruação, ovulação e janela fértil. A precisão aumenta com mais registos.</p>
+
+                    <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:1rem;">
+                        <span style="font-size:0.78rem;color:var(--slate);font-weight:600;display:flex;align-items:center;gap:6px;"><span style="width:13px;height:13px;border-radius:4px;background:var(--rose);display:inline-block;"></span>Menstruação</span>
+                        <span style="font-size:0.78rem;color:var(--slate);font-weight:600;display:flex;align-items:center;gap:6px;"><span style="width:13px;height:13px;border-radius:4px;background:#f9c3ce;display:inline-block;border:1px solid #ef9fb0;"></span>Menstruação prevista</span>
+                        <span style="font-size:0.78rem;color:var(--slate);font-weight:600;display:flex;align-items:center;gap:6px;"><span style="width:13px;height:13px;border-radius:4px;background:var(--teal-light);border:1px solid var(--teal);display:inline-block;"></span>Janela fértil</span>
+                        <span style="font-size:0.78rem;color:var(--slate);font-weight:600;display:flex;align-items:center;gap:6px;"><span style="width:13px;height:13px;border-radius:4px;background:var(--purple);display:inline-block;"></span>Ovulação</span>
+                        <span style="font-size:0.78rem;color:var(--slate);font-weight:600;display:flex;align-items:center;gap:6px;"><span style="width:13px;height:13px;border-radius:4px;border:2px solid var(--ink);display:inline-block;"></span>Hoje</span>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center;margin-bottom:8px;">
+                        <div style="font-size:0.72rem;font-weight:700;color:var(--slate);">Seg</div>
+                        <div style="font-size:0.72rem;font-weight:700;color:var(--slate);">Ter</div>
+                        <div style="font-size:0.72rem;font-weight:700;color:var(--slate);">Qua</div>
+                        <div style="font-size:0.72rem;font-weight:700;color:var(--slate);">Qui</div>
+                        <div style="font-size:0.72rem;font-weight:700;color:var(--slate);">Sex</div>
+                        <div style="font-size:0.72rem;font-weight:700;color:var(--slate);">Sáb</div>
+                        <div style="font-size:0.72rem;font-weight:700;color:var(--slate);">Dom</div>
+                    </div>
+                    <div id="calendar-days-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;"></div>
+
+                    <div id="cycle-upcoming-overview" style="margin-top:1rem;background:var(--paper-warm);border:1px solid var(--border);border-radius:var(--r-xs);padding:0.9rem 1rem;"></div>
+
+                    <div style="margin-top:1rem;">
+                        <h4 style="font-size:0.84rem;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:8px;">Visão dos próximos meses</h4>
+                        <div id="cycle-multi-month-view" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;"></div>
+                    </div>
+                </div>
+
+                <div class="prep-compare" style="margin-top:2rem;">
+                    <div class="prep-compare-card" style="grid-column:1 / -1;">
+                        <div class="prep-compare-header oral">
+                            <div>
+                                <div class="prep-compare-title">Registo da Menstruação</div>
+                                <div class="prep-compare-sub">Adicione cada início de menstruação para melhorar automaticamente as previsões.</div>
+                            </div>
+                        </div>
+                        <div class="prep-compare-body">
+                            <form id="cycle-form" style="display:flex;flex-direction:column;gap:14px;">
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;">
+                                    <div>
+                                        <label for="period-start" style="font-size:0.85rem;font-weight:700;color:var(--ink);">Data de início</label>
+                                        <input type="date" id="period-start" required class="form-control">
+                                    </div>
+                                    <div>
+                                        <label for="period-length" style="font-size:0.85rem;font-weight:700;color:var(--ink);">Dias de sangramento</label>
+                                        <input type="number" id="period-length" min="1" max="15" value="5" required class="form-control">
+                                    </div>
+                                    <div>
+                                        <label for="flow-intensity" style="font-size:0.85rem;font-weight:700;color:var(--ink);">Fluxo</label>
+                                        <select id="flow-intensity" class="form-control">
+                                            <option value="Leve">Leve</option>
+                                            <option value="Normal" selected>Normal</option>
+                                            <option value="Intenso">Intenso</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="width:100%;">Guardar novo ciclo</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="history-container" style="margin-top:2rem;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;gap:10px;flex-wrap:wrap;">
+                        <h3 style="font-size:1.15rem;color:var(--ink);">Histórico de ciclos</h3>
+                        <button id="btn-clear-history" type="button" style="background:none;border:none;color:var(--rose);font-size:0.8rem;font-weight:700;cursor:pointer;display:none;">Limpar histórico</button>
+                    </div>
+                    <ul id="cycle-history-list" class="prep-compare-list" style="background:var(--paper-warm);padding:1rem;border-radius:var(--r-sm);border:1px solid var(--border);"></ul>
+                </div>
+
+                <div style="margin-top:1.25rem;">
+                    <h4 style="font-size:0.95rem;color:var(--ink);margin-bottom:0.5rem;">Resumo dos últimos registos diários</h4>
+                    <div id="cycle-daily-insights" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:0.7rem;"></div>
+                    <div id="cycle-daily-history" style="background:var(--paper-card);border:1px solid var(--border);border-radius:var(--r-sm);padding:1rem;max-height:360px;overflow:auto;"></div>
+                </div>
+            </section>
+        </div>
+
+        <div id="tab-contracetivos" class="tab-panel" role="tabpanel">
+            <section class="card reveal" aria-labelledby="contra-titulo">
+                <p class="eyebrow">Planeamento Familiar</p>
+                <h2 id="contra-titulo">Guia de Métodos Contracetivos</h2>
+                
+                <p class="lead">O uso de métodos contracetivos permite-lhe ter o controlo sobre o seu corpo, decidindo quando e se deseja ter filhos. Cada método funciona de uma maneira diferente: alguns usam hormonas para impedir que o corpo liberte óvulos, outros criam uma barreira física ou tornam o útero um ambiente onde os espermatozoides não sobrevivem.</p>
+                <p class="lead" style="margin-top: -10px; margin-bottom: 2rem;"><strong>Lembre-se:</strong> Com exceção do preservativo, nenhum destes métodos protege contra o HIV ou outras ISTs. O uso combinado (Preservativo + Outro método) é a melhor escolha.</p>
+
+                <div class="guide-grid">
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg, var(--teal-dark), var(--teal));">
+                            <div>
+                                <p class="guide-card-name">Pílula Anticoncecional</p>
+                                <span class="guide-tag" style="background:rgba(255,255,255,0.15);color:#fff;">Comprimido Diário</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Eficácia:</span><span>91% a 99% (depende de não esquecer de tomar todos os dias).</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Vantagens:</span><span>Torna a menstruação mais regular e diminui muito as cólicas e a quantidade de sangue.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Desvantagens:</span><span>Exige muita disciplina. Se vomitar ou tiver diarreia, pode perder o efeito.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Efeitos Col.:</span><span>
+                                    1. Dor de cabeça<br>
+                                    2. Peito sensível ou dorido<br>
+                                    3. Enjoos ligeiros nos primeiros meses<br>
+                                    4. Pequenas alterações de humor<br>
+                                    5. Risco muito pequeno de problemas de circulação
+                                </span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg, var(--prep-blue-dark), var(--prep-blue));">
+                            <div>
+                                <p class="guide-card-name">Injeção Trimestral</p>
+                                <span class="guide-tag" style="background:rgba(255,255,255,0.15);color:#fff;">Acetato de Medroxiprogesterona</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Eficácia:</span><span>Mais de 96%. Muito alta porque não precisa de se lembrar diariamente.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Vantagens:</span><span>Toma-se apenas 1 vez a cada 3 meses. Ninguém nota que está a usar.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Desvantagens:</span><span>Tem de ir ao centro de saúde para tomar. Se quiser engravidar, pode demorar alguns meses após parar.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Efeitos Col.:</span><span>
+                                    1. Falta total de menstruação (o que é normal)<br>
+                                    2. Ligeiro aumento de peso<br>
+                                    3. Pingos de sangue fora de época<br>
+                                    4. Dor de cabeça<br>
+                                    5. Ligeira fraqueza nos ossos (recupera ao parar)
+                                </span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg, var(--purple), #8b5fb8);">
+                            <div>
+                                <p class="guide-card-name">Implante (Pauzinho)</p>
+                                <span class="guide-tag" style="background:rgba(255,255,255,0.15);color:#fff;">Hormonal de Longo Prazo</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Eficácia:</span><span>Mais de 99.9%. É um dos métodos mais seguros que existem.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Vantagens:</span><span>Dura entre 3 a 5 anos. Depois de colocado debaixo da pele do braço, pode esquecer-se dele.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Desvantagens:</span><span>Precisa de uma pequena anestesia local para ser colocado e retirado pela enfermeira.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Efeitos Col.:</span><span>
+                                    1. Menstruação muito desregulada no início<br>
+                                    2. Ficar meses sem menstruar<br>
+                                    3. Dor de cabeça<br>
+                                    4. Variações de humor<br>
+                                    5. Pode piorar espinhas/acne
+                                </span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg, var(--gold), #a0801a);">
+                            <div>
+                                <p class="guide-card-name">DIU (Aparelho)</p>
+                                <span class="guide-tag" style="background:rgba(255,255,255,0.15);color:#fff;">Intrauterino de Cobre ou Hormonal</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Eficácia:</span><span>Mais de 99%. Seguro e dura muito tempo (5 a 10 anos).</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Vantagens:</span><span>A versão de Cobre não tem nenhuma hormona. Se retirar o aparelho, pode engravidar logo no mês seguinte.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Desvantagens:</span><span>A colocação é feita dentro do útero, o que pode ser um pouco desconfortável.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Efeitos Col.:</span><span>
+                                    1. Cólicas mais fortes (no DIU de Cobre)<br>
+                                    2. Menstruação mais abundante (no DIU de Cobre)<br>
+                                    3. Pequenos sangramentos (no DIU Hormonal)<br>
+                                    4. Dor no pé da barriga nos primeiros dias após colocação<br>
+                                    5. Pequeno risco de infeção nas primeiras semanas
+                                </span></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg, var(--rose), #7a1828);">
+                            <div>
+                                <p class="guide-card-name">Preservativo (Camisinha)</p>
+                                <span class="guide-tag" style="background:rgba(255,255,255,0.15);color:#fff;">Masculino e Feminino</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Eficácia:</span><span>82% a 98% (se usado do princípio ao fim sem romper).</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Vantagens:</span><span>O ÚNICO método que protege contra gravidez não desejada e doenças (ISTs e HIV) ao mesmo tempo. Não mexe com o corpo.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Desvantagens:</span><span>Tem de ter sempre um à mão e colocar antes da relação.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Efeitos Col.:</span><span>
+                                    1. Alergia, comichão ou vermelhidão (apenas em quem tem alergia ao látex)<br>
+                                    2. Irritação na pele se não houver boa lubrificação<br>
+                                    3. Ligeira diminuição da sensibilidade
+                                </span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="notice-green" style="margin-top: 1.5rem;">
+                    ✔ <strong>Dica Clínica (A Dupla Proteção):</strong> Para estar 100% segura, o Ministério da Saúde recomenda usar um método muito eficaz para não engravidar (como a Pílula, Injeção, DIU ou Implante) acompanhado SEMPRE do Preservativo para evitar doenças.
+                </div>
+
+                <div style="margin-top: 3.5rem;">
+                    <p class="eyebrow">Dúvidas Comuns</p>
+                    <h3 style="font-family: var(--font-d); font-size: 1.6rem; font-weight: 800; color: var(--ink); margin-bottom: 1rem;">Perguntas Frequentes sobre Contracetivos</h3>
+                    
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                Qual método contracetivo posso usar?
+                                <span class="faq-chevron" aria-hidden="true">▼</span>
+                            </button>
+                            <div class="faq-answer">
+                                Não existe um método que seja o melhor para todas as pessoas. A escolha certa depende da sua idade, do seu estado de saúde, se sofre de pressão alta, se fuma e até do seu estilo de vida (se tem facilidade em lembrar-se de tomar um comprimido todos os dias, por exemplo). O ideal é dirigir-se ao centro de saúde para uma consulta de planeamento familiar, onde uma enfermeira ou médico vai ajudá-la a encontrar a opção mais segura e confortável para o seu corpo.
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                Os métodos com hormonas fazem engordar?
+                                <span class="faq-chevron" aria-hidden="true">▼</span>
+                            </button>
+                            <div class="faq-answer">
+                                Na maioria dos casos, não. A pílula e o implante não têm calorias. O que pode acontecer nos primeiros meses é uma ligeira retenção de líquidos (o corpo fica um pouco mais inchado) ou um pequeno aumento de apetite. A exceção é a Injeção Trimestral, que em algumas mulheres pode causar um aumento de peso mais notório ao longo do tempo. Se notar muito aumento de peso, pode pedir para trocar de método.
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                Ficar meses sem menstruar faz mal ou acumula sangue na barriga?
+                                <span class="faq-chevron" aria-hidden="true">▼</span>
+                            </button>
+                            <div class="faq-answer">
+                                Não faz mal nenhum e o sangue não se acumula. Métodos como o implante, a injeção ou a pílula contínua fazem com que o revestimento do útero fique muito fininho, por isso o corpo simplesmente não produz sangue para ser expulso. É uma pausa natural e saudável para o corpo, que até ajuda a curar casos de anemia (falta de ferro) e a evitar dores extremas.
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                O DIU ou o Implante podem causar infertilidade no futuro?
+                                <span class="faq-chevron" aria-hidden="true">▼</span>
+                            </button>
+                            <div class="faq-answer">
+                                Isto é um mito muito comum. O DIU e o Implante são métodos reversíveis. Assim que a enfermeira retirar o aparelho ou o pauzinho, o seu corpo volta a ovular normalmente. Muitas mulheres conseguem engravidar logo no primeiro mês após a retirada do DIU ou Implante.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+
+        <div id="tab-cofre" class="tab-panel" role="tabpanel">
+            <section class="card reveal" aria-labelledby="cofre-titulo">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;">
+                    <div>
+                        <p class="eyebrow">Gestão Clínica Pessoal</p>
+                        <h2 id="cofre-titulo">Cofre de Saúde Avançado</h2>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button type="button" class="btn btn-ghost" onclick="window.print()" style="flex:0 1 auto;">Exportar PDF</button>
+                        <button type="button" class="btn btn-ghost" id="btn-export-vault-json" style="flex:0 1 auto;">Exportar Backup (.json)</button>
+                        <button type="button" class="btn btn-ghost" id="btn-export-vault-report" style="flex:0 1 auto;">Exportar Relatório (.html)</button>
+                    </div>
+                </div>
+                <p class="lead">Registe o seu perfil completo, consultas, diagnósticos, exames, receitas, vacinas, cirurgias e medicamentos. Os dados ficam guardados localmente no dispositivo (localStorage + IndexedDB para ficheiros).</p>
+
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:1.5rem;">
+                    <div class="stat-box"><div class="stat-box-num" id="vault-kpi-records">0</div><div class="stat-box-label">Registos clínicos</div></div>
+                    <div class="stat-box"><div class="stat-box-num" id="vault-kpi-exams">0</div><div class="stat-box-label">Exames guardados</div></div>
+                    <div class="stat-box"><div class="stat-box-num" id="vault-kpi-consultas">0</div><div class="stat-box-label">Consultas registadas</div></div>
+                    <div class="stat-box"><div class="stat-box-num" id="vault-kpi-docs">0</div><div class="stat-box-label">Documentos anexados</div></div>
+                    <div class="stat-box"><div class="stat-box-num" id="vault-kpi-meds">0</div><div class="stat-box-label">Medicamentos ativos</div></div>
+                </div>
+
+                <div style="margin-top:1rem;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;">
+                    <div>
+                        <label for="vault-search" style="font-size:0.83rem;font-weight:700;color:var(--ink);">Busca inteligente no cofre</label>
+                        <input id="vault-search" class="form-control" type="search" placeholder="Pesquisar por consulta, exame, diagnóstico, medicamento...">
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                        <input id="vault-import-file" type="file" accept="application/json" class="form-control" style="max-width:220px;">
+                        <button type="button" id="btn-import-vault" class="btn btn-ghost" style="flex:0 1 auto;">Importar Backup</button>
+                    </div>
+                </div>
+
+                <div class="vault-grid" style="margin-top:1.75rem;">
+                    <div style="background:var(--prep-blue-light);border:1px solid rgba(13,79,143,0.15);border-radius:var(--r-sm);padding:1.5rem;">
+                        <h3 style="font-family:var(--font-d);font-size:1.25rem;font-weight:800;color:var(--prep-blue-dark);margin-bottom:1rem;">Perfil da Paciente</h3>
+                        <form id="vault-profile-form">
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;">
+                                <div class="form-group"><label for="v-name">Nome</label><input id="v-name" class="form-control" type="text" placeholder="Nome completo"></div>
+                                <div class="form-group"><label for="v-age">Idade</label><input id="v-age" class="form-control" type="number" min="10" max="99"></div>
+                                <div class="form-group"><label for="v-weight">Peso (kg)</label><input id="v-weight" class="form-control" type="number" min="20" max="250" step="0.1"></div>
+                                <div class="form-group"><label for="v-height">Altura (cm)</label><input id="v-height" class="form-control" type="number" min="100" max="220"></div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
+                                <div class="form-group"><label for="v-phone">Contacto</label><input id="v-phone" class="form-control" type="text" placeholder="Telefone"></div>
+                                <div class="form-group"><label for="v-emergency">Contacto de emergência</label><input id="v-emergency" class="form-control" type="text" placeholder="Nome e telefone"></div>
+                                <div class="form-group"><label for="v-pregnant">Estado de gravidez</label><select id="v-pregnant" class="form-control"><option value="nao">Não</option><option value="sim">Sim</option><option value="suspeita">Suspeita</option></select></div>
+                                <div class="form-group"><label for="v-blood">Grupo sanguíneo</label><select id="v-blood" class="form-control"><option value="">Não sei</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+                            </div>
+
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
+                                <div class="form-group"><label for="v-pressure">Pressão arterial habitual</label><input id="v-pressure" class="form-control" type="text" placeholder="Ex: 110/70"></div>
+                                <div class="form-group"><label for="v-menarche">Menarca (idade)</label><input id="v-menarche" class="form-control" type="number" min="8" max="25"></div>
+                                <div class="form-group"><label for="v-gravida">Gestações</label><input id="v-gravida" class="form-control" type="number" min="0" max="20"></div>
+                                <div class="form-group"><label for="v-para">Partos</label><input id="v-para" class="form-control" type="number" min="0" max="20"></div>
+                                <div class="form-group"><label for="v-abortions">Abortos</label><input id="v-abortions" class="form-control" type="number" min="0" max="20"></div>
+                                <div class="form-group"><label for="v-contraception">Método contracetivo atual</label><input id="v-contraception" class="form-control" type="text" placeholder="Ex: preservativo, implante"></div>
+                            </div>
+
+                            <div class="form-group"><label for="v-allergies">Alergias</label><textarea id="v-allergies" class="form-control" placeholder="Medicamentos, alimentos, látex..."></textarea></div>
+                            <div class="form-group"><label for="v-diseases">Doenças crónicas / antecedentes</label><textarea id="v-diseases" class="form-control" placeholder="Hipertensão, diabetes, asma, etc."></textarea></div>
+                            <div class="form-group"><label for="v-surgeries">Cirurgias prévias</label><textarea id="v-surgeries" class="form-control" placeholder="Data e tipo de cirurgia"></textarea></div>
+                            <div class="form-group"><label for="v-vaccines">Vacinas relevantes</label><textarea id="v-vaccines" class="form-control" placeholder="HPV, Hepatite B, Tétano..."></textarea></div>
+                            <div class="form-group"><label for="v-meds">Medicamentos de uso contínuo</label><textarea id="v-meds" class="form-control" placeholder="Nome, dose e frequência"></textarea></div>
+                            <div class="form-group"><label for="v-gyneco">Histórico ginecológico</label><textarea id="v-gyneco" class="form-control" placeholder="Último Papanicolau, SOP, endometriose, miomas, etc."></textarea></div>
+
+                            <button type="button" id="btn-save-profile" class="btn btn-primary" style="width:100%;">Guardar perfil</button>
+                            <span id="profile-save-msg" style="display:none;color:var(--teal-dark);font-size:0.8rem;font-weight:700;text-align:center;margin-top:8px;">Perfil guardado com sucesso!</span>
+                        </form>
+                    </div>
+
+                    <div style="display:flex;flex-direction:column;gap:1rem;">
+                        <div style="background:var(--paper-card);border:1px solid var(--border-strong);border-radius:var(--r-sm);padding:1.25rem;">
+                            <h3 style="font-family:var(--font-d);font-size:1.2rem;font-weight:800;color:var(--ink);margin-bottom:1rem;">Novo Registo Clínico</h3>
+                            <form id="vault-record-form">
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
+                                    <div class="form-group"><label for="r-category">Categoria</label><select id="r-category" class="form-control" required><option value="consulta">Consulta</option><option value="diagnostico">Diagnóstico</option><option value="exame">Exame</option><option value="receita">Receita médica</option><option value="vacina">Vacina</option><option value="cirurgia">Cirurgia</option><option value="ginecologico">Histórico ginecológico</option><option value="doenca">Doença / condição</option><option value="outro">Outro</option></select></div>
+                                    <div class="form-group"><label for="r-title">Título</label><input id="r-title" class="form-control" type="text" required placeholder="Ex: Consulta de ginecologia"></div>
+                                    <div class="form-group"><label for="r-date">Data</label><input id="r-date" class="form-control" type="date" required></div>
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
+                                    <div class="form-group"><label for="r-professional">Profissional / Unidade</label><input id="r-professional" class="form-control" type="text" placeholder="Ex: HCM - Dra. Ana"></div>
+                                    <div class="form-group"><label for="r-status">Estado</label><select id="r-status" class="form-control"><option value="ativo">Ativo</option><option value="concluido">Concluído</option><option value="seguimento">Seguimento</option></select></div>
+                                    <div class="form-group"><label for="r-tags">Tags</label><input id="r-tags" class="form-control" type="text" placeholder="Ex: urgência, fertilidade"></div>
+                                </div>
+                                <div class="form-group"><label for="r-notes">Notas clínicas</label><textarea id="r-notes" class="form-control" placeholder="Resultados, conduta, orientações..."></textarea></div>
+                                <button type="submit" class="btn btn-primary" style="width:100%;">Adicionar registo</button>
+                            </form>
+                        </div>
+
+                        <div style="background:var(--paper-card);border:1px solid var(--border-strong);border-radius:var(--r-sm);padding:1.25rem;">
+                            <h3 style="font-family:var(--font-d);font-size:1.2rem;font-weight:800;color:var(--ink);margin-bottom:1rem;">Controle de Medicamentos</h3>
+                            <form id="vault-med-form">
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;">
+                                    <div class="form-group"><label for="m-name">Medicamento</label><input id="m-name" class="form-control" type="text" required></div>
+                                    <div class="form-group"><label for="m-dose">Dose</label><input id="m-dose" class="form-control" type="text" placeholder="Ex: 500 mg"></div>
+                                    <div class="form-group"><label for="m-frequency">Frequência</label><input id="m-frequency" class="form-control" type="text" placeholder="Ex: 1x/dia"></div>
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;">
+                                    <div class="form-group"><label for="m-start">Início</label><input id="m-start" class="form-control" type="date"></div>
+                                    <div class="form-group"><label for="m-end">Fim</label><input id="m-end" class="form-control" type="date"></div>
+                                    <div class="form-group"><label for="m-notes">Instruções</label><input id="m-notes" class="form-control" type="text" placeholder="Antes/depois das refeições"></div>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="width:100%;">Guardar medicamento</button>
+                            </form>
+                            <div id="vault-med-list" style="margin-top:1rem;"></div>
+                        </div>
+
+                        <div style="background:var(--paper-card);border:1px solid var(--border-strong);border-radius:var(--r-sm);padding:1.25rem;">
+                            <h3 style="font-family:var(--font-d);font-size:1.2rem;font-weight:800;color:var(--ink);margin-bottom:0.5rem;">Upload de Documentos</h3>
+                            <p style="font-size:0.83rem;color:var(--slate);margin-bottom:0.75rem;">Aceita imagens e PDF. Ficheiros guardados localmente no dispositivo.</p>
+                            <input id="vault-doc-upload" class="form-control" type="file" multiple accept="image/*,application/pdf">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.8rem;">
+                                <strong style="font-size:0.82rem;color:var(--ink);">Documentos</strong>
+                                <span id="vault-doc-count" style="font-size:0.8rem;color:var(--slate);">0 anexos</span>
+                            </div>
+                            <div id="vault-doc-list" style="margin-top:0.6rem;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:2rem;">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:1rem;gap:10px;flex-wrap:wrap;">
+                        <h3 style="font-family:var(--font-d);font-size:1.4rem;font-weight:800;color:var(--ink);">Timeline de Registos Clínicos</h3>
+                        <span id="vault-record-count" style="font-size:0.85rem;font-weight:700;color:var(--teal);">0 registos</span>
+                    </div>
+                    <div id="vault-records-list"></div>
+                </div>
+            </section>
+        </div>
+
         <div id="tab-faq" class="tab-panel" role="tabpanel">
             <section class="card reveal" aria-labelledby="faq-titulo">
                 <p class="eyebrow">Perguntas Frequentes</p>
@@ -2619,7 +3269,7 @@
                             <span class="faq-chevron" aria-hidden="true">▼</span>
                         </button>
                         <div class="faq-answer">
-                            O preservativo masculino de látex é altamente eficaz contra ISTs transmitidas por fluidos corporais (HIV, gonorreia, clamídia, tricomoníase), reduzindo o risco em 80-95% quando usado corretamente e consistentemente. No entanto, oferece proteção parcial contra ISTs transmitidas por contacto de pele (herpes, HPV, sífilis), porque estas lesões podem estar em áreas não cobertas. A combinação de preservativo + testagem regular é a estratégia mais eficaz. (CDC, 2023)
+                            O preservativo masculino de látex é altamente eficaz contra ISTs transmitidas por fluidos corporais (HIV, gonorreia, clamídia, tricomoníase), reduzindo o risco em 80-95% quando usado corretamente e consistentemente. No entanto, oferece proteção parcial contra ISTs transmitidas por contacto de pele (herpes, HPV, sífilis), porque estas lesões podem estar em áreas não cobertas. A combination de preservativo + testagem regular é a estratégia mais eficaz. (CDC, 2023)
                         </div>
                     </div>
 
@@ -2867,9 +3517,10 @@
                 <h4>Secções</h4>
                 <ul class="footer-links">
                     <li><a href="#tabs-container" data-nav-tab="triagem">Triagem Clínica</a></li>
-                    <li><a href="#tabs-container" data-nav-tab="guia">Guia de ISTs</a></li>
-                    <li><a href="#tabs-container" data-nav-tab="prevencao">Prevenção</a></li>
-                    <li><a href="#tabs-container" data-nav-tab="prep">PrEP Injetável</a></li>
+                    <li><a href="#tabs-container" data-nav-tab="guia">Guia de ISTs (Prev. & PrEP)</a></li>
+                    <li><a href="#tabs-container" data-nav-tab="calendario">Diário do Ciclo</a></li>
+                    <li><a href="#tabs-container" data-nav-tab="contracetivos">Contracetivos</a></li>
+                    <li><a href="#tabs-container" data-nav-tab="cofre">Cofre de Saúde</a></li>
                     <li><a href="#tabs-container" data-nav-tab="faq">Perguntas Frequentes</a></li>
                     <li><a href="#tabs-container" data-nav-tab="glossario">Glossário Médico</a></li>
                     <li><a href="#recursos">Recursos em Maputo</a></li>
@@ -2955,7 +3606,7 @@
     }
 
     // ══════════════════════════════════════════════════════════════
-    // NOVO: Proteção contra clickjacking em runtime
+    // Proteção contra clickjacking em runtime
     // ══════════════════════════════════════════════════════════════
     if (window.top !== window.self) {
         try {
@@ -3246,6 +3897,7 @@
     // ── TABS E NAVEGAÇÃO ──
     var tabBtns = document.querySelectorAll('.tab-btn');
     var tabPanels = document.querySelectorAll('.tab-panel');
+    window.portalState = window.portalState || {};
 
     function activateTab(tabId) {
         tabBtns.forEach(function(b) {
@@ -3257,6 +3909,178 @@
             p.classList.toggle('active', p.id === 'tab-' + tabId);
         });
         gaEvent('tab_click', 'navigation', tabId);
+    }
+
+    function scrollToTabs() {
+        var tabs = document.getElementById('tabs-container');
+        if (tabs) tabs.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function openTabFromDashboard(tabId) {
+        if (!tabId) return;
+        activateTab(tabId);
+        scrollToTabs();
+    }
+
+    function updateMainDashboard() {
+        var state = window.portalState || {};
+        var cycle = state.cycle || {};
+        var vault = state.vault || {};
+        var storage = state.storage || {};
+
+        var actions = [];
+        var alerts = [];
+
+        if (!cycle.hasCycleData) {
+            actions.push('Registar a última menstruação para ativar previsões personalizadas.');
+        } else {
+            actions.push('Atualizar sintomas e humor do dia no Diário do Ciclo.');
+            if (cycle.phaseLabel) actions.push('Fase atual: ' + cycle.phaseLabel + '. Ajuste nutrição e rotina de descanso.');
+            if (cycle.currentDay && cycle.delayThreshold && cycle.currentDay > cycle.delayThreshold) {
+                alerts.push('Atraso menstrual superior ao padrão esperado.');
+            }
+            if (cycle.irregular) {
+                alerts.push('Ciclo com padrão irregular detetado automaticamente.');
+            }
+            if (cycle.todayPain !== undefined && Number(cycle.todayPain) >= 8) {
+                alerts.push('Dor intensa registada hoje (>=8/10).');
+            }
+            if (cycle.todayUnusualCount && cycle.todayUnusualCount > 0) {
+                alerts.push('Sintomas incomuns registados hoje no diário.');
+            }
+            if (cycle.isFertileWindow) {
+                alerts.push('Janela fértil ativa: atenção aos objetivos reprodutivos e método de prevenção.');
+            }
+        }
+
+        if ((vault.recordsCount || 0) === 0) {
+            actions.push('Adicionar o primeiro registo clínico no Cofre de Saúde.');
+        } else {
+            actions.push('Rever e atualizar registos clínicos recentes no cofre.');
+        }
+        if ((vault.activeMeds || 0) > 0) {
+            if ((vault.notTakenToday || 0) > 0) {
+                alerts.push(vault.notTakenToday + ' medicamento(s) ativo(s) sem confirmação de toma hoje.');
+            } else {
+                actions.push('Todos os medicamentos ativos marcados como tomados hoje.');
+            }
+        }
+        if ((vault.docsCount || 0) === 0) {
+            actions.push('Anexar exames (foto/PDF) para organizar o histórico médico.');
+        }
+        actions.push('Revisar métodos contracetivos conforme o seu perfil e necessidades atuais.');
+
+        var priority = 'Baixa';
+        if (alerts.length >= 3) priority = 'Alta';
+        else if (alerts.length >= 1) priority = 'Média';
+
+        var dataStatus = 'OK';
+        if (storage.ok === false) dataStatus = 'ERRO';
+        else if (storage.ok === true && storage.lastSaved) dataStatus = 'OK';
+
+        var actionsCountEl = document.getElementById('dash-actions-count');
+        var priorityEl = document.getElementById('dash-priority-level');
+        var alertCountEl = document.getElementById('dash-alert-count');
+        var dataStatusEl = document.getElementById('dash-data-status');
+        var actionsListEl = document.getElementById('dash-actions-list');
+        var alertsListEl = document.getElementById('dash-alerts-list');
+        var priorityBar = document.getElementById('dash-priority-alert');
+
+        if (actionsCountEl) actionsCountEl.textContent = String(actions.length);
+        if (priorityEl) priorityEl.textContent = priority;
+        if (alertCountEl) alertCountEl.textContent = String(alerts.length);
+        if (dataStatusEl) dataStatusEl.textContent = dataStatus;
+
+        if (actionsListEl) {
+            actionsListEl.innerHTML = actions.map(function(a) {
+                return '<div style="margin-bottom:5px;"><span style="color:var(--teal);font-weight:700;">•</span> ' + escapeHtml(a) + '</div>';
+            }).join('');
+        }
+        if (alertsListEl) {
+            if (alerts.length === 0) {
+                alertsListEl.innerHTML = '<div style="color:var(--teal-dark);font-weight:600;">Sem alertas críticos no momento.</div>';
+            } else {
+                alertsListEl.innerHTML = alerts.map(function(a) {
+                    return '<div style="margin-bottom:5px;"><span style="color:var(--rose);font-weight:700;">•</span> ' + escapeHtml(a) + '</div>';
+                }).join('');
+            }
+        }
+
+        if (priorityBar) {
+            if (alerts.length === 0) {
+                priorityBar.style.display = 'none';
+                priorityBar.innerHTML = '';
+            } else {
+                priorityBar.style.display = 'block';
+                priorityBar.innerHTML = '<strong>Prioridade ' + priority + ':</strong> ' + escapeHtml(alerts[0]);
+            }
+        }
+    }
+
+    window.updateMainDashboard = updateMainDashboard;
+
+    function initDashboardActions() {
+        document.querySelectorAll('[data-dashboard-tab]').forEach(function(btn) {
+            if (btn.hasAttribute('data-bound')) return;
+            btn.addEventListener('click', function() {
+                var tab = this.getAttribute('data-dashboard-tab');
+                openTabFromDashboard(tab);
+                gaEvent('dashboard_action_click', 'dashboard', tab || 'unknown');
+            });
+            btn.setAttribute('data-bound', '1');
+        });
+    }
+
+    function initContraceptiveTracking() {
+        var cards = document.querySelectorAll('#tab-contracetivos .guide-card');
+        cards.forEach(function(card) {
+            if (card.hasAttribute('data-track-bound')) return;
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', function() {
+                var titleEl = this.querySelector('.guide-card-name');
+                var label = titleEl ? titleEl.textContent.trim() : 'card';
+                gaEvent('contraceptive_card_click', 'contraceptivos', label);
+            });
+            card.setAttribute('data-track-bound', '1');
+        });
+    }
+
+    function initPWAInstall() {
+        var installBtn = document.getElementById('install-app-btn');
+        var deferredPrompt = null;
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(function() { gaEvent('pwa_sw_registered', 'pwa', 'success'); })
+                    .catch(function() { gaEvent('pwa_sw_registered', 'pwa', 'error'); });
+            });
+        }
+
+        window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (installBtn) installBtn.classList.add('show');
+            gaEvent('pwa_install_prompt_ready', 'pwa', 'available');
+        });
+
+        if (installBtn && !installBtn.hasAttribute('data-bound')) {
+            installBtn.addEventListener('click', function() {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(function(choiceResult) {
+                    gaEvent('pwa_install_choice', 'pwa', choiceResult.outcome || 'unknown');
+                    deferredPrompt = null;
+                    installBtn.classList.remove('show');
+                });
+            });
+            installBtn.setAttribute('data-bound', '1');
+        }
+
+        window.addEventListener('appinstalled', function() {
+            gaEvent('pwa_installed', 'pwa', 'installed');
+            if (installBtn) installBtn.classList.remove('show');
+        });
     }
 
     tabBtns.forEach(function(btn) {
@@ -3306,6 +4130,10 @@
                 this.classList.add('open');
                 this.setAttribute('aria-expanded', 'true');
                 gaEvent('faq_open', 'engagement', this.textContent.trim().substring(0, 50));
+                var inContraceptivesTab = !!this.closest('#tab-contracetivos');
+                if (inContraceptivesTab) {
+                    gaEvent('contraceptive_faq_open', 'contraceptivos', this.textContent.trim().substring(0, 50));
+                }
             }
         });
     });
@@ -3358,6 +4186,1642 @@
     setTimeout(function() { gaEvent('time_on_page', 'engagement', '30s'); }, 30000);
     setTimeout(function() { gaEvent('time_on_page', 'engagement', '90s'); }, 90000);
     setTimeout(function() { gaEvent('time_on_page', 'engagement', '3min'); }, 180000);
+
+    // ── UTILITÁRIOS DE ARMAZENAMENTO LOCAL ──
+    var APP_STORAGE_KEYS = {
+        cycles: 'intimateHealthCycles',
+        dailyLogs: 'intimateHealthDailyLogs',
+        vaultProfile: 'intimateHealthVault_Profile_v2',
+        vaultRecords: 'intimateHealthVault_Records_v2',
+        vaultMeds: 'intimateHealthVault_Meds_v2',
+        vaultMedIntake: 'intimateHealthVault_MedIntake_v2',
+        vaultDocMeta: 'intimateHealthVault_DocMeta_v2'
+    };
+
+    function safeJsonParse(raw, fallback) {
+        if (!raw) return fallback;
+        try { return JSON.parse(raw); } catch (e) { return fallback; }
+    }
+
+    function storageRead(key, fallback) {
+        var raw = localStorage.getItem(key);
+        if (raw) return safeJsonParse(raw, fallback);
+        var backupRaw = localStorage.getItem(key + '_backup');
+        if (!backupRaw) return fallback;
+        var backup = safeJsonParse(backupRaw, null);
+        if (backup && backup.data !== undefined) return backup.data;
+        return fallback;
+    }
+
+    function storageWrite(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+            localStorage.setItem(key + '_backup', JSON.stringify({
+                savedAt: new Date().toISOString(),
+                data: value
+            }));
+            window.portalState = window.portalState || {};
+            window.portalState.storage = {
+                ok: true,
+                key: key,
+                lastSaved: new Date().toISOString()
+            };
+            return true;
+        } catch (e) {
+            console.warn('Falha ao guardar dados locais:', key, e);
+            window.portalState = window.portalState || {};
+            window.portalState.storage = {
+                ok: false,
+                key: key,
+                errorAt: new Date().toISOString()
+            };
+            return false;
+        }
+    }
+
+    function toLocalISODate(date) {
+        var d = new Date(date);
+        var y = d.getFullYear();
+        var m = String(d.getMonth() + 1).padStart(2, '0');
+        var day = String(d.getDate()).padStart(2, '0');
+        return y + '-' + m + '-' + day;
+    }
+
+    function fromISODate(iso) {
+        if (!iso) return null;
+        var p = String(iso).split('-');
+        if (p.length !== 3) return null;
+        return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    }
+
+    function addDays(date, days) {
+        var d = new Date(date);
+        d.setDate(d.getDate() + days);
+        return d;
+    }
+
+    function diffDays(a, b) {
+        var d1 = new Date(a.getFullYear(), a.getMonth(), a.getDate());
+        var d2 = new Date(b.getFullYear(), b.getMonth(), b.getDate());
+        return Math.round((d1 - d2) / 86400000);
+    }
+
+    function average(list, fallback) {
+        if (!Array.isArray(list) || list.length === 0) return fallback;
+        return list.reduce(function(sum, v) { return sum + v; }, 0) / list.length;
+    }
+
+    function stdDev(list) {
+        if (!Array.isArray(list) || list.length < 2) return 0;
+        var mean = average(list, 0);
+        var variance = average(list.map(function(v) { return Math.pow(v - mean, 2); }), 0);
+        return Math.sqrt(variance);
+    }
+
+    function clamp(n, min, max) {
+        return Math.min(max, Math.max(min, n));
+    }
+
+    function formatDatePT(date) {
+        return date.toLocaleDateString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    // ── DIÁRIO DO CICLO (VERSÃO MELHORADA) ──
+    function initCycleTracker() {
+        var form = document.getElementById('cycle-form');
+        var dateInput = document.getElementById('period-start');
+        var lengthInput = document.getElementById('period-length');
+        var flowInput = document.getElementById('flow-intensity');
+        var historyList = document.getElementById('cycle-history-list');
+        var btnClear = document.getElementById('btn-clear-history');
+        var btnSaveDaily = document.getElementById('cycle-save-day');
+        var btnPregnant = document.getElementById('btn-pregnant-mode');
+        var painInput = document.getElementById('cycle-pain');
+        var energyInput = document.getElementById('cycle-energy');
+        var painValue = document.getElementById('cycle-pain-value');
+        var energyValue = document.getElementById('cycle-energy-value');
+        var dayNote = document.getElementById('cycle-day-note');
+        var dailyHistory = document.getElementById('cycle-daily-history');
+
+        if (!form || !historyList) return;
+
+        var cycles = storageRead(APP_STORAGE_KEYS.cycles, []);
+        var dailyLogs = storageRead(APP_STORAGE_KEYS.dailyLogs, {});
+
+        function normalizeCycles() {
+            cycles = (Array.isArray(cycles) ? cycles : []).map(function(c) {
+                return {
+                    id: Number(c.id || Date.now()),
+                    date: String(c.date || ''),
+                    periodLength: clamp(Number(c.periodLength || 5), 1, 15),
+                    flow: c.flow || 'Normal'
+                };
+            }).filter(function(c) {
+                return /^\d{4}-\d{2}-\d{2}$/.test(c.date);
+            });
+        }
+
+        function normalizeLogs() {
+            if (!dailyLogs || typeof dailyLogs !== 'object') dailyLogs = {};
+            Object.keys(dailyLogs).forEach(function(dayKey) {
+                var e = dailyLogs[dayKey];
+                if (Array.isArray(e)) {
+                    dailyLogs[dayKey] = {
+                        physical: e.slice(),
+                        mood: [],
+                        unusual: [],
+                        pain: 0,
+                        energy: 5,
+                        note: '',
+                        savedAt: null
+                    };
+                    return;
+                }
+                dailyLogs[dayKey] = {
+                    physical: Array.isArray(e.physical) ? e.physical : [],
+                    mood: Array.isArray(e.mood) ? e.mood : [],
+                    unusual: Array.isArray(e.unusual) ? e.unusual : [],
+                    pain: clamp(Number(e.pain || 0), 0, 10),
+                    energy: clamp(Number(e.energy || 5), 0, 10),
+                    note: String(e.note || ''),
+                    savedAt: e.savedAt || null
+                };
+            });
+        }
+
+        function saveCycles() { storageWrite(APP_STORAGE_KEYS.cycles, cycles); }
+        function saveLogs() { storageWrite(APP_STORAGE_KEYS.dailyLogs, dailyLogs); }
+
+        function ensureTodayEntry() {
+            var key = toLocalISODate(new Date());
+            if (!dailyLogs[key]) {
+                dailyLogs[key] = { physical: [], mood: [], unusual: [], pain: 0, energy: 5, note: '', savedAt: null };
+            }
+            return { key: key, entry: dailyLogs[key] };
+        }
+
+        function sortedAsc() {
+            return cycles.slice().sort(function(a, b) {
+                return fromISODate(a.date) - fromISODate(b.date);
+            });
+        }
+
+        function computeAccuracy(sorted) {
+            if (sorted.length < 4) return { value: 65, samples: 0 };
+            var scores = [];
+            for (var i = 2; i < sorted.length; i++) {
+                var hist = [];
+                for (var j = Math.max(1, i - 6); j <= i - 1; j++) {
+                    var c1 = fromISODate(sorted[j].date);
+                    var c0 = fromISODate(sorted[j - 1].date);
+                    if (!c1 || !c0) continue;
+                    var len = diffDays(c1, c0);
+                    if (len >= 18 && len <= 45) hist.push(len);
+                }
+                var prev = fromISODate(sorted[i - 1].date);
+                var actual = fromISODate(sorted[i].date);
+                if (!prev || !actual) continue;
+                var avg = Math.round(average(hist, 28));
+                var predicted = addDays(prev, avg);
+                var err = Math.abs(diffDays(actual, predicted));
+                var score = clamp(100 - (err * 10), 0, 100);
+                scores.push(score);
+            }
+            if (scores.length === 0) return { value: 65, samples: 0 };
+            return { value: Math.round(average(scores, 65)), samples: scores.length };
+        }
+
+        function computeMetrics() {
+            var asc = sortedAsc();
+            var lengths = [];
+            for (var i = 1; i < asc.length; i++) {
+                var a = fromISODate(asc[i].date);
+                var b = fromISODate(asc[i - 1].date);
+                if (!a || !b) continue;
+                var len = diffDays(a, b);
+                if (len >= 15 && len <= 60) lengths.push(len);
+            }
+
+            var avgCycle = Math.round(average(lengths, 28));
+            var avgBleeding = Math.round(average(asc.map(function(c) { return Number(c.periodLength) || 5; }), 5));
+            var variation = stdDev(lengths);
+            var accuracy = computeAccuracy(asc);
+            var irregular = avgCycle < 21 || avgCycle > 35 || variation >= 6 || lengths.filter(function(v) { return v < 21 || v > 35; }).length >= 2;
+            var regularity = 'Baixa';
+            if (variation <= 2.5) regularity = 'Alta';
+            else if (variation <= 4.5) regularity = 'Média';
+
+            return {
+                avgCycle: avgCycle,
+                avgBleeding: avgBleeding,
+                irregular: irregular,
+                regularity: regularity,
+                accuracy: accuracy,
+                delayThreshold: avgCycle + 7
+            };
+        }
+
+        function phaseForDay(day, bleedDays, avgCycle) {
+            var ovu = Math.max(10, avgCycle - 14);
+            if (day <= bleedDays) return { code: 'menstrual', label: 'Fase menstrual', desc: 'Período de sangramento e maior sensibilidade.' };
+            if (day < ovu - 4) return { code: 'folicular', label: 'Fase folicular', desc: 'Energia tende a subir com estrogénio.' };
+            if (day <= ovu + 1) return { code: 'fertil', label: 'Janela fértil / ovulação', desc: 'Maior probabilidade de gravidez.' };
+            if (day <= avgCycle + 6) return { code: 'lutea', label: 'Fase lútea', desc: 'Oscilações hormonais podem causar TPM.' };
+            return { code: 'atraso', label: 'Atraso menstrual provável', desc: 'Considere acompanhamento e teste de gravidez se necessário.' };
+        }
+
+        function getCurrentState(metrics) {
+            var desc = cycles.slice().sort(function(a, b) { return fromISODate(b.date) - fromISODate(a.date); });
+            if (desc.length === 0) return { hasCycle: false };
+            var last = desc[0];
+            var lastDate = fromISODate(last.date);
+            var bleedDays = Number(last.periodLength || 5);
+            var day = diffDays(new Date(), lastDate) + 1;
+            var next = addDays(lastDate, metrics.avgCycle);
+            var ovu = addDays(next, -14);
+            return {
+                hasCycle: true,
+                currentDay: day,
+                phase: phaseForDay(day, bleedDays, metrics.avgCycle),
+                lastDate: lastDate,
+                bleedDays: bleedDays,
+                flow: last.flow || 'Normal',
+                nextPeriod: next,
+                ovulation: ovu,
+                fertileStart: addDays(ovu, -4),
+                fertileEnd: addDays(ovu, 1)
+            };
+        }
+
+        function renderMetrics(metrics) {
+            var avgEl = document.getElementById('cycle-metric-avg');
+            var bEl = document.getElementById('cycle-metric-bleeding');
+            var rEl = document.getElementById('cycle-metric-regularity');
+            var aEl = document.getElementById('cycle-metric-accuracy');
+            var sEl = document.getElementById('cycle-metric-status');
+            if (avgEl) avgEl.textContent = String(metrics.avgCycle);
+            if (bEl) bEl.textContent = String(metrics.avgBleeding);
+            if (rEl) rEl.textContent = metrics.regularity;
+            if (aEl) aEl.textContent = String(metrics.accuracy.value) + '%';
+            if (sEl) sEl.textContent = metrics.irregular ? 'Irregular' : 'Estável';
+        }
+
+        function renderNutrition(phaseCode, entry, state) {
+            var list = document.getElementById('cycle-nutrition-list');
+            if (!list) return;
+
+            var tips = [];
+            var dayInCycle = state ? Number(state.currentDay || 0) : 0;
+            var bleedDays = state ? Number(state.bleedDays || 5) : 5;
+            var flow = state ? String(state.flow || 'Normal') : 'Normal';
+
+            if (phaseCode === 'menstrual') {
+                if (dayInCycle <= 2) {
+                    tips.push('Dia inicial da menstruação: combine ferro + vitamina C (feijão, fígado, espinafre com laranja) para repor perdas.');
+                    tips.push('Priorize refeições leves e quentes: sopa de legumes com proteína e boa hidratação.');
+                } else if (dayInCycle <= bleedDays) {
+                    tips.push('Na segunda metade do sangramento, foque em proteína magra, folhas verdes e cereais integrais para recuperar energia.');
+                    tips.push('Continue com água, água de coco e chás (gengibre/camomila) para aliviar cólicas e fadiga.');
+                }
+                if (flow === 'Intenso') {
+                    tips.push('Fluxo intenso: reforçar ferro diariamente e considerar avaliação de hemoglobina se houver cansaço frequente.');
+                }
+            } else if (phaseCode === 'folicular') {
+                tips.push('Fase folicular: proteínas magras, ovos, iogurte natural e legumes verdes ajudam no metabolismo hormonal.');
+                tips.push('Inclua sementes (linhaça/chia) e gorduras boas (abacate/azeite) para suporte do eixo hormonal.');
+            } else if (phaseCode === 'fertil') {
+                tips.push('Janela fértil: alimentos ricos em folato e antioxidantes (folhas verdes, abacate, frutos vermelhos, peixe).');
+                tips.push('Evite excesso de álcool e mantenha hidratação para melhor equilíbrio hormonal.');
+            } else if (phaseCode === 'lutea') {
+                tips.push('Fase lútea: magnésio e vitamina B6 (banana, aveia, grão-de-bico, cacau) ajudam na TPM.');
+                tips.push('Reduza sal e açúcar refinado para diminuir inchaço e oscilações de humor.');
+            } else {
+                tips.push('Atraso menstrual: mantenha refeições equilibradas e registe sintomas até confirmação clínica.');
+            }
+
+            var physical = entry.physical || [];
+            if (physical.includes('colicas')) {
+                tips.push('Cólicas: aumente magnésio (sementes, amêndoas, feijão) e alimentos anti-inflamatórios (sardinha, gengibre).');
+            }
+            if (physical.includes('dor-cabeca')) {
+                tips.push('Dor de cabeça: hidratação regular, reduzir jejum prolongado e preferir alimentos com riboflavina (ovos, iogurte).');
+            }
+            if (physical.includes('fadiga')) {
+                tips.push('Fadiga: refeições com ferro + proteína + vitamina C (ex: carne magra + feijão + salada cítrica).');
+            }
+            if (physical.includes('inchaco')) {
+                tips.push('Inchaço: reduzir sal/embutidos e aumentar potássio (banana, abóbora, água de coco).');
+            }
+            if (physical.includes('acne')) {
+                tips.push('Acne: diminuir ultraprocessados e açúcar; priorizar zinco (sementes, feijão, ovos).');
+            }
+            if (physical.includes('dor-seios')) {
+                tips.push('Dor mamária: reduzir cafeína e sal nos dias de maior sensibilidade.');
+            }
+
+            var unusual = entry.unusual || [];
+            if (unusual.includes('sangramento-intenso') || unusual.includes('coagulos')) {
+                tips.push('Sangramento intenso/coágulos: reforçar ferro e procurar avaliação clínica se persistir.');
+            }
+
+            var mood = entry.mood || [];
+            if (mood.includes('ansiosa') || mood.includes('irritada')) {
+                tips.push('Ansiedade/irritabilidade: incluir ómega-3 (peixe/sardinha), reduzir estimulantes e manter horário regular de refeições.');
+            }
+            if (mood.includes('triste')) {
+                tips.push('Humor baixo: refeições com triptofano (banana, aveia, ovos) podem apoiar bem-estar emocional.');
+            }
+
+            list.innerHTML = tips.map(function(t) {
+                return '<li><span style="color:var(--teal);font-weight:700;">•</span> ' + escapeHtml(t) + '</li>';
+            }).join('');
+        }
+
+        function alertsForState(metrics, state, todayEntry) {
+            var list = [];
+            if (metrics.irregular) list.push('Padrão de ciclo irregular detetado automaticamente.');
+            if (state.currentDay > metrics.delayThreshold) list.push('Atraso menstrual acima de 7 dias da média do seu ciclo.');
+            if (Number(todayEntry.pain || 0) >= 8) list.push('Dor intensa registada (>=8/10).');
+            if ((todayEntry.unusual || []).length > 0) list.push('Sintomas incomuns hoje: ' + todayEntry.unusual.join(', ') + '.');
+            return list;
+        }
+
+        function renderAlerts(metrics, state, todayEntry) {
+            var box = document.getElementById('cycle-smart-alerts');
+            if (!box) return;
+            var alerts = alertsForState(metrics, state, todayEntry);
+            if (alerts.length === 0) {
+                box.style.display = 'none';
+                box.innerHTML = '';
+                return;
+            }
+            box.style.display = 'block';
+            box.innerHTML =
+                '<h4 style="font-size:0.9rem;font-weight:800;color:var(--rose);margin-bottom:8px;">Alertas automáticos</h4>' +
+                '<ul style="margin:0;padding-left:1rem;color:#7a1828;font-size:0.85rem;line-height:1.5;">' +
+                alerts.map(function(a) { return '<li>' + escapeHtml(a) + '</li>'; }).join('') +
+                '</ul>';
+        }
+
+        function renderDailyHistory() {
+            if (!dailyHistory) return;
+            var insights = document.getElementById('cycle-daily-insights');
+            var keys = Object.keys(dailyLogs).sort().reverse().slice(0, 8);
+            if (keys.length === 0) {
+                if (insights) insights.innerHTML = '';
+                dailyHistory.innerHTML = '<p style="font-size:0.84rem;color:var(--slate);font-style:italic;">Sem registos diários ainda.</p>';
+                return;
+            }
+
+            var recent7 = Object.keys(dailyLogs).sort().reverse().slice(0, 7).map(function(k) { return dailyLogs[k]; });
+            var avgPain = Math.round(average(recent7.map(function(e) { return Number(e.pain || 0); }), 0) * 10) / 10;
+            var avgEnergy = Math.round(average(recent7.map(function(e) { return Number(e.energy || 0); }), 5) * 10) / 10;
+
+            function mostFrequent(arrays) {
+                var freq = {};
+                arrays.forEach(function(arr) {
+                    (arr || []).forEach(function(v) { freq[v] = (freq[v] || 0) + 1; });
+                });
+                var best = '';
+                var count = 0;
+                Object.keys(freq).forEach(function(k) {
+                    if (freq[k] > count) { best = k; count = freq[k]; }
+                });
+                return best ? (best + ' (' + count + 'x)') : 'Sem padrão';
+            }
+
+            var topPhysical = mostFrequent(recent7.map(function(e) { return e.physical; }));
+            var topMood = mostFrequent(recent7.map(function(e) { return e.mood; }));
+            var topUnusual = mostFrequent(recent7.map(function(e) { return e.unusual; }));
+            var highRiskDays = recent7.filter(function(e) {
+                return Number(e.pain || 0) >= 8 || (e.unusual || []).length > 0;
+            }).length;
+
+            if (insights) {
+                insights.innerHTML =
+                    '<div class="stat-box"><div class="stat-box-num">' + recent7.length + '</div><div class="stat-box-label">Dias registados (7d)</div></div>' +
+                    '<div class="stat-box"><div class="stat-box-num">' + avgPain + '</div><div class="stat-box-label">Dor média (0-10)</div></div>' +
+                    '<div class="stat-box"><div class="stat-box-num">' + avgEnergy + '</div><div class="stat-box-label">Energia média (0-10)</div></div>' +
+                    '<div class="stat-box"><div class="stat-box-num">' + highRiskDays + '</div><div class="stat-box-label">Dias com alerta</div></div>' +
+                    '<div class="stat-box"><div class="stat-box-label"><strong>Sintoma mais frequente:</strong> ' + escapeHtml(topPhysical) + '</div></div>' +
+                    '<div class="stat-box"><div class="stat-box-label"><strong>Humor predominante:</strong> ' + escapeHtml(topMood) + '</div></div>' +
+                    '<div class="stat-box"><div class="stat-box-label"><strong>Sintoma incomum:</strong> ' + escapeHtml(topUnusual) + '</div></div>';
+            }
+
+            dailyHistory.innerHTML = keys.map(function(k) {
+                var e = dailyLogs[k];
+                var tags = []
+                    .concat(e.physical || [])
+                    .concat(e.mood || [])
+                    .concat(e.unusual || [])
+                    .slice(0, 8);
+                var risk = Number(e.pain || 0) >= 8 || (e.unusual || []).length > 0;
+                return '<div style="padding:10px 0;border-bottom:1px solid var(--border);">' +
+                    '<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center;">' +
+                    '<strong style="font-size:0.82rem;color:var(--ink);">' + escapeHtml(formatDatePT(fromISODate(k))) + '</strong>' +
+                    '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">' +
+                    '<span style="font-size:0.76rem;color:var(--slate);">Dor ' + Number(e.pain || 0) + '/10 · Energia ' + Number(e.energy || 0) + '/10</span>' +
+                    (risk ? '<span style="font-size:0.66rem;border:1px solid var(--rose);color:var(--rose);padding:2px 7px;border-radius:20px;">Atenção</span>' : '') +
+                    '</div>' +
+                    '</div>' +
+                    '<div style="font-size:0.79rem;color:var(--slate);margin-top:2px;">' + (tags.length ? escapeHtml(tags.join(', ')) : 'Sem sintomas registados') + '</div>' +
+                    (e.note ? '<div style="font-size:0.78rem;color:var(--ink-80);margin-top:4px;background:var(--paper-warm);padding:6px 8px;border-radius:6px;">Nota: ' + escapeHtml(e.note) + '</div>' : '') +
+                    '</div>';
+            }).join('');
+        }
+
+        function applyTodayToUI() {
+            var today = ensureTodayEntry().entry;
+            document.querySelectorAll('.tracker-btn[data-group][data-value]').forEach(function(btn) {
+                var group = btn.dataset.group;
+                var value = btn.dataset.value;
+                var arr = Array.isArray(today[group]) ? today[group] : [];
+                btn.classList.toggle('active', arr.includes(value));
+            });
+            if (painInput) painInput.value = today.pain;
+            if (energyInput) energyInput.value = today.energy;
+            if (painValue) painValue.textContent = String(today.pain);
+            if (energyValue) energyValue.textContent = String(today.energy);
+            if (dayNote) dayNote.value = today.note || '';
+        }
+
+        function renderHistory() {
+            historyList.innerHTML = '';
+            if (cycles.length === 0) {
+                historyList.innerHTML = '<li style="color:var(--slate);font-style:italic;justify-content:center;">Sem histórico. Registe a sua última menstruação acima.</li>';
+                if (btnClear) btnClear.style.display = 'none';
+                return;
+            }
+            if (btnClear) btnClear.style.display = 'inline-block';
+            var desc = cycles.slice().sort(function(a, b) { return fromISODate(b.date) - fromISODate(a.date); });
+            desc.forEach(function(cycle, idx) {
+                var item = document.createElement('li');
+                item.style.display = 'flex';
+                item.style.justifyContent = 'space-between';
+                item.style.alignItems = 'center';
+                item.style.padding = '10px 0';
+                item.style.borderBottom = idx === desc.length - 1 ? 'none' : '1px solid var(--border)';
+
+                var cycleLen = '';
+                if (idx < desc.length - 1) {
+                    var curr = fromISODate(desc[idx].date);
+                    var prev = fromISODate(desc[idx + 1].date);
+                    cycleLen = ' · ciclo de ' + diffDays(curr, prev) + ' dias';
+                }
+                item.innerHTML =
+                    '<div>' +
+                        '<div style="font-size:0.9rem;font-weight:700;color:var(--ink);">' + escapeHtml(formatDatePT(fromISODate(cycle.date))) + '</div>' +
+                        '<div style="font-size:0.78rem;color:var(--slate);">Sangramento: ' + Number(cycle.periodLength || 5) + ' dias · Fluxo: ' + escapeHtml(cycle.flow || 'Normal') + cycleLen + '</div>' +
+                    '</div>' +
+                    '<button type="button" data-delete-cycle="' + Number(cycle.id) + '" style="background:none;border:none;color:var(--border-strong);cursor:pointer;font-size:1.3rem;">×</button>';
+                historyList.appendChild(item);
+            });
+
+            historyList.querySelectorAll('[data-delete-cycle]').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var id = Number(this.getAttribute('data-delete-cycle'));
+                    if (!confirm('Deseja remover este registo de ciclo?')) return;
+                    cycles = cycles.filter(function(c) { return Number(c.id) !== id; });
+                    saveCycles();
+                    updateUI();
+                });
+            });
+        }
+
+        function buildProjectedWindows(metrics, state, count) {
+            var windows = [];
+            if (!state || !state.hasCycle) return windows;
+            var total = count || 12;
+            var start = new Date(state.lastDate);
+            for (var i = 0; i < total; i++) {
+                var periodStart = new Date(start);
+                var periodEnd = addDays(periodStart, Math.max(1, Number(state.bleedDays || 5)) - 1);
+                var nextStart = addDays(periodStart, metrics.avgCycle);
+                var ovulation = addDays(nextStart, -14);
+                windows.push({
+                    periodStart: periodStart,
+                    periodEnd: periodEnd,
+                    ovulation: ovulation,
+                    fertileStart: addDays(ovulation, -4),
+                    fertileEnd: addDays(ovulation, 1),
+                    cycleStartNext: nextStart
+                });
+                start = nextStart;
+            }
+            return windows;
+        }
+
+        function renderUpcomingOverview(metrics, state) {
+            var box = document.getElementById('cycle-upcoming-overview');
+            if (!box || !state || !state.hasCycle) return;
+
+            var rows = [];
+            var start = new Date(state.nextPeriod);
+            for (var i = 0; i < 6; i++) {
+                var periodStart = new Date(start);
+                var periodEnd = addDays(periodStart, Math.max(1, Number(state.bleedDays || 5)) - 1);
+                var ovulation = addDays(periodStart, -14);
+                var fertileStart = addDays(ovulation, -4);
+                var fertileEnd = addDays(ovulation, 1);
+                rows.push({
+                    monthLabel: periodStart.toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' }),
+                    period: formatDatePT(periodStart) + ' a ' + formatDatePT(periodEnd),
+                    ovulation: formatDatePT(ovulation),
+                    fertile: formatDatePT(fertileStart) + ' a ' + formatDatePT(fertileEnd)
+                });
+                start = addDays(start, metrics.avgCycle);
+            }
+
+            box.innerHTML =
+                '<h4 style="font-size:0.83rem;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:6px;">Próximos ciclos previstos</h4>' +
+                '<div style="overflow:auto;">' +
+                '<table style="width:100%;border-collapse:collapse;font-size:0.78rem;">' +
+                '<thead><tr>' +
+                '<th style="text-align:left;padding:6px;border-bottom:1px solid var(--border);color:var(--ink);">Mês</th>' +
+                '<th style="text-align:left;padding:6px;border-bottom:1px solid var(--border);color:var(--ink);">Menstruação</th>' +
+                '<th style="text-align:left;padding:6px;border-bottom:1px solid var(--border);color:var(--ink);">Janela fértil</th>' +
+                '<th style="text-align:left;padding:6px;border-bottom:1px solid var(--border);color:var(--ink);">Ovulação</th>' +
+                '</tr></thead>' +
+                '<tbody>' +
+                rows.map(function(r) {
+                    return '<tr>' +
+                        '<td style="padding:6px;border-bottom:1px solid var(--border);text-transform:capitalize;color:var(--ink);font-weight:600;">' + escapeHtml(r.monthLabel) + '</td>' +
+                        '<td style="padding:6px;border-bottom:1px solid var(--border);color:var(--slate);">' + escapeHtml(r.period) + '</td>' +
+                        '<td style="padding:6px;border-bottom:1px solid var(--border);color:var(--slate);">' + escapeHtml(r.fertile) + '</td>' +
+                        '<td style="padding:6px;border-bottom:1px solid var(--border);color:var(--slate);">' + escapeHtml(r.ovulation) + '</td>' +
+                    '</tr>';
+                }).join('') +
+                '</tbody></table></div>';
+        }
+
+        function renderMultiMonthView(metrics, state, recordedPeriods, projected) {
+            var container = document.getElementById('cycle-multi-month-view');
+            if (!container || !state || !state.hasCycle) return;
+
+            function inRange(d, a, b) { return d >= a && d <= b; }
+            function dayRole(date) {
+                for (var i = 0; i < recordedPeriods.length; i++) {
+                    if (inRange(date, recordedPeriods[i].start, recordedPeriods[i].end)) return 'recorded-period';
+                }
+                for (var j = 0; j < projected.length; j++) {
+                    if (inRange(date, projected[j].periodStart, projected[j].periodEnd) && date >= new Date()) return 'predicted-period';
+                    if (toLocalISODate(date) === toLocalISODate(projected[j].ovulation)) return 'ovulation';
+                    if (inRange(date, projected[j].fertileStart, projected[j].fertileEnd)) return 'fertile';
+                }
+                return 'normal';
+            }
+
+            var monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+            var todayKey = toLocalISODate(new Date());
+            var startMonth = new Date();
+            startMonth = new Date(startMonth.getFullYear(), startMonth.getMonth(), 1);
+
+            var html = '';
+            for (var m = 0; m < 4; m++) {
+                var ref = new Date(startMonth.getFullYear(), startMonth.getMonth() + m, 1);
+                var month = ref.getMonth();
+                var year = ref.getFullYear();
+                var daysInMonth = new Date(year, month + 1, 0).getDate();
+                var offset = new Date(year, month, 1).getDay() - 1;
+                if (offset < 0) offset = 6;
+
+                var cells = [];
+                for (var o = 0; o < offset; o++) {
+                    cells.push('<span></span>');
+                }
+                for (var d = 1; d <= daysInMonth; d++) {
+                    var date = new Date(year, month, d);
+                    var role = dayRole(date);
+                    var styles = 'display:flex;align-items:center;justify-content:center;height:20px;border-radius:6px;font-size:0.68rem;';
+                    if (role === 'recorded-period') styles += 'background:var(--rose);color:#fff;font-weight:700;';
+                    else if (role === 'predicted-period') styles += 'background:#f9c3ce;color:#7a1828;font-weight:700;';
+                    else if (role === 'ovulation') styles += 'background:var(--purple);color:#fff;font-weight:800;';
+                    else if (role === 'fertile') styles += 'background:var(--teal-light);color:var(--teal-dark);border:1px solid var(--teal);font-weight:700;';
+                    else styles += 'background:rgba(12,14,22,0.04);color:var(--ink-80);';
+                    if (toLocalISODate(date) === todayKey) styles += 'box-shadow:inset 0 0 0 1px var(--ink);';
+                    cells.push('<span style="' + styles + '">' + d + '</span>');
+                }
+
+                html +=
+                    '<div style="border:1px solid var(--border);border-radius:10px;padding:0.65rem;background:#fff;">' +
+                    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">' +
+                    '<strong style="font-size:0.78rem;color:var(--ink);text-transform:capitalize;">' + monthNames[month] + ' ' + year + '</strong>' +
+                    '</div>' +
+                    '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:0.62rem;color:var(--slate);margin-bottom:4px;">' +
+                    '<span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span>' +
+                    '</div>' +
+                    '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;">' + cells.join('') + '</div>' +
+                    '</div>';
+            }
+            container.innerHTML = html;
+        }
+
+        function renderCalendar(metrics, state) {
+            var calGrid = document.getElementById('calendar-days-grid');
+            var calTitle = document.getElementById('calendar-month-title');
+            var btnPrevMonth = document.getElementById('cal-prev-month');
+            var btnNextMonth = document.getElementById('cal-next-month');
+            if (!calGrid || !calTitle || !state || !state.hasCycle) return;
+            if (!window.calDisplayDate) window.calDisplayDate = new Date();
+
+            if (btnPrevMonth && !btnPrevMonth.hasAttribute('data-bound')) {
+                btnPrevMonth.addEventListener('click', function() {
+                    window.calDisplayDate = addDays(new Date(window.calDisplayDate.getFullYear(), window.calDisplayDate.getMonth(), 1), -1);
+                    updateUI();
+                    gaEvent('cycle_calendar_nav', 'cycle_daily', 'prev_month');
+                });
+                btnPrevMonth.setAttribute('data-bound', '1');
+            }
+            if (btnNextMonth && !btnNextMonth.hasAttribute('data-bound')) {
+                btnNextMonth.addEventListener('click', function() {
+                    window.calDisplayDate = new Date(window.calDisplayDate.getFullYear(), window.calDisplayDate.getMonth() + 1, 1);
+                    updateUI();
+                    gaEvent('cycle_calendar_nav', 'cycle_daily', 'next_month');
+                });
+                btnNextMonth.setAttribute('data-bound', '1');
+            }
+
+            var monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+            var month = window.calDisplayDate.getMonth();
+            var year = window.calDisplayDate.getFullYear();
+            calTitle.textContent = monthNames[month] + ' ' + year;
+            calGrid.innerHTML = '';
+
+            var first = new Date(year, month, 1);
+            var daysInMonth = new Date(year, month + 1, 0).getDate();
+            var offset = first.getDay() - 1;
+            if (offset < 0) offset = 6;
+            for (var z = 0; z < offset; z++) calGrid.appendChild(document.createElement('div'));
+
+            var todayKey = toLocalISODate(new Date());
+            var todayDate = fromISODate(todayKey);
+            var periods = cycles.map(function(c) {
+                var s = fromISODate(c.date);
+                var e = addDays(s, Number(c.periodLength || 5) - 1);
+                return { start: s, end: e };
+            });
+
+            var projected = buildProjectedWindows(metrics, state, 14);
+
+            function inRange(d, a, b) { return d >= a && d <= b; }
+
+            for (var day = 1; day <= daysInMonth; day++) {
+                var date = new Date(year, month, day);
+                var key = toLocalISODate(date);
+                var cell = document.createElement('div');
+                cell.textContent = day;
+                cell.style.height = '35px';
+                cell.style.maxWidth = '35px';
+                cell.style.width = '100%';
+                cell.style.margin = '0 auto';
+                cell.style.borderRadius = '8px';
+                cell.style.display = 'flex';
+                cell.style.alignItems = 'center';
+                cell.style.justifyContent = 'center';
+                cell.style.fontSize = '0.88rem';
+                cell.style.color = 'var(--ink)';
+                cell.style.background = 'var(--paper-warm)';
+                if (key === todayKey) {
+                    cell.style.boxShadow = 'inset 0 0 0 2px var(--ink)';
+                    cell.style.fontWeight = '900';
+                }
+                for (var p = 0; p < periods.length; p++) {
+                    if (inRange(date, periods[p].start, periods[p].end)) {
+                        cell.style.background = 'var(--rose)';
+                        cell.style.color = '#fff';
+                        cell.style.fontWeight = '700';
+                        cell.title = 'Menstruação registada';
+                        break;
+                    }
+                }
+                if (!cell.title) {
+                    for (var q = 0; q < projected.length; q++) {
+                        if (inRange(date, projected[q].periodStart, projected[q].periodEnd) && date >= todayDate) {
+                            cell.style.background = '#f9c3ce';
+                            cell.style.color = '#7a1828';
+                            cell.style.fontWeight = '700';
+                            cell.title = 'Menstruação prevista';
+                            break;
+                        }
+                        if (toLocalISODate(projected[q].ovulation) === key) {
+                            cell.style.background = 'var(--purple)';
+                            cell.style.color = '#fff';
+                            cell.style.fontWeight = '800';
+                            cell.title = 'Ovulação prevista';
+                            break;
+                        }
+                        if (inRange(date, projected[q].fertileStart, projected[q].fertileEnd)) {
+                            cell.style.background = 'var(--teal-light)';
+                            cell.style.border = '1px solid var(--teal)';
+                            cell.style.color = 'var(--teal-dark)';
+                            cell.style.fontWeight = '700';
+                            cell.title = 'Janela fértil prevista';
+                            break;
+                        }
+                    }
+                }
+                calGrid.appendChild(cell);
+            }
+
+            renderUpcomingOverview(metrics, state);
+            renderMultiMonthView(metrics, state, periods, projected);
+        }
+
+        function bindTrackerButtons() {
+            document.querySelectorAll('.tracker-btn[data-group][data-value]').forEach(function(btn) {
+                if (btn.hasAttribute('data-bound')) return;
+                btn.addEventListener('click', function() {
+                    var today = ensureTodayEntry();
+                    var group = this.dataset.group;
+                    var value = this.dataset.value;
+                    if (!Array.isArray(today.entry[group])) today.entry[group] = [];
+                    if (today.entry[group].includes(value)) {
+                        today.entry[group] = today.entry[group].filter(function(v) { return v !== value; });
+                    } else {
+                        today.entry[group].push(value);
+                    }
+                    saveLogs();
+                    updateUI();
+                    gaEvent('cycle_daily_toggle', 'cycle_daily', group + '_' + value + '_' + (today.entry[group].includes(value) ? 'on' : 'off'));
+                });
+                btn.setAttribute('data-bound', '1');
+            });
+        }
+
+        function updateUI() {
+            normalizeCycles();
+            normalizeLogs();
+            renderHistory();
+            renderDailyHistory();
+
+            var metrics = computeMetrics();
+            renderMetrics(metrics);
+            var state = getCurrentState(metrics);
+
+            var dashboard = document.getElementById('cycle-dynamic-dashboard');
+            var calendarView = document.getElementById('cycle-calendar-view');
+            if (!state.hasCycle) {
+                if (dashboard) dashboard.style.display = 'none';
+                if (calendarView) calendarView.style.display = 'none';
+                window.portalState = window.portalState || {};
+                window.portalState.cycle = {
+                    hasCycleData: false,
+                    irregular: false,
+                    regularity: 'Sem dados',
+                    currentDay: 0,
+                    delayThreshold: metrics.delayThreshold,
+                    phaseLabel: 'Sem registo',
+                    isFertileWindow: false,
+                    nextPeriod: null,
+                    todayPain: 0,
+                    todayUnusualCount: 0
+                };
+                if (typeof updateMainDashboard === 'function') updateMainDashboard();
+                return;
+            }
+
+            if (dashboard) dashboard.style.display = 'block';
+            if (calendarView) calendarView.style.display = 'block';
+
+            var dEl = document.getElementById('cycle-current-day');
+            var pEl = document.getElementById('cycle-current-phase');
+            var nextEl = document.getElementById('cycle-next-period');
+            var ovuEl = document.getElementById('cycle-next-ovulation');
+            var fertileEl = document.getElementById('cycle-fertile-window');
+
+            if (dEl) dEl.textContent = String(state.currentDay);
+            if (pEl) pEl.textContent = state.phase.label + ' · ' + state.phase.desc;
+            if (nextEl) nextEl.textContent = formatDatePT(state.nextPeriod);
+            if (ovuEl) ovuEl.textContent = formatDatePT(state.ovulation);
+            if (fertileEl) fertileEl.textContent = formatDatePT(state.fertileStart) + ' até ' + formatDatePT(state.fertileEnd);
+
+            var today = ensureTodayEntry().entry;
+            renderNutrition(state.phase.code, today, state);
+            renderAlerts(metrics, state, today);
+            renderCalendar(metrics, state);
+            applyTodayToUI();
+
+            window.portalState = window.portalState || {};
+            window.portalState.cycle = {
+                hasCycleData: true,
+                irregular: metrics.irregular,
+                regularity: metrics.regularity,
+                currentDay: state.currentDay,
+                delayThreshold: metrics.delayThreshold,
+                phaseLabel: state.phase.label,
+                isFertileWindow: state.phase.code === 'fertil',
+                nextPeriod: toLocalISODate(state.nextPeriod),
+                todayPain: Number(today.pain || 0),
+                todayUnusualCount: (today.unusual || []).length
+            };
+            if (typeof updateMainDashboard === 'function') updateMainDashboard();
+        }
+
+        normalizeCycles();
+        normalizeLogs();
+        saveLogs();
+        if (dateInput) dateInput.value = toLocalISODate(new Date());
+
+        if (form && !form.hasAttribute('data-bound')) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var date = dateInput ? dateInput.value : '';
+                var length = clamp(Number(lengthInput ? lengthInput.value : 5), 1, 15);
+                var flow = flowInput ? flowInput.value : 'Normal';
+
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+                    alert('Selecione uma data válida para o início da menstruação.');
+                    return;
+                }
+                var chosen = fromISODate(date);
+                var today = fromISODate(toLocalISODate(new Date()));
+                if (chosen > today) {
+                    alert('A data não pode estar no futuro.');
+                    return;
+                }
+
+                var existing = cycles.find(function(c) { return c.date === date; });
+                if (existing) {
+                    existing.periodLength = length;
+                    existing.flow = flow;
+                } else {
+                    cycles.push({ id: Date.now(), date: date, periodLength: length, flow: flow });
+                }
+                saveCycles();
+                form.reset();
+                if (dateInput) dateInput.value = toLocalISODate(new Date());
+                if (lengthInput) lengthInput.value = '5';
+                if (flowInput) flowInput.value = 'Normal';
+                updateUI();
+                gaEvent('cycle_added', 'cycle', date);
+            });
+            form.setAttribute('data-bound', '1');
+        }
+
+        if (btnClear && !btnClear.hasAttribute('data-bound')) {
+            btnClear.addEventListener('click', function() {
+                if (!confirm('Deseja apagar todo o histórico de ciclos?')) return;
+                cycles = [];
+                saveCycles();
+                updateUI();
+            });
+            btnClear.setAttribute('data-bound', '1');
+        }
+
+        if (painInput && !painInput.hasAttribute('data-bound')) {
+            painInput.addEventListener('input', function() {
+                if (painValue) painValue.textContent = this.value;
+            });
+            painInput.setAttribute('data-bound', '1');
+        }
+        if (energyInput && !energyInput.hasAttribute('data-bound')) {
+            energyInput.addEventListener('input', function() {
+                if (energyValue) energyValue.textContent = this.value;
+            });
+            energyInput.setAttribute('data-bound', '1');
+        }
+
+        if (btnSaveDaily && !btnSaveDaily.hasAttribute('data-bound')) {
+            btnSaveDaily.addEventListener('click', function() {
+                var today = ensureTodayEntry();
+                today.entry.pain = clamp(Number(painInput ? painInput.value : 0), 0, 10);
+                today.entry.energy = clamp(Number(energyInput ? energyInput.value : 5), 0, 10);
+                today.entry.note = dayNote ? dayNote.value.trim() : '';
+                today.entry.savedAt = new Date().toISOString();
+                saveLogs();
+                var old = btnSaveDaily.textContent;
+                btnSaveDaily.textContent = 'Registo guardado';
+                setTimeout(function() { btnSaveDaily.textContent = old; }, 1500);
+                updateUI();
+                gaEvent('cycle_daily_saved', 'cycle', today.key);
+            });
+            btnSaveDaily.setAttribute('data-bound', '1');
+        }
+
+        if (btnPregnant && !btnPregnant.hasAttribute('data-bound')) {
+            btnPregnant.addEventListener('click', function() {
+                var pregnantField = document.getElementById('v-pregnant');
+                if (pregnantField) pregnantField.value = 'sim';
+                alert('Estado de gravidez marcado. Atualize o seu perfil e procure consulta pré-natal.');
+                gaEvent('cycle_pregnancy_mode', 'cycle_daily', 'clicked');
+            });
+            btnPregnant.setAttribute('data-bound', '1');
+        }
+
+        bindTrackerButtons();
+        updateUI();
+    }
+
+    // ── COFRE DE SAÚDE (VERSÃO MELHORADA) ──
+    function initHealthVault() {
+        var profileForm = document.getElementById('vault-profile-form');
+        var recordsForm = document.getElementById('vault-record-form');
+        var medsForm = document.getElementById('vault-med-form');
+        var docsInput = document.getElementById('vault-doc-upload');
+        var searchInput = document.getElementById('vault-search');
+        var recordsList = document.getElementById('vault-records-list');
+        var medsList = document.getElementById('vault-med-list');
+        var docsList = document.getElementById('vault-doc-list');
+        var recordCount = document.getElementById('vault-record-count');
+        var docCount = document.getElementById('vault-doc-count');
+        var saveMsg = document.getElementById('profile-save-msg');
+        var exportJsonBtn = document.getElementById('btn-export-vault-json');
+        var exportReportBtn = document.getElementById('btn-export-vault-report');
+        var importBtn = document.getElementById('btn-import-vault');
+        var importInput = document.getElementById('vault-import-file');
+
+        if (!profileForm || !recordsList) return;
+
+        var fieldIds = [
+            'v-name','v-age','v-weight','v-height','v-phone','v-emergency','v-pregnant','v-blood','v-pressure',
+            'v-menarche','v-gravida','v-para','v-abortions','v-contraception',
+            'v-allergies','v-diseases','v-surgeries','v-vaccines','v-meds','v-gyneco'
+        ];
+
+        var defaultProfile = {};
+        fieldIds.forEach(function(id) { defaultProfile[id] = ''; });
+        defaultProfile['v-pregnant'] = 'nao';
+
+        var profileData = Object.assign({}, defaultProfile, storageRead(APP_STORAGE_KEYS.vaultProfile, {}));
+        var recordsData = storageRead(APP_STORAGE_KEYS.vaultRecords, []);
+        var medsData = storageRead(APP_STORAGE_KEYS.vaultMeds, []);
+        var medIntake = storageRead(APP_STORAGE_KEYS.vaultMedIntake, {});
+        var docsMeta = storageRead(APP_STORAGE_KEYS.vaultDocMeta, []);
+
+        var oldProfile = storageRead('intimateHealthVault_Profile', null);
+        if (oldProfile && !profileData['v-allergies'] && !profileData['v-meds']) {
+            profileData['v-blood'] = oldProfile.blood || '';
+            profileData['v-allergies'] = oldProfile.allergies || '';
+            profileData['v-meds'] = oldProfile.meds || '';
+        }
+
+        var oldExams = storageRead('intimateHealthVault_Exams', []);
+        if (Array.isArray(oldExams) && oldExams.length > 0 && (!Array.isArray(recordsData) || recordsData.length === 0)) {
+            recordsData = oldExams.map(function(ex) {
+                return {
+                    id: Number(ex.id || Date.now()),
+                    category: 'exame',
+                    title: ex.type || 'Exame',
+                    date: ex.date || toLocalISODate(new Date()),
+                    professional: '',
+                    status: ex.result || 'concluido',
+                    tags: 'migração',
+                    notes: ex.notes || ''
+                };
+            });
+        }
+
+        function normalizeRecords(list) {
+            return (Array.isArray(list) ? list : []).map(function(r) {
+                return {
+                    id: Number(r.id || Date.now()),
+                    category: r.category || 'outro',
+                    title: String(r.title || 'Sem título'),
+                    date: r.date || toLocalISODate(new Date()),
+                    professional: String(r.professional || ''),
+                    status: String(r.status || 'ativo'),
+                    tags: String(r.tags || ''),
+                    notes: String(r.notes || '')
+                };
+            });
+        }
+        function normalizeMeds(list) {
+            return (Array.isArray(list) ? list : []).map(function(m) {
+                return {
+                    id: Number(m.id || Date.now()),
+                    name: String(m.name || ''),
+                    dose: String(m.dose || ''),
+                    frequency: String(m.frequency || ''),
+                    start: String(m.start || ''),
+                    end: String(m.end || ''),
+                    notes: String(m.notes || ''),
+                    active: m.active !== false
+                };
+            }).filter(function(m) { return m.name.trim().length > 0; });
+        }
+        function normalizeDocs(list) {
+            return (Array.isArray(list) ? list : []).map(function(d) {
+                return {
+                    id: Number(d.id || Date.now()),
+                    name: String(d.name || 'documento'),
+                    type: String(d.type || 'application/octet-stream'),
+                    size: Number(d.size || 0),
+                    createdAt: d.createdAt || new Date().toISOString()
+                };
+            });
+        }
+
+        recordsData = normalizeRecords(recordsData);
+        medsData = normalizeMeds(medsData);
+        docsMeta = normalizeDocs(docsMeta);
+
+        function saveAll() {
+            storageWrite(APP_STORAGE_KEYS.vaultProfile, profileData);
+            storageWrite(APP_STORAGE_KEYS.vaultRecords, recordsData);
+            storageWrite(APP_STORAGE_KEYS.vaultMeds, medsData);
+            storageWrite(APP_STORAGE_KEYS.vaultMedIntake, medIntake);
+            storageWrite(APP_STORAGE_KEYS.vaultDocMeta, docsMeta);
+        }
+
+        function updateKPIs() {
+            function setText(id, value) {
+                var el = document.getElementById(id);
+                if (el) el.textContent = String(value);
+            }
+            var totalRecords = recordsData.length;
+            var examCountVal = recordsData.filter(function(r) { return r.category === 'exame'; }).length;
+            var consultCountVal = recordsData.filter(function(r) { return r.category === 'consulta'; }).length;
+            var docsCountVal = docsMeta.length;
+            var activeMedsCount = medsData.filter(function(m) { return m.active; }).length;
+            var keyToday = toLocalISODate(new Date());
+            var todayIntake = medIntake[keyToday] || {};
+            var notTakenToday = medsData.filter(function(m) {
+                return m.active && !todayIntake[m.id];
+            }).length;
+
+            setText('vault-kpi-records', totalRecords);
+            setText('vault-kpi-exams', examCountVal);
+            setText('vault-kpi-consultas', consultCountVal);
+            setText('vault-kpi-docs', docsCountVal);
+            setText('vault-kpi-meds', activeMedsCount);
+
+            window.portalState = window.portalState || {};
+            window.portalState.vault = {
+                recordsCount: totalRecords,
+                activeMeds: activeMedsCount,
+                docsCount: docsCountVal,
+                notTakenToday: notTakenToday,
+                hasProfile: !!(profileData['v-name'] || profileData['v-phone'] || profileData['v-blood'])
+            };
+            if (typeof updateMainDashboard === 'function') updateMainDashboard();
+        }
+
+        function categoryLabel(cat) {
+            var labels = {
+                consulta: 'Consulta',
+                diagnostico: 'Diagnóstico',
+                exame: 'Exame',
+                receita: 'Receita médica',
+                vacina: 'Vacina',
+                cirurgia: 'Cirurgia',
+                ginecologico: 'Histórico ginecológico',
+                doenca: 'Doença/condição',
+                outro: 'Outro'
+            };
+            return labels[cat] || cat;
+        }
+
+        function getQuery() {
+            return (searchInput && searchInput.value ? searchInput.value.trim().toLowerCase() : '');
+        }
+        function matchesQuery(parts, query) {
+            if (!query) return true;
+            return parts.join(' ').toLowerCase().includes(query);
+        }
+
+        function loadProfile() {
+            fieldIds.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.value = profileData[id] || '';
+            });
+        }
+
+        function saveProfile() {
+            fieldIds.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) profileData[id] = String(el.value || '').trim();
+            });
+            storageWrite(APP_STORAGE_KEYS.vaultProfile, profileData);
+            if (saveMsg) {
+                saveMsg.style.display = 'block';
+                setTimeout(function() { saveMsg.style.display = 'none'; }, 2500);
+            }
+            updateKPIs();
+            gaEvent('vault_profile_saved', 'vault', 'profile');
+        }
+
+        function renderRecords() {
+            var query = getQuery();
+            var sorted = recordsData.slice().sort(function(a, b) { return fromISODate(b.date) - fromISODate(a.date); });
+            var filtered = sorted.filter(function(r) {
+                return matchesQuery([r.category, r.title, r.professional, r.status, r.tags, r.notes], query);
+            });
+            if (recordCount) recordCount.textContent = filtered.length + ' registos';
+            if (filtered.length === 0) {
+                recordsList.innerHTML = '<div style="text-align:center;padding:1.6rem;color:var(--slate);font-style:italic;background:var(--paper-warm);border-radius:var(--r-sm);border:1px solid var(--border);">Sem registos para apresentar.</div>';
+                return;
+            }
+            recordsList.innerHTML = filtered.map(function(r) {
+                var date = fromISODate(r.date);
+                var statusColor = r.status === 'concluido' ? 'var(--teal)' : (r.status === 'seguimento' ? 'var(--gold)' : 'var(--rose)');
+                return '<div style="background:var(--paper-card);border:1px solid var(--border);border-radius:var(--r-sm);padding:1rem 1.1rem;margin-bottom:10px;">' +
+                    '<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;">' +
+                    '<div>' +
+                    '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">' +
+                    '<span style="font-size:0.7rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--teal);">' + escapeHtml(categoryLabel(r.category)) + '</span>' +
+                    '<span style="font-size:0.68rem;border:1px solid ' + statusColor + ';color:' + statusColor + ';padding:2px 8px;border-radius:20px;">' + escapeHtml(r.status) + '</span>' +
+                    '</div>' +
+                    '<h4 style="font-size:0.98rem;color:var(--ink);margin:4px 0 3px 0;">' + escapeHtml(r.title) + '</h4>' +
+                    '<div style="font-size:0.79rem;color:var(--slate);">' + escapeHtml(date ? formatDatePT(date) : r.date) + (r.professional ? ' · ' + escapeHtml(r.professional) : '') + '</div>' +
+                    (r.tags ? '<div style="font-size:0.76rem;color:var(--slate);margin-top:3px;">Tags: ' + escapeHtml(r.tags) + '</div>' : '') +
+                    '</div>' +
+                    '<button type="button" data-record-delete="' + Number(r.id) + '" style="border:none;background:rgba(12,14,22,0.05);color:var(--rose);width:30px;height:30px;border-radius:50%;cursor:pointer;">×</button>' +
+                    '</div>' +
+                    (r.notes ? '<p style="font-size:0.84rem;color:var(--ink-80);margin-top:8px;line-height:1.55;">' + escapeHtml(r.notes) + '</p>' : '') +
+                    '</div>';
+            }).join('');
+
+            recordsList.querySelectorAll('[data-record-delete]').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var id = Number(this.getAttribute('data-record-delete'));
+                    if (!confirm('Remover este registo clínico?')) return;
+                    recordsData = recordsData.filter(function(r) { return Number(r.id) !== id; });
+                    storageWrite(APP_STORAGE_KEYS.vaultRecords, recordsData);
+                    renderRecords();
+                    updateKPIs();
+                    gaEvent('vault_record_delete', 'vault', 'record');
+                });
+            });
+        }
+
+        function medTakenToday(id) {
+            var key = toLocalISODate(new Date());
+            var bucket = medIntake[key] || {};
+            return !!bucket[id];
+        }
+        function medAdherence(id, windowDays) {
+            var days = windowDays || 14;
+            var taken = 0;
+            for (var i = 0; i < days; i++) {
+                var key = toLocalISODate(addDays(new Date(), -i));
+                var bucket = medIntake[key] || {};
+                if (bucket[id]) taken++;
+            }
+            return Math.round((taken / days) * 100);
+        }
+
+        function renderMeds() {
+            var query = getQuery();
+            var filtered = medsData.filter(function(m) {
+                return matchesQuery([m.name, m.dose, m.frequency, m.notes], query);
+            });
+            if (filtered.length === 0) {
+                medsList.innerHTML = '<div style="font-size:0.82rem;color:var(--slate);padding:0.8rem 0;">Sem medicamentos guardados.</div>';
+                return;
+            }
+            medsList.innerHTML = filtered.map(function(m) {
+                var adh = medAdherence(m.id, 14);
+                return '<div style="border:1px solid var(--border);border-radius:var(--r-xs);padding:0.75rem;margin-bottom:8px;background:var(--paper-warm);">' +
+                    '<div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">' +
+                    '<div>' +
+                    '<strong style="font-size:0.9rem;color:var(--ink);">' + escapeHtml(m.name) + '</strong>' +
+                    '<div style="font-size:0.78rem;color:var(--slate);">' + escapeHtml(m.dose || 'Sem dose definida') + ' · ' + escapeHtml(m.frequency || 'Sem frequência') + '</div>' +
+                    '<div style="font-size:0.74rem;color:var(--slate);">' + (m.start ? escapeHtml(m.start) : '--') + ' até ' + (m.end ? escapeHtml(m.end) : '--') + '</div>' +
+                    (m.notes ? '<div style="font-size:0.76rem;color:var(--ink-80);margin-top:2px;">' + escapeHtml(m.notes) + '</div>' : '') +
+                    '<div style="font-size:0.74rem;color:var(--teal-dark);margin-top:3px;">Adesão (14 dias): ' + adh + '%</div>' +
+                    '</div>' +
+                    '<div style="display:flex;gap:6px;">' +
+                    '<button type="button" data-med-toggle="' + Number(m.id) + '" style="border:none;background:rgba(12,14,22,0.08);padding:5px 8px;border-radius:8px;cursor:pointer;font-size:0.72rem;">' + (m.active ? 'Ativo' : 'Inativo') + '</button>' +
+                    '<button type="button" data-med-delete="' + Number(m.id) + '" style="border:none;background:rgba(192,52,74,0.14);color:var(--rose);padding:5px 8px;border-radius:8px;cursor:pointer;font-size:0.72rem;">Apagar</button>' +
+                    '</div>' +
+                    '</div>' +
+                    '<label style="display:flex;gap:8px;align-items:center;font-size:0.78rem;color:var(--ink);margin-top:6px;">' +
+                    '<input type="checkbox" data-med-intake="' + Number(m.id) + '" ' + (medTakenToday(m.id) ? 'checked' : '') + '> Tomado hoje' +
+                    '</label>' +
+                    '</div>';
+            }).join('');
+
+            medsList.querySelectorAll('[data-med-toggle]').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var id = Number(this.getAttribute('data-med-toggle'));
+                    var med = medsData.find(function(x) { return Number(x.id) === id; });
+                    if (!med) return;
+                    med.active = !med.active;
+                    storageWrite(APP_STORAGE_KEYS.vaultMeds, medsData);
+                    renderMeds();
+                    updateKPIs();
+                    gaEvent('vault_med_toggle', 'vault', med.active ? 'active' : 'inactive');
+                });
+            });
+            medsList.querySelectorAll('[data-med-delete]').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var id = Number(this.getAttribute('data-med-delete'));
+                    if (!confirm('Remover este medicamento?')) return;
+                    medsData = medsData.filter(function(x) { return Number(x.id) !== id; });
+                    storageWrite(APP_STORAGE_KEYS.vaultMeds, medsData);
+                    renderMeds();
+                    updateKPIs();
+                    gaEvent('vault_med_delete', 'vault', 'medication');
+                });
+            });
+            medsList.querySelectorAll('[data-med-intake]').forEach(function(chk) {
+                chk.addEventListener('change', function() {
+                    var id = Number(this.getAttribute('data-med-intake'));
+                    var key = toLocalISODate(new Date());
+                    if (!medIntake[key]) medIntake[key] = {};
+                    medIntake[key][id] = !!this.checked;
+                    storageWrite(APP_STORAGE_KEYS.vaultMedIntake, medIntake);
+                    renderMeds();
+                    updateKPIs();
+                    gaEvent('vault_med_intake', 'vault', this.checked ? 'taken' : 'untaken');
+                });
+            });
+        }
+
+        var DB_NAME = 'SaudeIntimaVaultDB';
+        var DB_VERSION = 1;
+        var DB_STORE = 'documents';
+
+        function openVaultDB() {
+            return new Promise(function(resolve, reject) {
+                if (!window.indexedDB) {
+                    reject(new Error('IndexedDB indisponível'));
+                    return;
+                }
+                var req = indexedDB.open(DB_NAME, DB_VERSION);
+                req.onupgradeneeded = function() {
+                    var db = req.result;
+                    if (!db.objectStoreNames.contains(DB_STORE)) {
+                        db.createObjectStore(DB_STORE, { keyPath: 'id' });
+                    }
+                };
+                req.onsuccess = function() { resolve(req.result); };
+                req.onerror = function() { reject(req.error || new Error('Erro ao abrir IndexedDB')); };
+            });
+        }
+
+        function dbPut(doc) {
+            return openVaultDB().then(function(db) {
+                return new Promise(function(resolve, reject) {
+                    var tx = db.transaction(DB_STORE, 'readwrite');
+                    tx.objectStore(DB_STORE).put(doc);
+                    tx.oncomplete = function() { db.close(); resolve(true); };
+                    tx.onerror = function() { db.close(); reject(tx.error || new Error('Erro a gravar')); };
+                });
+            });
+        }
+
+        function dbGet(id) {
+            return openVaultDB().then(function(db) {
+                return new Promise(function(resolve, reject) {
+                    var tx = db.transaction(DB_STORE, 'readonly');
+                    var req = tx.objectStore(DB_STORE).get(id);
+                    req.onsuccess = function() { db.close(); resolve(req.result || null); };
+                    req.onerror = function() { db.close(); reject(req.error || new Error('Erro a ler')); };
+                });
+            });
+        }
+
+        function dbDel(id) {
+            return openVaultDB().then(function(db) {
+                return new Promise(function(resolve, reject) {
+                    var tx = db.transaction(DB_STORE, 'readwrite');
+                    tx.objectStore(DB_STORE).delete(id);
+                    tx.oncomplete = function() { db.close(); resolve(true); };
+                    tx.onerror = function() { db.close(); reject(tx.error || new Error('Erro a apagar')); };
+                });
+            });
+        }
+
+        function readAsDataUrl(file) {
+            return new Promise(function(resolve, reject) {
+                var reader = new FileReader();
+                reader.onload = function() { resolve(reader.result); };
+                reader.onerror = function() { reject(reader.error || new Error('Erro de leitura')); };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function renderDocs() {
+            var query = getQuery();
+            var sorted = docsMeta.slice().sort(function(a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
+            var filtered = sorted.filter(function(d) {
+                return matchesQuery([d.name, d.type], query);
+            });
+            if (docCount) docCount.textContent = filtered.length + ' anexos';
+            if (filtered.length === 0) {
+                docsList.innerHTML = '<div style="font-size:0.8rem;color:var(--slate);padding:0.7rem 0;">Sem documentos anexados.</div>';
+                return;
+            }
+            docsList.innerHTML = filtered.map(function(d) {
+                var kb = Math.max(1, Math.round((d.size || 0) / 1024));
+                return '<div style="display:flex;justify-content:space-between;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);">' +
+                    '<div style="min-width:0;">' +
+                    '<div style="font-size:0.82rem;color:var(--ink);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px;">' + escapeHtml(d.name) + '</div>' +
+                    '<div style="font-size:0.72rem;color:var(--slate);">' + escapeHtml(d.type) + ' · ' + kb + ' KB</div>' +
+                    '</div>' +
+                    '<div style="display:flex;gap:6px;">' +
+                    '<button type="button" data-doc-download="' + Number(d.id) + '" style="border:none;background:rgba(12,14,22,0.06);padding:5px 8px;border-radius:8px;cursor:pointer;font-size:0.72rem;">Baixar</button>' +
+                    '<button type="button" data-doc-delete="' + Number(d.id) + '" style="border:none;background:rgba(192,52,74,0.14);color:var(--rose);padding:5px 8px;border-radius:8px;cursor:pointer;font-size:0.72rem;">Apagar</button>' +
+                    '</div>' +
+                    '</div>';
+            }).join('');
+
+            docsList.querySelectorAll('[data-doc-download]').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var id = Number(this.getAttribute('data-doc-download'));
+                    dbGet(id).then(function(doc) {
+                        if (!doc || !doc.dataUrl) {
+                            alert('Documento não encontrado no armazenamento local.');
+                            return;
+                        }
+                        var a = document.createElement('a');
+                        a.href = doc.dataUrl;
+                        a.download = doc.name || ('documento-' + id);
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        gaEvent('vault_doc_download', 'vault', doc.type || 'file');
+                    }).catch(function() {
+                        alert('Não foi possível descarregar este documento.');
+                    });
+                });
+            });
+
+            docsList.querySelectorAll('[data-doc-delete]').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var id = Number(this.getAttribute('data-doc-delete'));
+                    if (!confirm('Eliminar este documento?')) return;
+                    dbDel(id).finally(function() {
+                        docsMeta = docsMeta.filter(function(d) { return Number(d.id) !== id; });
+                        storageWrite(APP_STORAGE_KEYS.vaultDocMeta, docsMeta);
+                        renderDocs();
+                        updateKPIs();
+                        gaEvent('vault_doc_delete', 'vault', 'document');
+                    });
+                });
+            });
+        }
+
+        function handleUpload(files) {
+            var list = Array.from(files || []);
+            if (list.length === 0) return;
+            var chain = Promise.resolve();
+            list.forEach(function(file) {
+                chain = chain.then(function() {
+                    var valid = file.type.indexOf('image/') === 0 || file.type === 'application/pdf';
+                    if (!valid) {
+                        alert('Tipo de ficheiro não suportado: ' + file.name);
+                        return;
+                    }
+                    if (file.size > 8 * 1024 * 1024) {
+                        alert('Ficheiro muito grande (>8MB): ' + file.name);
+                        return;
+                    }
+                    return readAsDataUrl(file).then(function(dataUrl) {
+                        var id = Date.now() + Math.floor(Math.random() * 100000);
+                        return dbPut({
+                            id: id,
+                            name: file.name,
+                            type: file.type,
+                            size: file.size,
+                            createdAt: new Date().toISOString(),
+                            dataUrl: dataUrl
+                        }).then(function() {
+                            docsMeta.push({
+                                id: id,
+                                name: file.name,
+                                type: file.type,
+                                size: file.size,
+                                createdAt: new Date().toISOString()
+                            });
+                        });
+                    }).catch(function() {
+                        alert('Falha ao guardar documento: ' + file.name);
+                    });
+                });
+            });
+            chain.then(function() {
+                storageWrite(APP_STORAGE_KEYS.vaultDocMeta, docsMeta);
+                renderDocs();
+                updateKPIs();
+                gaEvent('vault_docs_upload', 'vault', 'count_' + list.length);
+            });
+        }
+
+        function exportBackupJson() {
+            var payload = {
+                version: 2,
+                exportedAt: new Date().toISOString(),
+                profile: profileData,
+                records: recordsData,
+                medications: medsData,
+                medicationIntake: medIntake,
+                documentsMeta: docsMeta,
+                cycles: storageRead(APP_STORAGE_KEYS.cycles, []),
+                dailyCycleLogs: storageRead(APP_STORAGE_KEYS.dailyLogs, {})
+            };
+            var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'cofre-saude-backup-' + toLocalISODate(new Date()) + '.json';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            gaEvent('vault_backup_export', 'vault', 'json');
+        }
+
+        function exportReportHtml() {
+            var rowsRecords = recordsData.slice().sort(function(a, b) { return fromISODate(b.date) - fromISODate(a.date); }).map(function(r) {
+                return '<tr><td>' + escapeHtml(r.date) + '</td><td>' + escapeHtml(categoryLabel(r.category)) + '</td><td>' + escapeHtml(r.title) + '</td><td>' + escapeHtml(r.professional || '-') + '</td><td>' + escapeHtml(r.status) + '</td><td>' + escapeHtml(r.notes || '-') + '</td></tr>';
+            }).join('');
+            var rowsMeds = medsData.map(function(m) {
+                return '<tr><td>' + escapeHtml(m.name) + '</td><td>' + escapeHtml(m.dose || '-') + '</td><td>' + escapeHtml(m.frequency || '-') + '</td><td>' + escapeHtml(m.start || '-') + '</td><td>' + escapeHtml(m.end || '-') + '</td><td>' + (m.active ? 'Ativo' : 'Inativo') + '</td></tr>';
+            }).join('');
+            var rowsDocs = docsMeta.map(function(d) {
+                return '<tr><td>' + escapeHtml(d.name) + '</td><td>' + escapeHtml(d.type) + '</td><td>' + Math.round((d.size || 0) / 1024) + ' KB</td><td>' + escapeHtml(d.createdAt || '-') + '</td></tr>';
+            }).join('');
+            var html =
+                '<!DOCTYPE html><html lang="pt-PT"><head><meta charset="utf-8"><title>Relatório Cofre de Saúde</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#111}h1,h2{margin:0 0 8px}table{border-collapse:collapse;width:100%;margin:8px 0 18px}th,td{border:1px solid #ccc;padding:6px 8px;font-size:12px;vertical-align:top}th{background:#f2f2f2;text-align:left}.box{background:#f9f9f9;border:1px solid #ddd;padding:10px;margin-bottom:14px}</style></head><body>' +
+                '<h1>Relatório do Cofre de Saúde</h1>' +
+                '<p><strong>Data de exportação:</strong> ' + escapeHtml(new Date().toLocaleString('pt-PT')) + '</p>' +
+                '<div class="box"><h2>Perfil</h2>' +
+                '<p><strong>Nome:</strong> ' + escapeHtml(profileData['v-name'] || '-') + '</p>' +
+                '<p><strong>Idade:</strong> ' + escapeHtml(profileData['v-age'] || '-') + ' | <strong>Peso:</strong> ' + escapeHtml(profileData['v-weight'] || '-') + ' kg | <strong>Altura:</strong> ' + escapeHtml(profileData['v-height'] || '-') + ' cm</p>' +
+                '<p><strong>Gravidez:</strong> ' + escapeHtml(profileData['v-pregnant'] || '-') + ' | <strong>Grupo sanguíneo:</strong> ' + escapeHtml(profileData['v-blood'] || '-') + '</p>' +
+                '<p><strong>Alergias:</strong> ' + escapeHtml(profileData['v-allergies'] || '-') + '</p>' +
+                '<p><strong>Doenças:</strong> ' + escapeHtml(profileData['v-diseases'] || '-') + '</p>' +
+                '<p><strong>Cirurgias:</strong> ' + escapeHtml(profileData['v-surgeries'] || '-') + '</p>' +
+                '<p><strong>Vacinas:</strong> ' + escapeHtml(profileData['v-vaccines'] || '-') + '</p>' +
+                '<p><strong>Histórico ginecológico:</strong> ' + escapeHtml(profileData['v-gyneco'] || '-') + '</p></div>' +
+                '<h2>Registos Clínicos</h2><table><thead><tr><th>Data</th><th>Categoria</th><th>Título</th><th>Profissional</th><th>Estado</th><th>Notas</th></tr></thead><tbody>' + (rowsRecords || '<tr><td colspan="6">Sem registos</td></tr>') + '</tbody></table>' +
+                '<h2>Medicamentos</h2><table><thead><tr><th>Medicamento</th><th>Dose</th><th>Frequência</th><th>Início</th><th>Fim</th><th>Estado</th></tr></thead><tbody>' + (rowsMeds || '<tr><td colspan="6">Sem medicamentos</td></tr>') + '</tbody></table>' +
+                '<h2>Documentos</h2><table><thead><tr><th>Nome</th><th>Tipo</th><th>Tamanho</th><th>Criado em</th></tr></thead><tbody>' + (rowsDocs || '<tr><td colspan="4">Sem documentos</td></tr>') + '</tbody></table>' +
+                '</body></html>';
+            var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'cofre-saude-relatorio-' + toLocalISODate(new Date()) + '.html';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            gaEvent('vault_report_export', 'vault', 'html');
+        }
+
+        function importBackup() {
+            if (!importInput || !importInput.files || !importInput.files[0]) {
+                alert('Selecione um ficheiro de backup .json primeiro.');
+                return;
+            }
+            var file = importInput.files[0];
+            var reader = new FileReader();
+            reader.onload = function() {
+                try {
+                    var parsed = JSON.parse(reader.result);
+                    if (!parsed || typeof parsed !== 'object') throw new Error('Invalid');
+                    if (parsed.profile && typeof parsed.profile === 'object') {
+                        profileData = Object.assign({}, defaultProfile, parsed.profile);
+                    }
+                    if (Array.isArray(parsed.records)) recordsData = normalizeRecords(parsed.records);
+                    if (Array.isArray(parsed.medications)) medsData = normalizeMeds(parsed.medications);
+                    if (parsed.medicationIntake && typeof parsed.medicationIntake === 'object') medIntake = parsed.medicationIntake;
+                    if (Array.isArray(parsed.documentsMeta)) docsMeta = normalizeDocs(parsed.documentsMeta);
+                    saveAll();
+                    loadProfile();
+                    renderAll();
+                    alert('Backup importado com sucesso.');
+                    gaEvent('vault_backup_import', 'vault', 'success');
+                } catch (e) {
+                    alert('Não foi possível importar este backup. Verifique o ficheiro JSON.');
+                    gaEvent('vault_backup_import', 'vault', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function renderAll() {
+            renderRecords();
+            renderMeds();
+            renderDocs();
+            updateKPIs();
+        }
+
+        if (!profileForm.hasAttribute('data-bound')) {
+            var saveBtn = document.getElementById('btn-save-profile');
+            if (saveBtn) saveBtn.addEventListener('click', saveProfile);
+            profileForm.setAttribute('data-bound', '1');
+        }
+
+        if (recordsForm && !recordsForm.hasAttribute('data-bound')) {
+            var rc = document.getElementById('r-category');
+            var rt = document.getElementById('r-title');
+            var rd = document.getElementById('r-date');
+            var rp = document.getElementById('r-professional');
+            var rs = document.getElementById('r-status');
+            var rg = document.getElementById('r-tags');
+            var rn = document.getElementById('r-notes');
+            if (rd) rd.value = toLocalISODate(new Date());
+
+            recordsForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var title = rt ? rt.value.trim() : '';
+                if (!title) {
+                    alert('Informe um título para o registo clínico.');
+                    return;
+                }
+                recordsData.push({
+                    id: Date.now() + Math.floor(Math.random() * 1000),
+                    category: rc ? rc.value : 'outro',
+                    title: title,
+                    date: (rd && rd.value) ? rd.value : toLocalISODate(new Date()),
+                    professional: rp ? rp.value.trim() : '',
+                    status: rs ? rs.value : 'ativo',
+                    tags: rg ? rg.value.trim() : '',
+                    notes: rn ? rn.value.trim() : ''
+                });
+                storageWrite(APP_STORAGE_KEYS.vaultRecords, recordsData);
+                recordsForm.reset();
+                if (rd) rd.value = toLocalISODate(new Date());
+                renderRecords();
+                updateKPIs();
+                gaEvent('vault_record_added', 'vault', 'record');
+            });
+            recordsForm.setAttribute('data-bound', '1');
+        }
+
+        if (medsForm && !medsForm.hasAttribute('data-bound')) {
+            var mn = document.getElementById('m-name');
+            var md = document.getElementById('m-dose');
+            var mf = document.getElementById('m-frequency');
+            var ms = document.getElementById('m-start');
+            var me = document.getElementById('m-end');
+            var mnote = document.getElementById('m-notes');
+            medsForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var name = mn ? mn.value.trim() : '';
+                if (!name) {
+                    alert('Informe o nome do medicamento.');
+                    return;
+                }
+                medsData.push({
+                    id: Date.now() + Math.floor(Math.random() * 1000),
+                    name: name,
+                    dose: md ? md.value.trim() : '',
+                    frequency: mf ? mf.value.trim() : '',
+                    start: ms ? ms.value : '',
+                    end: me ? me.value : '',
+                    notes: mnote ? mnote.value.trim() : '',
+                    active: true
+                });
+                storageWrite(APP_STORAGE_KEYS.vaultMeds, medsData);
+                medsForm.reset();
+                renderMeds();
+                updateKPIs();
+                gaEvent('vault_med_added', 'vault', 'medication');
+            });
+            medsForm.setAttribute('data-bound', '1');
+        }
+
+        if (docsInput && !docsInput.hasAttribute('data-bound')) {
+            docsInput.addEventListener('change', function() {
+                handleUpload(this.files);
+                this.value = '';
+            });
+            docsInput.setAttribute('data-bound', '1');
+        }
+
+        if (searchInput && !searchInput.hasAttribute('data-bound')) {
+            var searchTrackTimer = null;
+            searchInput.addEventListener('input', function() {
+                renderAll();
+                if (searchTrackTimer) clearTimeout(searchTrackTimer);
+                var value = this.value ? this.value.trim() : '';
+                searchTrackTimer = setTimeout(function() {
+                    if (!value || value.length >= 2) gaEvent('vault_search', 'vault', value || 'clear');
+                }, 350);
+            });
+            searchInput.setAttribute('data-bound', '1');
+        }
+
+        if (exportJsonBtn && !exportJsonBtn.hasAttribute('data-bound')) {
+            exportJsonBtn.addEventListener('click', exportBackupJson);
+            exportJsonBtn.setAttribute('data-bound', '1');
+        }
+        if (exportReportBtn && !exportReportBtn.hasAttribute('data-bound')) {
+            exportReportBtn.addEventListener('click', exportReportHtml);
+            exportReportBtn.setAttribute('data-bound', '1');
+        }
+        if (importBtn && !importBtn.hasAttribute('data-bound')) {
+            importBtn.addEventListener('click', importBackup);
+            importBtn.setAttribute('data-bound', '1');
+        }
+
+        loadProfile();
+        saveAll();
+        renderAll();
+    }
+
+    // Inicializar experiência geral
+    initDashboardActions();
+    initContraceptiveTracking();
+    initPWAInstall();
+    initCycleTracker();
+    initHealthVault();
+    updateMainDashboard();
 
 })();
 </script>
