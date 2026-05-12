@@ -47,11 +47,35 @@
         anonymize_ip: true
       });
 
+      var ANALYTICS_PRIVACY_MODE = true;
+      var REDACT_LABEL_ACTIONS = {
+        symptom_toggle: true,
+        generate_report: true,
+        diagnosis_result: true,
+        cycle_daily_toggle: true,
+        vault_search: true,
+        contraceptive_card_click: true,
+        contraceptive_faq_open: true
+      };
+
+      function normalizeAnalyticsLabel(action, label, value) {
+        if (!ANALYTICS_PRIVACY_MODE || !REDACT_LABEL_ACTIONS[action]) return label;
+        if (action === 'generate_report') return 'count_' + String(value || 0);
+        if (action === 'diagnosis_result') return 'match_score_' + String(value || 0);
+        if (action === 'cycle_daily_toggle') return 'daily_tag_toggle';
+        if (action === 'vault_search') return label === 'clear' ? 'clear' : 'query';
+        if (action === 'symptom_toggle') return (String(label || '').indexOf('_checked') !== -1) ? 'checked' : 'unchecked';
+        if (action === 'contraceptive_card_click') return 'method_card';
+        if (action === 'contraceptive_faq_open') return 'faq_item';
+        return 'redacted';
+      }
+
       function gaEvent(action, category, label, value) {
         if (typeof gtag !== 'function') return;
+        var safeLabel = normalizeAnalyticsLabel(action, label, value);
         gtag('event', action, {
           event_category: category,
-          event_label: label,
+          event_label: safeLabel,
           value: value || 0
         });
       }
@@ -1737,6 +1761,11 @@
             transition: color 0.2s;
         }
         .footer-links a:hover { color: #fff; }
+        .footer-text-link {
+            color: rgba(255,255,255,0.45);
+            font-size: 0.87rem;
+            cursor: default;
+        }
 
         .footer-bottom {
             border-top: 1px solid rgba(255,255,255,0.07);
@@ -3530,8 +3559,8 @@
                 <h4>Apoio</h4>
                 <ul class="footer-links">
                     <li><a href="https://wa.me/258850727507" target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
-                    <li><a href="javascript:void(0)" aria-label="M-Pesa: mais 258 85 072 75 07">M-Pesa: +258 85 072 75 07</a></li>
-                    <li><a href="javascript:void(0)" aria-label="E-Mola: mais 258 86 346 02 82">E-Mola: +258 86 346 02 82</a></li>
+                    <li><span class="footer-text-link" aria-label="M-Pesa: mais 258 85 072 75 07">M-Pesa: +258 85 072 75 07</span></li>
+                    <li><span class="footer-text-link" aria-label="E-Mola: mais 258 86 346 02 82">E-Mola: +258 86 346 02 82</span></li>
                 </ul>
             </div>
         </div>
@@ -3813,7 +3842,7 @@
         btnGerar.textContent = '⏳ A analisar...';
 
         gaEvent('triagem_gerada', 'triagem', 'sintomas_count_' + selecionados.length, selecionados.length);
-        gaEvent('generate_report', 'engagement', selecionados.join('|'));
+        gaEvent('generate_report', 'engagement', 'symptom_selection', selecionados.length);
 
         setTimeout(function() {
             container.innerHTML = '';
@@ -3927,6 +3956,7 @@
         var cycle = state.cycle || {};
         var vault = state.vault || {};
         var storage = state.storage || {};
+        var storagePersistence = state.storagePersistence || '';
 
         var actions = [];
         var alerts = [];
@@ -3968,6 +3998,9 @@
         if ((vault.docsCount || 0) === 0) {
             actions.push('Anexar exames (foto/PDF) para organizar o histórico médico.');
         }
+        if (storagePersistence === 'best-effort') {
+            actions.push('Mantenha o portal em uso regular para reduzir risco de limpeza automática do armazenamento pelo navegador.');
+        }
         actions.push('Revisar métodos contracetivos conforme o seu perfil e necessidades atuais.');
 
         var priority = 'Baixa';
@@ -3989,7 +4022,7 @@
         if (actionsCountEl) actionsCountEl.textContent = String(actions.length);
         if (priorityEl) priorityEl.textContent = priority;
         if (alertCountEl) alertCountEl.textContent = String(alerts.length);
-        if (dataStatusEl) dataStatusEl.textContent = dataStatus;
+        if (dataStatusEl) dataStatusEl.textContent = dataStatus + (storagePersistence === 'best-effort' ? '*' : '');
 
         if (actionsListEl) {
             actionsListEl.innerHTML = actions.map(function(a) {
@@ -4237,6 +4270,30 @@
             };
             return false;
         }
+    }
+
+    function initLocalDataPersistence() {
+        if (!navigator.storage || !navigator.storage.persisted) return;
+        navigator.storage.persisted().then(function(isPersistent) {
+            window.portalState = window.portalState || {};
+            window.portalState.storagePersistence = isPersistent ? 'persistent' : 'best-effort';
+            if (isPersistent) {
+                gaEvent('storage_persistence_status', 'storage', 'persistent');
+                return;
+            }
+            if (!navigator.storage.persist) {
+                gaEvent('storage_persistence_status', 'storage', 'unsupported');
+                return;
+            }
+            navigator.storage.persist().then(function(granted) {
+                window.portalState.storagePersistence = granted ? 'persistent' : 'best-effort';
+                gaEvent('storage_persistence_request', 'storage', granted ? 'granted' : 'denied');
+            }).catch(function() {
+                gaEvent('storage_persistence_request', 'storage', 'error');
+            });
+        }).catch(function() {
+            gaEvent('storage_persistence_status', 'storage', 'error');
+        });
     }
 
     function toLocalISODate(date) {
@@ -5816,6 +5873,7 @@
     }
 
     // Inicializar experiência geral
+    initLocalDataPersistence();
     initDashboardActions();
     initContraceptiveTracking();
     initPWAInstall();
@@ -5826,4 +5884,4 @@
 })();
 </script>
 </body>
-</html>
+</html> 
