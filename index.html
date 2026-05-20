@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
@@ -14,21 +14,15 @@
         font-src 'self' https://fonts.gstatic.com;
         img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com;
         connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com;
-        worker-src 'self';
-        manifest-src 'self';
-        navigate-to 'self';
         frame-ancestors 'none';
         base-uri 'self';
         form-action 'self';
         object-src 'none';
-        upgrade-insecure-requests;
     ">
 
-    <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=(), payment=(), interest-cohort=()">
-    <meta http-equiv="X-Permitted-Cross-Domain-Policies" content="none">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=(), payment=()">
     <meta name="theme-color" content="#0c0e16">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -38,7 +32,9 @@
 
     <link rel="manifest" href="manifest.webmanifest">
     <script src="pwa-additions.js" defer></script>
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%230c0e16'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' font-family='Arial,Helvetica,sans-serif' font-size='84' fill='%2312c49e' font-weight='700'%3E%C3%8D%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -130,6 +126,8 @@
         html {
             scroll-behavior: smooth;
             scroll-padding-top: 68px;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
         }
 
         body {
@@ -139,6 +137,12 @@
             line-height: 1.7;
             font-size: 16px;
             overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        img, svg, video, canvas {
+            max-width: 100%;
+            height: auto;
         }
 
         :focus-visible {
@@ -244,16 +248,11 @@
         .install-btn:hover { background: rgba(18,196,158,0.22); color: #fff; border-color: rgba(18,196,158,0.7); }
 
         button, a, input, select, textarea { font-size: 1rem; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-        img, svg, iframe { max-width: 100%; height: auto; }
-        .container { width: min(100%, 1180px); margin: 0 auto; padding: 0 1rem; }
-        .section, .hero, .footer-section { width: 100%; }
         .btn, .tracker-btn, .faq-question, .tab-btn, .mobile-menu-btn { transition: transform 0.18s ease, box-shadow 0.2s ease, background-color 0.2s ease; }
         .btn:active, .tracker-btn:active, .mobile-menu-btn:active, .faq-question:active { transform: translateY(1px); }
         .tracker-btn { min-width: 110px; }
         .btn { min-height: 48px; }
         .form-control { min-height: 44px; }
-        body { min-height: 100vh; overscroll-behavior-y: contain; }
-        main { min-height: calc(100vh - 68px); }
 
         @media (max-width: 900px) {
             .topnav-inner { flex-wrap: wrap; height: auto; padding: 0.75rem 1rem; }
@@ -265,12 +264,11 @@
 
         @media (max-width: 800px) {
             .mobile-menu-btn { display: inline-flex; }
-            .topnav-inner { align-items: flex-start; }
             .nav-links {
                 position: absolute;
                 top: calc(100% + 14px);
-                right: 0.75rem;
-                left: 0.75rem;
+                right: 1rem;
+                left: 1rem;
                 visibility: hidden;
                 opacity: 0;
                 transform: translateY(-8px);
@@ -304,31 +302,6 @@
             }
             .nav-links .nav-cta { width: 100%; text-align: center; }
             .install-btn { width: 100%; justify-content: center; margin-top: 0.75rem; }
-        }
-
-        @media (max-width: 600px) {
-            .topnav-inner { padding: 0.85rem 0.9rem 0.95rem; gap: 0.75rem; }
-            .nav-logo { font-size: 1.1rem; }
-            .hero { padding: 4.5rem 1rem 7rem; }
-            .hero h1 { font-size: clamp(2rem, 7vw, 3.25rem); }
-            .hero-sub { font-size: 1rem; }
-            .hero-stats { flex-direction: column; gap: 1rem; }
-            .btn, .tracker-btn, .form-control, .tab-btn { width: 100%; }
-            .quiz-card, .content-card, .insights-grid, .card-row { gap: 0.85rem; }
-            .section-tabs { padding: 0 0.5rem; }
-            .faq-question { width: 100%; }
-            .install-btn { padding: 0.9rem 1rem; }
-            .topnav { padding: 0 0.9rem; }
-        }
-
-        @media (max-width: 768px) {
-            .action-row { flex-wrap: wrap; gap: 0.85rem; }
-            .action-row button { flex: 1 1 100%; }
-            .prep-compare, .prep-compare-body { display: flex; flex-direction: column; gap: 1rem; }
-            .vault-grid { grid-template-columns: 1fr; }
-            .form-group { min-width: 0; }
-            .section-tabs { padding: 0.75rem 0.5rem; }
-            #cycle-calendar-view, #cycle-dynamic-dashboard { padding: 1rem; }
         }
 
         /* ── HERO ── */
@@ -503,8 +476,16 @@
 
         .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.5); color: var(--ink); }
 
-        .tab-panel { display: none; animation: fadeIn 0.4s ease; }
-        .tab-panel.active { display: block; }
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.4s ease;
+            content-visibility: auto;
+            contain-intrinsic-size: 900px;
+        }
+        .tab-panel.active {
+            display: block;
+            content-visibility: visible;
+        }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -636,6 +617,668 @@
             border-color: var(--teal);
             color: var(--teal-dark);
             font-weight: 600;
+        }
+
+        /* ── CICLO MODERNO ── */
+        .cycle-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .cycle-dashboard {
+            margin-top: 1.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            background: var(--paper-card);
+        }
+
+        .cycle-dashboard-hero {
+            background:
+                radial-gradient(circle at 15% 20%, rgba(18,196,158,0.2), transparent 42%),
+                radial-gradient(circle at 90% 0%, rgba(201,162,39,0.18), transparent 34%),
+                linear-gradient(135deg, #101523 0%, #10273a 58%, #0b4554 100%);
+            color: #fff;
+            padding: 1.35rem;
+            display: grid;
+            grid-template-columns: minmax(220px, 0.95fr) minmax(260px, 1.05fr);
+            gap: 1rem;
+            align-items: stretch;
+        }
+
+        .cycle-day-core {
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 16px;
+            background: rgba(255,255,255,0.06);
+            padding: 1rem 1.05rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 152px;
+        }
+
+        .cycle-kicker {
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.72);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .cycle-day-number {
+            font-family: var(--font-d);
+            font-size: clamp(1.9rem, 3.3vw, 2.6rem);
+            line-height: 1;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .cycle-phase-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: rgba(255,255,255,0.84);
+        }
+
+        .cycle-date-cards {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(130px, 1fr));
+            gap: 10px;
+        }
+
+        .cycle-date-card {
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.08);
+            padding: 0.85rem 0.85rem 0.78rem;
+            min-height: 92px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .cycle-date-label {
+            font-size: 0.67rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.7);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .cycle-date-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.45;
+        }
+
+        .cycle-alert-strip {
+            padding: 0.95rem 1.15rem;
+            border-top: 1px solid rgba(192,52,74,0.22);
+            background: var(--rose-light);
+        }
+
+        .cycle-notify-wrap {
+            padding: 1rem 1.2rem;
+            border-top: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(11,140,114,0.06), rgba(11,140,114,0.01));
+        }
+
+        .cycle-notification-banner {
+            margin-bottom: 0.85rem;
+            padding: 0.9rem 1rem;
+            border-radius: var(--r-sm);
+            background: rgba(11,140,114,0.12);
+            color: var(--teal-dark);
+            font-size: 0.9rem;
+            line-height: 1.55;
+        }
+
+        .cycle-notify-actions {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .cycle-tracker-shell {
+            padding: 1.2rem;
+            background: var(--paper-warm);
+            border-top: 1px solid var(--border);
+        }
+
+        .cycle-section-title {
+            font-size: 1rem;
+            color: var(--ink);
+            margin-bottom: 0.95rem;
+        }
+
+        .tracker-group {
+            margin-bottom: 0.9rem;
+            padding: 0.85rem;
+            border-radius: 12px;
+            border: 1px solid rgba(12,14,22,0.08);
+            background: rgba(255,255,255,0.66);
+        }
+
+        .tracker-group-title {
+            font-size: 0.74rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--slate);
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .tracker-group-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .cycle-inputs-grid {
+            margin-top: 0.6rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            align-items: stretch;
+        }
+
+        .cycle-input-card {
+            border: 1px solid rgba(12,14,22,0.09);
+            border-radius: 12px;
+            background: #fff;
+            padding: 0.82rem 0.86rem;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .cycle-input-card label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .cycle-input-card input[type='range'] {
+            width: 100%;
+            accent-color: var(--teal);
+        }
+
+        .cycle-input-card-note textarea {
+            min-height: 90px;
+        }
+
+        .range-readout {
+            font-size: 0.78rem;
+            color: var(--slate);
+            margin-top: 2px;
+        }
+
+        .cycle-action-row {
+            margin-top: 0.95rem;
+        }
+
+        .btn-cycle-gold {
+            background: linear-gradient(135deg, var(--gold), #e6b822);
+            color: var(--ink);
+        }
+
+        .cycle-nutrition-shell {
+            padding: 1.1rem 1.2rem 1.2rem;
+            border-top: 1px solid var(--border);
+            background: var(--paper-card);
+        }
+
+        .cycle-nutrition-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.86rem;
+            color: var(--ink-80);
+        }
+
+        .cycle-calendar-shell {
+            margin-top: 2rem;
+            background: var(--paper-card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 1.2rem;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .cycle-calendar-top {
+            display: grid;
+            grid-template-columns: 44px 1fr 44px;
+            gap: 0.8rem;
+            align-items: center;
+            margin-bottom: 0.55rem;
+        }
+
+        .cycle-calendar-title-wrap {
+            text-align: center;
+            min-width: 0;
+        }
+
+        .cycle-calendar-title-wrap .cycle-kicker {
+            color: var(--slate);
+            letter-spacing: 1.2px;
+            margin-bottom: 4px;
+        }
+
+        .cycle-calendar-title {
+            font-family: var(--font-d);
+            font-size: clamp(1.15rem, 2vw, 1.45rem);
+            color: var(--ink);
+            font-weight: 800;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .cycle-calendar-nav {
+            border: 1px solid var(--border-strong);
+            background: #fff;
+            color: var(--slate);
+            border-radius: 10px;
+            width: 44px;
+            height: 44px;
+            font-size: 1.18rem;
+            cursor: pointer;
+        }
+
+        .cycle-calendar-nav:hover {
+            background: var(--teal-light);
+            border-color: var(--teal);
+            color: var(--teal-dark);
+        }
+
+        .cycle-calendar-sub {
+            font-size: 0.88rem;
+            color: var(--slate);
+            line-height: 1.6;
+            margin-bottom: 0.9rem;
+        }
+
+        .cycle-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-bottom: 0.9rem;
+        }
+
+        .legend-chip {
+            font-size: 0.76rem;
+            color: var(--slate);
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 4px 9px;
+            background: rgba(247,245,240,0.82);
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .legend-dot.recorded { background: var(--rose); }
+        .legend-dot.predicted { background: #f9c3ce; border: 1px solid #ef9fb0; }
+        .legend-dot.fertile { background: var(--teal-light); border: 1px solid var(--teal); }
+        .legend-dot.ovulation { background: var(--purple); }
+        .legend-dot.today { background: #fff; border: 2px solid var(--ink); }
+
+        .cycle-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .cycle-weekdays div {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--slate);
+            letter-spacing: 0.4px;
+        }
+
+        .calendar-days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 6px;
+        }
+
+        .calendar-day {
+            height: clamp(35px, 7vw, 44px);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: var(--ink);
+            background: var(--paper-warm);
+            font-weight: 600;
+            border: 1px solid transparent;
+            user-select: none;
+        }
+
+        .calendar-day.is-empty {
+            background: transparent;
+            border: none;
+            pointer-events: none;
+        }
+
+        .calendar-day.is-recorded-period {
+            background: var(--rose);
+            color: #fff;
+        }
+
+        .calendar-day.is-predicted-period {
+            background: #f9c3ce;
+            color: #7a1828;
+        }
+
+        .calendar-day.is-fertile {
+            background: var(--teal-light);
+            color: var(--teal-dark);
+            border-color: var(--teal);
+        }
+
+        .calendar-day.is-ovulation {
+            background: var(--purple);
+            color: #fff;
+        }
+
+        .calendar-day.is-today {
+            box-shadow: inset 0 0 0 2px var(--ink);
+            font-weight: 900;
+        }
+
+        .cycle-upcoming-overview {
+            margin-top: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--paper-warm);
+            padding: 0.92rem 0.95rem;
+        }
+
+        .cycle-overview-title {
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--slate);
+            margin-bottom: 0.62rem;
+        }
+
+        .cycle-overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 8px;
+        }
+
+        .cycle-overview-card {
+            background: #fff;
+            border: 1px solid rgba(12,14,22,0.09);
+            border-radius: 11px;
+            padding: 0.72rem 0.78rem;
+        }
+
+        .cycle-overview-month {
+            font-size: 0.79rem;
+            font-weight: 700;
+            color: var(--ink);
+            text-transform: capitalize;
+            margin-bottom: 6px;
+        }
+
+        .cycle-overview-line {
+            font-size: 0.75rem;
+            color: var(--slate);
+            line-height: 1.5;
+            margin-bottom: 3px;
+        }
+
+        .cycle-months-shell {
+            margin-top: 1rem;
+        }
+
+        .cycle-months-title {
+            font-size: 0.84rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--slate);
+            margin-bottom: 8px;
+        }
+
+        .cycle-multi-month-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 10px;
+        }
+
+        .cycle-mini-month-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.62rem;
+            background: #fff;
+        }
+
+        .cycle-mini-month-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .cycle-mini-month-name {
+            font-size: 0.78rem;
+            color: var(--ink);
+            text-transform: capitalize;
+            font-weight: 700;
+        }
+
+        .cycle-mini-weekdays,
+        .cycle-mini-days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+        }
+
+        .cycle-mini-weekdays span {
+            font-size: 0.62rem;
+            color: var(--slate);
+            text-align: center;
+        }
+
+        .cycle-mini-day {
+            height: 20px;
+            border-radius: 6px;
+            font-size: 0.68rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(12,14,22,0.04);
+            color: var(--ink-80);
+            border: 1px solid transparent;
+        }
+
+        .cycle-mini-day.is-recorded-period { background: var(--rose); color: #fff; font-weight: 700; }
+        .cycle-mini-day.is-predicted-period { background: #f9c3ce; color: #7a1828; font-weight: 700; }
+        .cycle-mini-day.is-fertile { background: var(--teal-light); color: var(--teal-dark); border-color: var(--teal); font-weight: 700; }
+        .cycle-mini-day.is-ovulation { background: var(--purple); color: #fff; font-weight: 700; }
+        .cycle-mini-day.is-today { box-shadow: inset 0 0 0 1px var(--ink); }
+        .cycle-mini-day.is-empty { background: transparent; border: none; }
+
+        .cycle-form-shell {
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .cycle-form-head {
+            padding: 1rem 1.1rem;
+            color: #fff;
+            background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+        }
+
+        .cycle-form-title {
+            font-size: 1.05rem;
+            font-family: var(--font-d);
+            font-weight: 800;
+        }
+
+        .cycle-form-sub {
+            font-size: 0.83rem;
+            color: rgba(255,255,255,0.88);
+            margin-top: 3px;
+            line-height: 1.45;
+        }
+
+        .cycle-form-body {
+            padding: 1rem 1.1rem 1.1rem;
+            background: #fff;
+        }
+
+        .cycle-reg-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .cycle-history-shell {
+            margin-top: 1.7rem;
+        }
+
+        .cycle-history-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .cycle-history-title {
+            font-size: 1.15rem;
+            color: var(--ink);
+        }
+
+        .cycle-clear-history {
+            background: none;
+            border: none;
+            color: var(--rose);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .cycle-history-list {
+            background: var(--paper-warm);
+            padding: 1rem;
+            border-radius: var(--r-sm);
+            border: 1px solid var(--border);
+        }
+
+        .cycle-daily-summary-shell {
+            margin-top: 1.25rem;
+        }
+
+        .cycle-daily-insights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 8px;
+            margin-bottom: 0.7rem;
+        }
+
+        .cycle-daily-history {
+            background: var(--paper-card);
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            padding: 1rem;
+            max-height: 360px;
+            overflow: auto;
+        }
+
+        @media (max-width: 980px) {
+            .cycle-dashboard-hero {
+                grid-template-columns: 1fr;
+            }
+            .cycle-date-cards {
+                grid-template-columns: repeat(2, minmax(130px, 1fr));
+            }
+            .cycle-notify-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .cycle-dashboard,
+            .cycle-calendar-shell,
+            .cycle-form-shell {
+                border-radius: 14px;
+            }
+            .cycle-calendar-shell {
+                padding: 0.95rem;
+            }
+            .cycle-weekdays div {
+                font-size: 0.67rem;
+            }
+            .calendar-day {
+                height: 35px;
+                font-size: 0.82rem;
+            }
+            .cycle-upcoming-overview {
+                padding: 0.8rem 0.75rem;
+            }
+            .cycle-overview-grid {
+                grid-template-columns: 1fr;
+            }
+            .cycle-inputs-grid {
+                grid-template-columns: 1fr;
+            }
+            .cycle-action-row .btn {
+                width: 100%;
+                flex: 1 1 100%;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .cycle-dashboard-hero,
+            .cycle-tracker-shell,
+            .cycle-notify-wrap,
+            .cycle-nutrition-shell {
+                padding: 0.9rem;
+            }
+            .cycle-date-cards {
+                grid-template-columns: 1fr;
+            }
+            .cycle-day-number {
+                font-size: 2rem;
+            }
+            .cycle-calendar-top {
+                grid-template-columns: 38px 1fr 38px;
+                gap: 0.4rem;
+            }
+            .cycle-calendar-nav {
+                width: 38px;
+                height: 38px;
+                font-size: 1rem;
+            }
+            .legend-chip {
+                font-size: 0.7rem;
+            }
         }
 
         /* ── IST GUIDE CARDS ── */
@@ -1920,6 +2563,20 @@
             border-top: 1px solid rgba(255,255,255,0.05);
         }
 
+        @media (max-width: 640px) {
+            .container { padding: 0 0.9rem; }
+            .main-content { margin-top: -38px; padding-bottom: 4.75rem; }
+            .card { padding: 1.2rem; border-radius: 14px; }
+            .lead { font-size: 0.97rem; line-height: 1.68; }
+            .section-tabs { margin-bottom: 1.25rem; }
+            .tab-btn { padding: 8px 14px; font-size: 0.8rem; }
+            .stat-box { padding: 0.95rem 1rem; }
+            .stat-box-num { font-size: 1.75rem; }
+            .guide-grid { grid-template-columns: 1fr; }
+            .prep-benefits-grid,
+            .prep-eligibility { grid-template-columns: 1fr; }
+        }
+
         @media (max-width: 480px) {
             .hero { padding: 4rem 1rem 8rem; }
             .symptoms-grid { grid-template-columns: 1fr; }
@@ -2889,59 +3546,60 @@
                 </div>
             </section>
         </div>
-
         <div id="tab-calendario" class="tab-panel" role="tabpanel">
-            <section class="card reveal" aria-labelledby="cal-titulo">
+            <section class="card reveal cycle-modern" aria-labelledby="cal-titulo">
                 <p class="eyebrow">Acompanhamento Diário</p>
                 <h2 id="cal-titulo">Calendário Inteligente do Ciclo</h2>
                 <p class="lead">Registe o seu ciclo menstrual e acompanhe previsões de menstruação, ovulação, janela fértil, sintomas e humor com alertas automáticos para padrões irregulares.</p>
 
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:1.5rem;">
-                    <div class="stat-box"><div class="stat-box-num" id="cycle-metric-avg">--</div><div class="stat-box-label">Média do ciclo (dias)</div></div>
-                    <div class="stat-box"><div class="stat-box-num" id="cycle-metric-bleeding">--</div><div class="stat-box-label">Média da menstruação (dias)</div></div>
-                    <div class="stat-box"><div class="stat-box-num" id="cycle-metric-regularity">--</div><div class="stat-box-label">Regularidade do ciclo</div></div>
-                    <div class="stat-box"><div class="stat-box-num" id="cycle-metric-accuracy">--%</div><div class="stat-box-label">Precisão das previsões</div></div>
-                    <div class="stat-box"><div class="stat-box-num" id="cycle-metric-status">--</div><div class="stat-box-label">Estado clínico atual</div></div>
+                <div class="cycle-metrics-grid" role="list" aria-label="Resumo rápido do ciclo">
+                    <div class="stat-box" role="listitem"><div class="stat-box-num" id="cycle-metric-avg">--</div><div class="stat-box-label">Média do ciclo (dias)</div></div>
+                    <div class="stat-box" role="listitem"><div class="stat-box-num" id="cycle-metric-bleeding">--</div><div class="stat-box-label">Média da menstruação (dias)</div></div>
+                    <div class="stat-box" role="listitem"><div class="stat-box-num" id="cycle-metric-regularity">--</div><div class="stat-box-label">Regularidade do ciclo</div></div>
+                    <div class="stat-box" role="listitem"><div class="stat-box-num" id="cycle-metric-accuracy">--%</div><div class="stat-box-label">Precisão das previsões</div></div>
+                    <div class="stat-box" role="listitem"><div class="stat-box-num" id="cycle-metric-status">--</div><div class="stat-box-label">Estado clínico atual</div></div>
                 </div>
 
-                <div id="cycle-empty-placeholder" style="display:none;margin-top:1.75rem;padding:1.2rem;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--paper-warm);color:var(--ink);font-size:0.95rem;line-height:1.6;">
-                    <strong>Ainda não existem registos.</strong> Preencha o formulário abaixo para guardar o seu primeiro ciclo e ativar o calendário dinâmico com previsões e alertas.
-                </div>
-                <div id="cycle-dynamic-dashboard" style="display:none;margin-top:1.75rem;background:var(--paper-card);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;box-shadow:var(--shadow-sm);">
-                    <div style="background:var(--ink);color:#fff;padding:1.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:15px;align-items:end;">
-                        <div>
-                            <p style="font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--teal-bright);font-weight:700;">Dia atual do ciclo</p>
-                            <p style="font-family:var(--font-d);font-size:2.5rem;font-weight:900;line-height:1;margin-top:5px;">#<span id="cycle-current-day">--</span></p>
-                            <p id="cycle-current-phase" style="font-size:0.92rem;color:rgba(255,255,255,0.75);margin-top:8px;">A calcular...</p>
+                <div id="cycle-dynamic-dashboard" class="cycle-dashboard" style="display:none;">
+                    <div class="cycle-dashboard-hero">
+                        <div class="cycle-day-core">
+                            <p class="cycle-kicker">Dia atual do ciclo</p>
+                            <p class="cycle-day-number">#<span id="cycle-current-day">--</span></p>
+                            <p id="cycle-current-phase" class="cycle-phase-text">A calcular...</p>
                         </div>
-                        <div style="background:rgba(255,255,255,0.08);padding:10px 12px;border-radius:var(--r-xs);">
-                            <p style="font-size:0.68rem;text-transform:uppercase;color:rgba(255,255,255,0.65);">Próxima menstruação</p>
-                            <p id="cycle-next-period" style="font-weight:700;font-size:1rem;margin-top:2px;">--/--/----</p>
-                        </div>
-                        <div style="background:rgba(255,255,255,0.08);padding:10px 12px;border-radius:var(--r-xs);">
-                            <p style="font-size:0.68rem;text-transform:uppercase;color:rgba(255,255,255,0.65);">Ovulação prevista</p>
-                            <p id="cycle-next-ovulation" style="font-weight:700;font-size:1rem;margin-top:2px;">--/--/----</p>
-                        </div>
-                        <div style="background:rgba(255,255,255,0.08);padding:10px 12px;border-radius:var(--r-xs);">
-                            <p style="font-size:0.68rem;text-transform:uppercase;color:rgba(255,255,255,0.65);">Janela fértil</p>
-                            <p id="cycle-fertile-window" style="font-weight:700;font-size:0.9rem;margin-top:2px;line-height:1.4;">--</p>
+                        <div class="cycle-date-cards">
+                            <div class="cycle-date-card">
+                                <p class="cycle-date-label">Próxima menstruação</p>
+                                <p id="cycle-next-period" class="cycle-date-value">--/--/----</p>
+                            </div>
+                            <div class="cycle-date-card">
+                                <p class="cycle-date-label">Ovulação prevista</p>
+                                <p id="cycle-next-ovulation" class="cycle-date-value">--/--/----</p>
+                            </div>
+                            <div class="cycle-date-card">
+                                <p class="cycle-date-label">Janela fértil</p>
+                                <p id="cycle-fertile-window" class="cycle-date-value">--</p>
+                            </div>
                         </div>
                     </div>
 
-                    <div id="cycle-smart-alerts" style="display:none;padding:1rem 1.5rem;background:var(--rose-light);border-top:1px solid rgba(192,52,74,0.2);"></div>
-                    <div id="cycle-notification-banner" style="display:none;margin:1rem 0;padding:0.95rem 1.1rem;border-radius:var(--r-sm);background:rgba(11,140,114,0.12);color:var(--teal-dark);font-size:0.9rem;line-height:1.5;"></div>
-                    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:0.65rem;">
-                        <button type="button" id="cycle-enable-notifications" class="btn btn-ghost" style="flex:1 1 220px;">Ativar notificações</button>
-                        <button type="button" id="cycle-test-notification" class="btn btn-primary" style="flex:1 1 220px;">Enviar lembrete agora</button>
-                        <button type="button" id="cycle-subscribe-push" class="btn btn-ghost" style="flex:1 1 220px;">Inscrever notificações push</button>
+                    <div id="cycle-smart-alerts" class="cycle-alert-strip" style="display:none;"></div>
+
+                    <div class="cycle-notify-wrap">
+                        <div id="cycle-notification-banner" class="cycle-notification-banner" style="display:none;"></div>
+                        <div class="cycle-notify-actions">
+                            <button type="button" id="cycle-enable-notifications" class="btn btn-ghost">Ativar notificações</button>
+                            <button type="button" id="cycle-test-notification" class="btn btn-primary">Enviar lembrete agora</button>
+                            <button type="button" id="cycle-subscribe-push" class="btn btn-ghost">Inscrever notificações push</button>
+                        </div>
                     </div>
 
-                    <div style="padding:1.5rem;background:var(--paper-warm);border-top:1px solid var(--border);">
-                        <h4 style="font-size:1rem;color:var(--ink);margin-bottom:10px;">Rastreamento de sintomas, humor e emoções (hoje)</h4>
+                    <div class="cycle-tracker-shell">
+                        <h4 class="cycle-section-title">Rastreamento de sintomas, humor e emoções (hoje)</h4>
 
-                        <div style="margin-bottom:12px;">
-                            <p style="font-size:0.74rem;text-transform:uppercase;letter-spacing:1px;color:var(--slate);font-weight:700;">Sintomas físicos</p>
-                            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:7px;">
+                        <div class="tracker-group">
+                            <p class="tracker-group-title">Sintomas físicos</p>
+                            <div class="tracker-group-buttons">
                                 <button type="button" class="tracker-btn" data-group="physical" data-value="colicas">Cólicas</button>
                                 <button type="button" class="tracker-btn" data-group="physical" data-value="dor-cabeca">Dor de cabeça</button>
                                 <button type="button" class="tracker-btn" data-group="physical" data-value="fadiga">Fadiga</button>
@@ -2951,9 +3609,9 @@
                             </div>
                         </div>
 
-                        <div style="margin-bottom:12px;">
-                            <p style="font-size:0.74rem;text-transform:uppercase;letter-spacing:1px;color:var(--slate);font-weight:700;">Humor e emoções</p>
-                            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:7px;">
+                        <div class="tracker-group">
+                            <p class="tracker-group-title">Humor e emoções</p>
+                            <div class="tracker-group-buttons">
                                 <button type="button" class="tracker-btn" data-group="mood" data-value="calma">Calma</button>
                                 <button type="button" class="tracker-btn" data-group="mood" data-value="ansiosa">Ansiosa</button>
                                 <button type="button" class="tracker-btn" data-group="mood" data-value="irritada">Irritada</button>
@@ -2963,9 +3621,9 @@
                             </div>
                         </div>
 
-                        <div style="margin-bottom:12px;">
-                            <p style="font-size:0.74rem;text-transform:uppercase;letter-spacing:1px;color:var(--slate);font-weight:700;">Sintomas incomuns</p>
-                            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:7px;">
+                        <div class="tracker-group">
+                            <p class="tracker-group-title">Sintomas incomuns</p>
+                            <div class="tracker-group-buttons">
                                 <button type="button" class="tracker-btn" data-group="unusual" data-value="sangramento-intenso">Sangramento muito intenso</button>
                                 <button type="button" class="tracker-btn" data-group="unusual" data-value="coagulos">Coágulos frequentes</button>
                                 <button type="button" class="tracker-btn" data-group="unusual" data-value="dor-incapacitante">Dor incapacitante</button>
@@ -2974,120 +3632,122 @@
                             </div>
                         </div>
 
-                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;align-items:end;">
-                            <div>
-                                <label for="cycle-pain" style="font-size:0.8rem;font-weight:700;color:var(--ink);">Intensidade da dor (0-10)</label>
-                                <input id="cycle-pain" type="range" min="0" max="10" value="0" style="width:100%;margin-top:4px;">
-                                <p style="font-size:0.78rem;color:var(--slate);">Valor: <strong id="cycle-pain-value">0</strong></p>
+                        <div class="cycle-inputs-grid">
+                            <div class="cycle-input-card">
+                                <label for="cycle-pain">Intensidade da dor (0-10)</label>
+                                <input id="cycle-pain" type="range" min="0" max="10" value="0">
+                                <p class="range-readout">Valor: <strong id="cycle-pain-value">0</strong></p>
                             </div>
-                            <div>
-                                <label for="cycle-energy" style="font-size:0.8rem;font-weight:700;color:var(--ink);">Nível de energia (0-10)</label>
-                                <input id="cycle-energy" type="range" min="0" max="10" value="5" style="width:100%;margin-top:4px;">
-                                <p style="font-size:0.78rem;color:var(--slate);">Valor: <strong id="cycle-energy-value">5</strong></p>
+                            <div class="cycle-input-card">
+                                <label for="cycle-energy">Nível de energia (0-10)</label>
+                                <input id="cycle-energy" type="range" min="0" max="10" value="5">
+                                <p class="range-readout">Valor: <strong id="cycle-energy-value">5</strong></p>
                             </div>
-                            <div>
-                                <label for="cycle-day-note" style="font-size:0.8rem;font-weight:700;color:var(--ink);">Observação do dia</label>
-                                <textarea id="cycle-day-note" class="form-control" placeholder="Ex: dor pélvica mais forte de manhã, stress elevado..." style="min-height:76px;"></textarea>
+                            <div class="cycle-input-card cycle-input-card-note">
+                                <label for="cycle-day-note">Observação do dia</label>
+                                <textarea id="cycle-day-note" class="form-control" placeholder="Ex: dor pélvica mais forte de manhã, stress elevado..."></textarea>
                             </div>
                         </div>
 
-                        <div class="action-row" style="margin-top:1rem;">
-                            <button type="button" id="cycle-save-day" class="btn btn-primary" style="flex:1 1 220px;">Guardar registo do dia</button>
-                            <button type="button" id="btn-pregnant-mode" class="btn" style="flex:1 1 220px;background:linear-gradient(135deg,var(--gold),#e6b822);color:var(--ink);">Descobri que estou grávida</button>
+                        <div class="action-row cycle-action-row">
+                            <button type="button" id="cycle-save-day" class="btn btn-primary">Guardar registo do dia</button>
+                            <button type="button" id="btn-pregnant-mode" class="btn btn-cycle-gold">Descobri que estou grávida</button>
                         </div>
                     </div>
 
-                    <div style="padding:1.25rem 1.5rem;border-top:1px solid var(--border);background:var(--paper-card);">
-                        <h4 style="font-size:0.95rem;color:var(--ink);margin-bottom:8px;">Nutrição Feminina Inteligente (hoje)</h4>
-                        <ul id="cycle-nutrition-list" style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:0.86rem;color:var(--ink-80);"></ul>
+                    <div class="cycle-nutrition-shell">
+                        <h4 class="cycle-section-title">Nutrição Feminina Inteligente (hoje)</h4>
+                        <ul id="cycle-nutrition-list" class="cycle-nutrition-list"></ul>
                     </div>
                 </div>
 
-                <div id="cycle-calendar-view" style="display:none;margin-top:2rem;background:var(--paper-card);border:1px solid var(--border);border-radius:var(--r-sm);padding:1.5rem;box-shadow:var(--shadow-sm);">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
-                        <button id="cal-prev-month" aria-label="Mês anterior" style="background:none;border:1px solid var(--border);border-radius:var(--r-xs);width:36px;height:36px;font-size:1.2rem;cursor:pointer;color:var(--slate);">&lt;</button>
-                        <h3 id="calendar-month-title" style="font-family:var(--font-d);font-size:1.35rem;color:var(--ink);font-weight:800;">Mês atual</h3>
-                        <button id="cal-next-month" aria-label="Mês seguinte" style="background:none;border:1px solid var(--border);border-radius:var(--r-xs);width:36px;height:36px;font-size:1.2rem;cursor:pointer;color:var(--slate);">&gt;</button>
+                <div id="cycle-calendar-view" class="cycle-calendar-shell" style="display:none;">
+                    <div class="cycle-calendar-top">
+                        <button id="cal-prev-month" class="cycle-calendar-nav" aria-label="Mês anterior">&lt;</button>
+                        <div class="cycle-calendar-title-wrap">
+                            <p class="cycle-kicker">Painel mensal inteligente</p>
+                            <h3 id="calendar-month-title" class="cycle-calendar-title">Mês atual</h3>
+                        </div>
+                        <button id="cal-next-month" class="cycle-calendar-nav" aria-label="Mês seguinte">&gt;</button>
                     </div>
 
-                    <p style="font-size:0.88rem;color:var(--slate);line-height:1.6;margin-bottom:1rem;">Calendário menstrual com previsão de menstruação, ovulação e janela fértil. A precisão aumenta com mais registos.</p>
+                    <p class="cycle-calendar-sub">Calendário menstrual com previsão de menstruação, ovulação e janela fértil. A precisão aumenta com mais registos.</p>
 
-                    <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:1rem;">
-                        <span style="font-size:0.78rem;color:var(--slate);font-weight:600;display:flex;align-items:center;gap:6px;"><span style="width:13px;height:13px;border-radius:4px;background:var(--rose);display:inline-block;"></span>Menstruação</span>
-                        <span style="font-size:0.78rem;color:var(--slate);font-weight:600;display:flex;align-items:center;gap:6px;"><span style="width:13px;height:13px;border-radius:4px;background:#f9c3ce;display:inline-block;border:1px solid #ef9fb0;"></span>Menstruação prevista</span>
-                        <span style="font-size:0.78rem;color:var(--slate);font-weight:600;display:flex;align-items:center;gap:6px;"><span style="width:13px;height:13px;border-radius:4px;background:var(--teal-light);border:1px solid var(--teal);display:inline-block;"></span>Janela fértil</span>
-                        <span style="font-size:0.78rem;color:var(--slate);font-weight:600;display:flex;align-items:center;gap:6px;"><span style="width:13px;height:13px;border-radius:4px;background:var(--purple);display:inline-block;"></span>Ovulação</span>
-                        <span style="font-size:0.78rem;color:var(--slate);font-weight:600;display:flex;align-items:center;gap:6px;"><span style="width:13px;height:13px;border-radius:4px;border:2px solid var(--ink);display:inline-block;"></span>Hoje</span>
+                    <div class="cycle-legend" role="list" aria-label="Legenda do calendário">
+                        <span class="legend-chip" role="listitem"><span class="legend-dot recorded"></span>Menstruação</span>
+                        <span class="legend-chip" role="listitem"><span class="legend-dot predicted"></span>Menstruação prevista</span>
+                        <span class="legend-chip" role="listitem"><span class="legend-dot fertile"></span>Janela fértil</span>
+                        <span class="legend-chip" role="listitem"><span class="legend-dot ovulation"></span>Ovulação</span>
+                        <span class="legend-chip" role="listitem"><span class="legend-dot today"></span>Hoje</span>
                     </div>
 
-                    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center;margin-bottom:8px;">
-                        <div style="font-size:0.72rem;font-weight:700;color:var(--slate);">Seg</div>
-                        <div style="font-size:0.72rem;font-weight:700;color:var(--slate);">Ter</div>
-                        <div style="font-size:0.72rem;font-weight:700;color:var(--slate);">Qua</div>
-                        <div style="font-size:0.72rem;font-weight:700;color:var(--slate);">Qui</div>
-                        <div style="font-size:0.72rem;font-weight:700;color:var(--slate);">Sex</div>
-                        <div style="font-size:0.72rem;font-weight:700;color:var(--slate);">Sáb</div>
-                        <div style="font-size:0.72rem;font-weight:700;color:var(--slate);">Dom</div>
+                    <div class="cycle-weekdays" aria-hidden="true">
+                        <div>Seg</div>
+                        <div>Ter</div>
+                        <div>Qua</div>
+                        <div>Qui</div>
+                        <div>Sex</div>
+                        <div>Sáb</div>
+                        <div>Dom</div>
                     </div>
-                    <div id="calendar-days-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;"></div>
 
-                    <div id="cycle-upcoming-overview" style="margin-top:1rem;background:var(--paper-warm);border:1px solid var(--border);border-radius:var(--r-xs);padding:0.9rem 1rem;"></div>
+                    <div id="calendar-days-grid" class="calendar-days-grid"></div>
 
-                    <div style="margin-top:1rem;">
-                        <h4 style="font-size:0.84rem;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:8px;">Visão dos próximos meses</h4>
-                        <div id="cycle-multi-month-view" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;"></div>
+                    <div id="cycle-upcoming-overview" class="cycle-upcoming-overview"></div>
+
+                    <div class="cycle-months-shell">
+                        <h4 class="cycle-months-title">Visão dos próximos meses</h4>
+                        <div id="cycle-multi-month-view" class="cycle-multi-month-view"></div>
                     </div>
                 </div>
 
-                <div class="prep-compare" style="margin-top:2rem;">
-                    <div class="prep-compare-card" style="grid-column:1 / -1;">
-                        <div class="prep-compare-header oral">
-                            <div>
-                                <div class="prep-compare-title">Registo da Menstruação</div>
-                                <div class="prep-compare-sub">Adicione cada início de menstruação para melhorar automaticamente as previsões.</div>
-                            </div>
-                        </div>
-                        <div class="prep-compare-body">
-                            <form id="cycle-form" style="display:flex;flex-direction:column;gap:14px;">
-                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;">
-                                    <div>
-                                        <label for="period-start" style="font-size:0.85rem;font-weight:700;color:var(--ink);">Data de início</label>
-                                        <input type="date" id="period-start" required class="form-control">
-                                    </div>
-                                    <div>
-                                        <label for="period-length" style="font-size:0.85rem;font-weight:700;color:var(--ink);">Dias de sangramento</label>
-                                        <input type="number" id="period-length" min="1" max="15" value="5" required class="form-control">
-                                    </div>
-                                    <div>
-                                        <label for="flow-intensity" style="font-size:0.85rem;font-weight:700;color:var(--ink);">Fluxo</label>
-                                        <select id="flow-intensity" class="form-control">
-                                            <option value="Leve">Leve</option>
-                                            <option value="Normal" selected>Normal</option>
-                                            <option value="Intenso">Intenso</option>
-                                        </select>
-                                    </div>
+                <div class="cycle-form-shell" style="margin-top:2rem;">
+                    <div class="cycle-form-head">
+                        <div class="cycle-form-title">Registo da Menstruação</div>
+                        <div class="cycle-form-sub">Adicione cada início de menstruação para melhorar automaticamente as previsões.</div>
+                    </div>
+                    <div class="cycle-form-body">
+                        <form id="cycle-form" style="display:flex;flex-direction:column;gap:14px;">
+                            <div class="cycle-reg-grid">
+                                <div>
+                                    <label for="period-start" style="font-size:0.85rem;font-weight:700;color:var(--ink);">Data de início</label>
+                                    <input type="date" id="period-start" required class="form-control">
                                 </div>
-                                <button type="submit" class="btn btn-primary" style="width:100%;">Guardar novo ciclo</button>
-                            </form>
-                        </div>
+                                <div>
+                                    <label for="period-length" style="font-size:0.85rem;font-weight:700;color:var(--ink);">Dias de sangramento</label>
+                                    <input type="number" id="period-length" min="1" max="15" value="5" required class="form-control">
+                                </div>
+                                <div>
+                                    <label for="flow-intensity" style="font-size:0.85rem;font-weight:700;color:var(--ink);">Fluxo</label>
+                                    <select id="flow-intensity" class="form-control">
+                                        <option value="Leve">Leve</option>
+                                        <option value="Normal" selected>Normal</option>
+                                        <option value="Intenso">Intenso</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width:100%;">Guardar novo ciclo</button>
+                        </form>
                     </div>
                 </div>
 
-                <div id="history-container" style="margin-top:2rem;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;gap:10px;flex-wrap:wrap;">
-                        <h3 style="font-size:1.15rem;color:var(--ink);">Histórico de ciclos</h3>
-                        <button id="btn-clear-history" type="button" style="background:none;border:none;color:var(--rose);font-size:0.8rem;font-weight:700;cursor:pointer;display:none;">Limpar histórico</button>
+                <div id="history-container" class="cycle-history-shell">
+                    <div class="cycle-history-head">
+                        <h3 class="cycle-history-title">Histórico de ciclos</h3>
+                        <button id="btn-clear-history" type="button" class="cycle-clear-history" style="display:none;">Limpar histórico</button>
                     </div>
-                    <ul id="cycle-history-list" class="prep-compare-list" style="background:var(--paper-warm);padding:1rem;border-radius:var(--r-sm);border:1px solid var(--border);"></ul>
+                    <ul id="cycle-history-list" class="prep-compare-list cycle-history-list"></ul>
                 </div>
 
-                <div style="margin-top:1.25rem;">
-                    <h4 style="font-size:0.95rem;color:var(--ink);margin-bottom:0.5rem;">Resumo dos últimos registos diários</h4>
-                    <div id="cycle-daily-insights" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:0.7rem;"></div>
-                    <div id="cycle-daily-history" style="background:var(--paper-card);border:1px solid var(--border);border-radius:var(--r-sm);padding:1rem;max-height:360px;overflow:auto;"></div>
+                <div class="cycle-daily-summary-shell">
+                    <h4 class="cycle-section-title">Resumo dos últimos registos diários</h4>
+                    <div id="cycle-daily-insights" class="cycle-daily-insights"></div>
+                    <div id="cycle-daily-history" class="cycle-daily-history"></div>
                 </div>
             </section>
         </div>
+
+
 
         <div id="tab-contracetivos" class="tab-panel" role="tabpanel">
             <section class="card reveal" aria-labelledby="contra-titulo">
@@ -3749,11 +4409,184 @@
 (function () {
     'use strict';
 
+    // ── COMPATIBILIDADE E FALLBACKS PARA NAVEGADORES MÓVEIS ──
+    if (!Object.assign) {
+        Object.assign = function(target) {
+            if (target == null) throw new TypeError('Cannot convert undefined or null to object');
+            var to = Object(target);
+            for (var i = 1; i < arguments.length; i++) {
+                var source = arguments[i];
+                if (source == null) continue;
+                for (var key in source) {
+                    if (Object.prototype.hasOwnProperty.call(source, key)) {
+                        to[key] = source[key];
+                    }
+                }
+            }
+            return to;
+        };
+    }
+
+    if (!Array.from) {
+        Array.from = function(arrayLike) {
+            var out = [];
+            if (!arrayLike) return out;
+            for (var i = 0; i < arrayLike.length; i++) out.push(arrayLike[i]);
+            return out;
+        };
+    }
+
+    if (!Array.prototype.includes) {
+        Array.prototype.includes = function(searchElement) {
+            if (this == null) throw new TypeError('"this" is null or not defined');
+            var o = Object(this);
+            var len = o.length >>> 0;
+            if (len === 0) return false;
+            var n = arguments.length > 1 ? Number(arguments[1]) : 0;
+            var k = n >= 0 ? n : Math.max(len + n, 0);
+            while (k < len) {
+                if (o[k] === searchElement || (searchElement !== searchElement && o[k] !== o[k])) return true;
+                k++;
+            }
+            return false;
+        };
+    }
+
+    if (!String.prototype.padStart) {
+        String.prototype.padStart = function(targetLength, padString) {
+            targetLength = targetLength >> 0;
+            padString = String(typeof padString !== 'undefined' ? padString : ' ');
+            if (this.length >= targetLength) return String(this);
+            targetLength = targetLength - this.length;
+            if (targetLength > padString.length) {
+                padString += new Array(Math.ceil(targetLength / padString.length) + 1).join(padString);
+            }
+            return padString.slice(0, targetLength) + String(this);
+        };
+    }
+
+    if (!String.prototype.repeat) {
+        String.prototype.repeat = function(count) {
+            count = Number(count);
+            if (count < 0 || count === Infinity) throw new RangeError('Invalid count value');
+            count = Math.floor(count);
+            if (this.length === 0 || count === 0) return '';
+            var result = '';
+            var str = String(this);
+            while (count > 0) {
+                if (count % 2 === 1) result += str;
+                count = Math.floor(count / 2);
+                if (count > 0) str += str;
+            }
+            return result;
+        };
+    }
+
+    if (window.NodeList && !NodeList.prototype.forEach) {
+        NodeList.prototype.forEach = function(callback, thisArg) {
+            thisArg = thisArg || window;
+            for (var i = 0; i < this.length; i++) callback.call(thisArg, this[i], i, this);
+        };
+    }
+
+    if (window.Element && !Element.prototype.matches) {
+        Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector || function(selector) {
+            var matches = (this.document || this.ownerDocument).querySelectorAll(selector);
+            var i = 0;
+            while (matches[i] && matches[i] !== this) i++;
+            return !!matches[i];
+        };
+    }
+
+    if (window.Element && !Element.prototype.closest) {
+        Element.prototype.closest = function(selector) {
+            var el = this;
+            while (el && el.nodeType === 1) {
+                if (el.matches(selector)) return el;
+                el = el.parentElement || el.parentNode;
+            }
+            return null;
+        };
+    }
+
+    if (window.Promise && !Promise.prototype.finally) {
+        Promise.prototype.finally = function(onFinally) {
+            var P = this.constructor;
+            return this.then(
+                function(value) { return P.resolve(onFinally && onFinally()).then(function() { return value; }); },
+                function(reason) { return P.resolve(onFinally && onFinally()).then(function() { throw reason; }); }
+            );
+        };
+    }
+
+    if (!window.requestIdleCallback) {
+        window.requestIdleCallback = function(cb, options) {
+            var start = Date.now();
+            return setTimeout(function() {
+                cb({
+                    didTimeout: false,
+                    timeRemaining: function() {
+                        return Math.max(0, 50 - (Date.now() - start));
+                    }
+                });
+            }, (options && options.timeout) || 1);
+        };
+    }
+    if (!window.cancelIdleCallback) {
+        window.cancelIdleCallback = function(id) { clearTimeout(id); };
+    }
+
+    var memoryStorageFallback = {};
+    function safeStorageGetItem(key) {
+        try {
+            if (window.localStorage) return window.localStorage.getItem(key);
+        } catch (e) {}
+        return Object.prototype.hasOwnProperty.call(memoryStorageFallback, key) ? memoryStorageFallback[key] : null;
+    }
+    function safeStorageSetItem(key, value) {
+        var stringValue = String(value);
+        try {
+            if (window.localStorage) {
+                window.localStorage.setItem(key, stringValue);
+                return true;
+            }
+        } catch (e) {}
+        memoryStorageFallback[key] = stringValue;
+        return false;
+    }
+    function safeStorageRemoveItem(key) {
+        try {
+            if (window.localStorage) {
+                window.localStorage.removeItem(key);
+                return true;
+            }
+        } catch (e) {}
+        if (Object.prototype.hasOwnProperty.call(memoryStorageFallback, key)) delete memoryStorageFallback[key];
+        return false;
+    }
+
+    function safeScrollIntoView(el, options, fallbackAlignTop) {
+        if (!el || typeof el.scrollIntoView !== 'function') return;
+        try {
+            el.scrollIntoView(options || { behavior: 'smooth', block: 'start' });
+        } catch (e) {
+            try { el.scrollIntoView(fallbackAlignTop !== false); } catch (ignored) {}
+        }
+    }
+
+    function safeScrollToTop() {
+        try {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (e) {
+            window.scrollTo(0, 0);
+        }
+    }
+
     // ══════════════════════════════════════════════════════════════
     // SEGURANÇA — SANITIZAÇÃO DE SAÍDA
     // ══════════════════════════════════════════════════════════════
     function escapeHtml(str) {
-        const m = { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' };
+        var m = { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' };
         return String(str).replace(/[&<>"']/g, function(c) { return m[c]; });
     }
 
@@ -4022,7 +4855,7 @@
 
             area.style.display = 'block';
             setTimeout(function() {
-                area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                safeScrollIntoView(area, { behavior: 'smooth', block: 'start' }, true);
             }, 100);
 
             btnGerar.disabled = false;
@@ -4040,7 +4873,7 @@
         updateCount();
         document.getElementById('results-area').style.display = 'none';
         gaEvent('form_reset', 'triagem', 'clear_button');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        safeScrollToTop();
     }
 
     document.getElementById('btn-gerar').addEventListener('click', gerarDiagnostico);
@@ -4050,8 +4883,29 @@
     var tabBtns = document.querySelectorAll('.tab-btn');
     var tabPanels = document.querySelectorAll('.tab-panel');
     window.portalState = window.portalState || {};
+    var modulesReady = { cycle: false, vault: false };
+
+    function ensureFeatureModules(tabId) {
+        if (tabId === 'calendario' && !modulesReady.cycle) {
+            try {
+                initCycleTracker();
+                modulesReady.cycle = true;
+            } catch (e) {
+                console.error('Falha ao inicializar Diário do Ciclo:', e);
+            }
+        }
+        if (tabId === 'cofre' && !modulesReady.vault) {
+            try {
+                initHealthVault();
+                modulesReady.vault = true;
+            } catch (e) {
+                console.error('Falha ao inicializar Cofre de Saúde:', e);
+            }
+        }
+    }
 
     function activateTab(tabId) {
+        ensureFeatureModules(tabId);
         tabBtns.forEach(function(b) {
             var active = b.dataset.tab === tabId;
             b.classList.toggle('active', active);
@@ -4065,7 +4919,7 @@
 
     function scrollToTabs() {
         var tabs = document.getElementById('tabs-container');
-        if (tabs) tabs.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (tabs) safeScrollIntoView(tabs, { behavior: 'smooth', block: 'start' }, true);
     }
 
     function openTabFromDashboard(tabId) {
@@ -4207,7 +5061,10 @@
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('./sw.js')
+                navigator.serviceWorker.getRegistration('./').then(function(existingReg) {
+                    if (existingReg) return existingReg;
+                    return navigator.serviceWorker.register('./sw.js');
+                })
                     .then(function() { gaEvent('pwa_sw_registered', 'pwa', 'success'); })
                     .catch(function() { gaEvent('pwa_sw_registered', 'pwa', 'error'); });
             });
@@ -4247,7 +5104,7 @@
 
     function getPushSubscriptionFromStorage() {
         try {
-            return JSON.parse(localStorage.getItem('intimateHealthPushSubscription'));
+            return JSON.parse(safeStorageGetItem('intimateHealthPushSubscription'));
         } catch (e) {
             return null;
         }
@@ -4255,10 +5112,10 @@
 
     function setPushSubscriptionToStorage(subscription) {
         if (!subscription) {
-            localStorage.removeItem('intimateHealthPushSubscription');
+            safeStorageRemoveItem('intimateHealthPushSubscription');
             return;
         }
-        localStorage.setItem('intimateHealthPushSubscription', JSON.stringify(subscription));
+        safeStorageSetItem('intimateHealthPushSubscription', JSON.stringify(subscription));
     }
 
     function getPushPublicKey() {
@@ -4315,11 +5172,11 @@
     }
 
     function getCycleNotificationEnabled() {
-        return localStorage.getItem('intimateHealthNotifyEnabled') === 'true';
+        return safeStorageGetItem('intimateHealthNotifyEnabled') === 'true';
     }
 
     function setCycleNotificationEnabled(enabled) {
-        localStorage.setItem('intimateHealthNotifyEnabled', enabled ? 'true' : 'false');
+        safeStorageSetItem('intimateHealthNotifyEnabled', enabled ? 'true' : 'false');
     }
 
     function showLocalNotification(title, body) {
@@ -4351,7 +5208,10 @@
             if (callback) callback(false);
             return;
         }
-        Notification.requestPermission().then(function(permission) {
+        var handled = false;
+        function applyPermission(permission) {
+            if (handled) return;
+            handled = true;
             if (permission === 'granted') {
                 setCycleNotificationEnabled(true);
                 if (callback) callback(true);
@@ -4359,7 +5219,23 @@
                 setCycleNotificationEnabled(false);
                 if (callback) callback(false);
             }
-        });
+        }
+        try {
+            var maybePromise = Notification.requestPermission(function(permission) {
+                applyPermission(permission);
+            });
+            if (maybePromise && typeof maybePromise.then === 'function') {
+                maybePromise.then(function(permission) {
+                    applyPermission(permission);
+                }).catch(function() {
+                    applyPermission('denied');
+                });
+            } else if (typeof maybePromise === 'string') {
+                applyPermission(maybePromise);
+            }
+        } catch (e) {
+            applyPermission(Notification.permission || 'denied');
+        }
     }
 
     function renderCycleNotificationUI() {
@@ -4392,7 +5268,7 @@
     function scheduleCycleNotification(state, metrics) {
         if (!state || !state.hasCycle || !getCycleNotificationEnabled() || Notification.permission !== 'granted') return;
         var todayKey = toLocalISODate(new Date());
-        var lastSent = localStorage.getItem('intimateHealthNotifyLastSent') || '';
+        var lastSent = safeStorageGetItem('intimateHealthNotifyLastSent') || '';
         if (lastSent === todayKey) return;
         var title = 'Diário do Ciclo';
         var body = 'Atualize o seu diário do ciclo hoje e verifique as previsões de menstruação e fertilidade.';
@@ -4406,7 +5282,7 @@
             body = 'Fase lútea ativa. Cuide da nutrição e registe o humor e sintomas.';
         }
         showLocalNotification(title, body);
-        localStorage.setItem('intimateHealthNotifyLastSent', todayKey);
+        safeStorageSetItem('intimateHealthNotifyLastSent', todayKey);
     }
 
     function updateCycleNotificationState(state, metrics) {
@@ -4417,7 +5293,7 @@
     tabBtns.forEach(function(btn) {
         btn.addEventListener('click', function() {
             activateTab(btn.dataset.tab);
-            btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            safeScrollIntoView(btn, { behavior: 'smooth', block: 'nearest', inline: 'center' }, true);
         });
     });
 
@@ -4430,16 +5306,15 @@
             if (navTab) {
                 e.preventDefault();
                 activateTab(navTab);
-                history.replaceState(null, '', '#' + navTab);
                 var tabsContainer = document.getElementById('tabs-container');
                 if (tabsContainer) {
-                    tabsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    safeScrollIntoView(tabsContainer, { behavior: 'smooth', block: 'start' }, true);
                 }
             } else if (targetId) {
                 var targetEl = document.getElementById(targetId);
                 if (targetEl) {
                     e.preventDefault();
-                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    safeScrollIntoView(targetEl, { behavior: 'smooth', block: 'start' }, true);
                 }
             }
             var mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -4449,23 +5324,6 @@
                 mobileMenuBtn.setAttribute('aria-expanded', 'false');
             }
         });
-    });
-
-    function handleHashNavigation(hash) {
-        if (!hash) return;
-        var tabId = hash.replace('#', '');
-        var validTabs = ['triagem','guia','calendario','contracetivos','cofre','faq','glossario'];
-        if (validTabs.indexOf(tabId) === -1) return;
-        activateTab(tabId);
-        var tabsContainer = document.getElementById('tabs-container');
-        if (tabsContainer) tabsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    window.addEventListener('load', function() {
-        handleHashNavigation(window.location.hash);
-    });
-    window.addEventListener('hashchange', function() {
-        handleHashNavigation(window.location.hash);
     });
 
     var mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -4537,7 +5395,7 @@
         }, { passive: true });
 
         backToTopBtn.addEventListener('click', function() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            safeScrollToTop();
             gaEvent('back_to_top', 'navigation', 'button_click', Math.round(window.scrollY));
         });
     }
@@ -4574,9 +5432,9 @@
     }
 
     function storageRead(key, fallback) {
-        var raw = localStorage.getItem(key);
+        var raw = safeStorageGetItem(key);
         if (raw) return safeJsonParse(raw, fallback);
-        var backupRaw = localStorage.getItem(key + '_backup');
+        var backupRaw = safeStorageGetItem(key + '_backup');
         if (!backupRaw) return fallback;
         var backup = safeJsonParse(backupRaw, null);
         if (backup && backup.data !== undefined) return backup.data;
@@ -4585,18 +5443,20 @@
 
     function storageWrite(key, value) {
         try {
-            localStorage.setItem(key, JSON.stringify(value));
-            localStorage.setItem(key + '_backup', JSON.stringify({
+            var mainStored = safeStorageSetItem(key, JSON.stringify(value));
+            var backupStored = safeStorageSetItem(key + '_backup', JSON.stringify({
                 savedAt: new Date().toISOString(),
                 data: value
             }));
+            var persisted = !!(mainStored && backupStored);
             window.portalState = window.portalState || {};
             window.portalState.storage = {
-                ok: true,
+                ok: persisted,
                 key: key,
-                lastSaved: new Date().toISOString()
+                lastSaved: new Date().toISOString(),
+                mode: persisted ? 'localStorage' : 'memory-fallback'
             };
-            return true;
+            return persisted;
         } catch (e) {
             console.warn('Falha ao guardar dados locais:', key, e);
             window.portalState = window.portalState || {};
@@ -4705,6 +5565,10 @@
 
         var cycles = storageRead(APP_STORAGE_KEYS.cycles, []);
         var dailyLogs = storageRead(APP_STORAGE_KEYS.dailyLogs, {});
+        var cyclesSnapshotBeforeInit = '';
+        var logsSnapshotBeforeInit = '';
+        try { cyclesSnapshotBeforeInit = JSON.stringify(cycles || []); } catch (e) {}
+        try { logsSnapshotBeforeInit = JSON.stringify(dailyLogs || {}); } catch (e) {}
 
         function normalizeCycles() {
             cycles = (Array.isArray(cycles) ? cycles : []).map(function(c) {
@@ -4749,6 +5613,16 @@
 
         function saveCycles() { storageWrite(APP_STORAGE_KEYS.cycles, cycles); }
         function saveLogs() { storageWrite(APP_STORAGE_KEYS.dailyLogs, dailyLogs); }
+        var cycleUpdateQueued = false;
+        function requestCycleUIUpdate() {
+            if (cycleUpdateQueued) return;
+            cycleUpdateQueued = true;
+            var scheduler = window.requestAnimationFrame || function(cb) { return setTimeout(cb, 16); };
+            scheduler(function() {
+                cycleUpdateQueued = false;
+                updateUI();
+            });
+        }
 
         function ensureTodayEntry() {
             var key = toLocalISODate(new Date());
@@ -5081,7 +5955,7 @@
                     if (!confirm('Deseja remover este registo de ciclo?')) return;
                     cycles = cycles.filter(function(c) { return Number(c.id) !== id; });
                     saveCycles();
-                    updateUI();
+                    requestCycleUIUpdate();
                 });
             });
         }
@@ -5131,25 +6005,17 @@
             }
 
             box.innerHTML =
-                '<h4 style="font-size:0.83rem;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:6px;">Próximos ciclos previstos</h4>' +
-                '<div style="overflow:auto;">' +
-                '<table style="width:100%;border-collapse:collapse;font-size:0.78rem;">' +
-                '<thead><tr>' +
-                '<th style="text-align:left;padding:6px;border-bottom:1px solid var(--border);color:var(--ink);">Mês</th>' +
-                '<th style="text-align:left;padding:6px;border-bottom:1px solid var(--border);color:var(--ink);">Menstruação</th>' +
-                '<th style="text-align:left;padding:6px;border-bottom:1px solid var(--border);color:var(--ink);">Janela fértil</th>' +
-                '<th style="text-align:left;padding:6px;border-bottom:1px solid var(--border);color:var(--ink);">Ovulação</th>' +
-                '</tr></thead>' +
-                '<tbody>' +
+                '<h4 class="cycle-overview-title">Próximos ciclos previstos</h4>' +
+                '<div class="cycle-overview-grid">' +
                 rows.map(function(r) {
-                    return '<tr>' +
-                        '<td style="padding:6px;border-bottom:1px solid var(--border);text-transform:capitalize;color:var(--ink);font-weight:600;">' + escapeHtml(r.monthLabel) + '</td>' +
-                        '<td style="padding:6px;border-bottom:1px solid var(--border);color:var(--slate);">' + escapeHtml(r.period) + '</td>' +
-                        '<td style="padding:6px;border-bottom:1px solid var(--border);color:var(--slate);">' + escapeHtml(r.fertile) + '</td>' +
-                        '<td style="padding:6px;border-bottom:1px solid var(--border);color:var(--slate);">' + escapeHtml(r.ovulation) + '</td>' +
-                    '</tr>';
+                    return '<article class="cycle-overview-card">' +
+                        '<div class="cycle-overview-month">' + escapeHtml(r.monthLabel) + '</div>' +
+                        '<p class="cycle-overview-line"><strong>Menstruação:</strong> ' + escapeHtml(r.period) + '</p>' +
+                        '<p class="cycle-overview-line"><strong>Janela fértil:</strong> ' + escapeHtml(r.fertile) + '</p>' +
+                        '<p class="cycle-overview-line"><strong>Ovulação:</strong> ' + escapeHtml(r.ovulation) + '</p>' +
+                    '</article>';
                 }).join('') +
-                '</tbody></table></div>';
+                '</div>';
         }
 
         function renderMultiMonthView(metrics, state, recordedPeriods, projected) {
@@ -5185,30 +6051,29 @@
 
                 var cells = [];
                 for (var o = 0; o < offset; o++) {
-                    cells.push('<span></span>');
+                    cells.push('<span class="cycle-mini-day is-empty"></span>');
                 }
                 for (var d = 1; d <= daysInMonth; d++) {
                     var date = new Date(year, month, d);
                     var role = dayRole(date);
-                    var styles = 'display:flex;align-items:center;justify-content:center;height:20px;border-radius:6px;font-size:0.68rem;';
-                    if (role === 'recorded-period') styles += 'background:var(--rose);color:#fff;font-weight:700;';
-                    else if (role === 'predicted-period') styles += 'background:#f9c3ce;color:#7a1828;font-weight:700;';
-                    else if (role === 'ovulation') styles += 'background:var(--purple);color:#fff;font-weight:800;';
-                    else if (role === 'fertile') styles += 'background:var(--teal-light);color:var(--teal-dark);border:1px solid var(--teal);font-weight:700;';
-                    else styles += 'background:rgba(12,14,22,0.04);color:var(--ink-80);';
-                    if (toLocalISODate(date) === todayKey) styles += 'box-shadow:inset 0 0 0 1px var(--ink);';
-                    cells.push('<span style="' + styles + '">' + d + '</span>');
+                    var cls = 'cycle-mini-day';
+                    if (role === 'recorded-period') cls += ' is-recorded-period';
+                    else if (role === 'predicted-period') cls += ' is-predicted-period';
+                    else if (role === 'ovulation') cls += ' is-ovulation';
+                    else if (role === 'fertile') cls += ' is-fertile';
+                    if (toLocalISODate(date) === todayKey) cls += ' is-today';
+                    cells.push('<span class="' + cls + '">' + d + '</span>');
                 }
 
                 html +=
-                    '<div style="border:1px solid var(--border);border-radius:10px;padding:0.65rem;background:#fff;">' +
-                    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">' +
-                    '<strong style="font-size:0.78rem;color:var(--ink);text-transform:capitalize;">' + monthNames[month] + ' ' + year + '</strong>' +
+                    '<div class="cycle-mini-month-card">' +
+                    '<div class="cycle-mini-month-head">' +
+                    '<strong class="cycle-mini-month-name">' + monthNames[month] + ' ' + year + '</strong>' +
                     '</div>' +
-                    '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:0.62rem;color:var(--slate);margin-bottom:4px;">' +
+                    '<div class="cycle-mini-weekdays">' +
                     '<span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span>' +
                     '</div>' +
-                    '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;">' + cells.join('') + '</div>' +
+                    '<div class="cycle-mini-days-grid">' + cells.join('') + '</div>' +
                     '</div>';
             }
             container.innerHTML = html;
@@ -5225,7 +6090,7 @@
             if (btnPrevMonth && !btnPrevMonth.hasAttribute('data-bound')) {
                 btnPrevMonth.addEventListener('click', function() {
                     window.calDisplayDate = addDays(new Date(window.calDisplayDate.getFullYear(), window.calDisplayDate.getMonth(), 1), -1);
-                    updateUI();
+                    requestCycleUIUpdate();
                     gaEvent('cycle_calendar_nav', 'cycle_daily', 'prev_month');
                 });
                 btnPrevMonth.setAttribute('data-bound', '1');
@@ -5233,7 +6098,7 @@
             if (btnNextMonth && !btnNextMonth.hasAttribute('data-bound')) {
                 btnNextMonth.addEventListener('click', function() {
                     window.calDisplayDate = new Date(window.calDisplayDate.getFullYear(), window.calDisplayDate.getMonth() + 1, 1);
-                    updateUI();
+                    requestCycleUIUpdate();
                     gaEvent('cycle_calendar_nav', 'cycle_daily', 'next_month');
                 });
                 btnNextMonth.setAttribute('data-bound', '1');
@@ -5244,12 +6109,20 @@
             var year = window.calDisplayDate.getFullYear();
             calTitle.textContent = monthNames[month] + ' ' + year;
             calGrid.innerHTML = '';
+            calGrid.setAttribute('role', 'grid');
+            var calendarFragment = document.createDocumentFragment();
 
             var first = new Date(year, month, 1);
             var daysInMonth = new Date(year, month + 1, 0).getDate();
             var offset = first.getDay() - 1;
             if (offset < 0) offset = 6;
-            for (var z = 0; z < offset; z++) calGrid.appendChild(document.createElement('div'));
+            for (var z = 0; z < offset; z++) {
+                var empty = document.createElement('div');
+                empty.className = 'calendar-day is-empty';
+                empty.setAttribute('aria-hidden', 'true');
+                empty.setAttribute('role', 'presentation');
+                calendarFragment.appendChild(empty);
+            }
 
             var todayKey = toLocalISODate(new Date());
             var todayDate = fromISODate(todayKey);
@@ -5268,58 +6141,46 @@
                 var key = toLocalISODate(date);
                 var cell = document.createElement('div');
                 cell.textContent = day;
-                cell.style.height = '35px';
-                cell.style.maxWidth = '35px';
-                cell.style.width = '100%';
-                cell.style.margin = '0 auto';
-                cell.style.borderRadius = '8px';
-                cell.style.display = 'flex';
-                cell.style.alignItems = 'center';
-                cell.style.justifyContent = 'center';
-                cell.style.fontSize = '0.88rem';
-                cell.style.color = 'var(--ink)';
-                cell.style.background = 'var(--paper-warm)';
+                cell.className = 'calendar-day';
+                cell.setAttribute('role', 'gridcell');
+                var label = 'Dia ' + day + ' de ' + monthNames[month] + ' de ' + year;
                 if (key === todayKey) {
-                    cell.style.boxShadow = 'inset 0 0 0 2px var(--ink)';
-                    cell.style.fontWeight = '900';
+                    cell.classList.add('is-today');
                 }
                 for (var p = 0; p < periods.length; p++) {
                     if (inRange(date, periods[p].start, periods[p].end)) {
-                        cell.style.background = 'var(--rose)';
-                        cell.style.color = '#fff';
-                        cell.style.fontWeight = '700';
+                        cell.classList.add('is-recorded-period');
                         cell.title = 'Menstruação registada';
+                        label += ' - Menstruação registada';
                         break;
                     }
                 }
                 if (!cell.title) {
                     for (var q = 0; q < projected.length; q++) {
                         if (inRange(date, projected[q].periodStart, projected[q].periodEnd) && date >= todayDate) {
-                            cell.style.background = '#f9c3ce';
-                            cell.style.color = '#7a1828';
-                            cell.style.fontWeight = '700';
+                            cell.classList.add('is-predicted-period');
                             cell.title = 'Menstruação prevista';
+                            label += ' - Menstruação prevista';
                             break;
                         }
                         if (toLocalISODate(projected[q].ovulation) === key) {
-                            cell.style.background = 'var(--purple)';
-                            cell.style.color = '#fff';
-                            cell.style.fontWeight = '800';
+                            cell.classList.add('is-ovulation');
                             cell.title = 'Ovulação prevista';
+                            label += ' - Ovulação prevista';
                             break;
                         }
                         if (inRange(date, projected[q].fertileStart, projected[q].fertileEnd)) {
-                            cell.style.background = 'var(--teal-light)';
-                            cell.style.border = '1px solid var(--teal)';
-                            cell.style.color = 'var(--teal-dark)';
-                            cell.style.fontWeight = '700';
+                            cell.classList.add('is-fertile');
                             cell.title = 'Janela fértil prevista';
+                            label += ' - Janela fértil prevista';
                             break;
                         }
                     }
                 }
-                calGrid.appendChild(cell);
+                cell.setAttribute('aria-label', label);
+                calendarFragment.appendChild(cell);
             }
+            calGrid.appendChild(calendarFragment);
 
             renderUpcomingOverview(metrics, state);
             renderMultiMonthView(metrics, state, periods, projected);
@@ -5339,7 +6200,7 @@
                         today.entry[group].push(value);
                     }
                     saveLogs();
-                    updateUI();
+                    requestCycleUIUpdate();
                     gaEvent('cycle_daily_toggle', 'cycle_daily', group + '_' + value + '_' + (today.entry[group].includes(value) ? 'on' : 'off'));
                 });
                 btn.setAttribute('data-bound', '1');
@@ -5361,8 +6222,6 @@
             if (!state.hasCycle) {
                 if (dashboard) dashboard.style.display = 'none';
                 if (calendarView) calendarView.style.display = 'none';
-                var emptyHint = document.getElementById('cycle-empty-placeholder');
-                if (emptyHint) emptyHint.style.display = 'block';
                 window.portalState = window.portalState || {};
                 window.portalState.cycle = {
                     hasCycleData: false,
@@ -5379,8 +6238,6 @@
                 if (typeof updateMainDashboard === 'function') updateMainDashboard();
                 return;
             }
-            var emptyHint = document.getElementById('cycle-empty-placeholder');
-            if (emptyHint) emptyHint.style.display = 'none';
 
             if (dashboard) dashboard.style.display = 'block';
             if (calendarView) calendarView.style.display = 'block';
@@ -5422,7 +6279,12 @@
 
         normalizeCycles();
         normalizeLogs();
-        saveLogs();
+        var cyclesSnapshotAfterInit = '';
+        var logsSnapshotAfterInit = '';
+        try { cyclesSnapshotAfterInit = JSON.stringify(cycles || []); } catch (e) {}
+        try { logsSnapshotAfterInit = JSON.stringify(dailyLogs || {}); } catch (e) {}
+        if (cyclesSnapshotAfterInit !== cyclesSnapshotBeforeInit) saveCycles();
+        if (logsSnapshotAfterInit !== logsSnapshotBeforeInit) saveLogs();
         if (dateInput) dateInput.value = toLocalISODate(new Date());
 
         if (form && !form.hasAttribute('data-bound')) {
@@ -5455,7 +6317,7 @@
                 if (dateInput) dateInput.value = toLocalISODate(new Date());
                 if (lengthInput) lengthInput.value = '5';
                 if (flowInput) flowInput.value = 'Normal';
-                updateUI();
+                requestCycleUIUpdate();
                 gaEvent('cycle_added', 'cycle', date);
             });
             form.setAttribute('data-bound', '1');
@@ -5466,7 +6328,7 @@
                 if (!confirm('Deseja apagar todo o histórico de ciclos?')) return;
                 cycles = [];
                 saveCycles();
-                updateUI();
+                requestCycleUIUpdate();
             });
             btnClear.setAttribute('data-bound', '1');
         }
@@ -5495,7 +6357,7 @@
                 var old = btnSaveDaily.textContent;
                 btnSaveDaily.textContent = 'Registo guardado';
                 setTimeout(function() { btnSaveDaily.textContent = old; }, 1500);
-                updateUI();
+                requestCycleUIUpdate();
                 gaEvent('cycle_daily_saved', 'cycle', today.key);
             });
             btnSaveDaily.setAttribute('data-bound', '1');
@@ -5523,7 +6385,7 @@
                         renderCycleNotificationUI();
                         if (granted) {
                             showLocalNotification('Notificações ativadas', 'Receberá lembretes de menstruação, fertilidade e ovulação.');
-                            updateUI();
+                            requestCycleUIUpdate();
                         } else {
                             alert('Permissão de notificações não foi concedida.');
                         }
@@ -5584,7 +6446,7 @@
         }
 
         window.addEventListener('focus', function() {
-            updateUI();
+            requestCycleUIUpdate();
         });
 
         bindTrackerButtons();
@@ -5626,12 +6488,24 @@
         var medsData = storageRead(APP_STORAGE_KEYS.vaultMeds, []);
         var medIntake = storageRead(APP_STORAGE_KEYS.vaultMedIntake, {});
         var docsMeta = storageRead(APP_STORAGE_KEYS.vaultDocMeta, []);
+        var vaultNeedsInitialSave = false;
+        var vaultSnapshotBefore = '';
+        try {
+            vaultSnapshotBefore = JSON.stringify({
+                profileData: profileData,
+                recordsData: recordsData,
+                medsData: medsData,
+                medIntake: medIntake,
+                docsMeta: docsMeta
+            });
+        } catch (e) {}
 
         var oldProfile = storageRead('intimateHealthVault_Profile', null);
         if (oldProfile && !profileData['v-allergies'] && !profileData['v-meds']) {
             profileData['v-blood'] = oldProfile.blood || '';
             profileData['v-allergies'] = oldProfile.allergies || '';
             profileData['v-meds'] = oldProfile.meds || '';
+            vaultNeedsInitialSave = true;
         }
 
         var oldExams = storageRead('intimateHealthVault_Exams', []);
@@ -5648,6 +6522,7 @@
                     notes: ex.notes || ''
                 };
             });
+            vaultNeedsInitialSave = true;
         }
 
         function normalizeRecords(list) {
@@ -5693,6 +6568,17 @@
         recordsData = normalizeRecords(recordsData);
         medsData = normalizeMeds(medsData);
         docsMeta = normalizeDocs(docsMeta);
+        var vaultSnapshotAfter = '';
+        try {
+            vaultSnapshotAfter = JSON.stringify({
+                profileData: profileData,
+                recordsData: recordsData,
+                medsData: medsData,
+                medIntake: medIntake,
+                docsMeta: docsMeta
+            });
+        } catch (e) {}
+        if (vaultSnapshotAfter !== vaultSnapshotBefore) vaultNeedsInitialSave = true;
 
         function saveAll() {
             storageWrite(APP_STORAGE_KEYS.vaultProfile, profileData);
@@ -5910,22 +6796,57 @@
         var DB_NAME = 'SaudeIntimaVaultDB';
         var DB_VERSION = 1;
         var DB_STORE = 'documents';
+        var vaultDbUnavailable = false;
+        var vaultDbWarned = false;
+
+        function warnVaultDbUnavailable() {
+            if (vaultDbWarned) return;
+            vaultDbWarned = true;
+            alert('O armazenamento avançado de anexos está limitado neste navegador. O Cofre continua funcional para perfil, registos e medicação.');
+        }
 
         function openVaultDB() {
             return new Promise(function(resolve, reject) {
-                if (!window.indexedDB) {
+                if (vaultDbUnavailable || !window.indexedDB) {
+                    vaultDbUnavailable = true;
                     reject(new Error('IndexedDB indisponível'));
                     return;
                 }
                 var req = indexedDB.open(DB_NAME, DB_VERSION);
+                var settled = false;
+                var timeoutId = setTimeout(function() {
+                    if (settled) return;
+                    settled = true;
+                    vaultDbUnavailable = true;
+                    try { if (req.result && req.result.close) req.result.close(); } catch (ignored) {}
+                    reject(new Error('Tempo excedido ao abrir armazenamento local'));
+                }, 5000);
                 req.onupgradeneeded = function() {
                     var db = req.result;
                     if (!db.objectStoreNames.contains(DB_STORE)) {
                         db.createObjectStore(DB_STORE, { keyPath: 'id' });
                     }
                 };
-                req.onsuccess = function() { resolve(req.result); };
-                req.onerror = function() { reject(req.error || new Error('Erro ao abrir IndexedDB')); };
+                req.onsuccess = function() {
+                    if (settled) return;
+                    settled = true;
+                    clearTimeout(timeoutId);
+                    resolve(req.result);
+                };
+                req.onerror = function() {
+                    if (settled) return;
+                    settled = true;
+                    clearTimeout(timeoutId);
+                    vaultDbUnavailable = true;
+                    reject(req.error || new Error('Erro ao abrir IndexedDB'));
+                };
+                req.onblocked = function() {
+                    if (settled) return;
+                    settled = true;
+                    clearTimeout(timeoutId);
+                    vaultDbUnavailable = true;
+                    reject(new Error('Abertura do IndexedDB bloqueada'));
+                };
             });
         }
 
@@ -5937,6 +6858,9 @@
                     tx.oncomplete = function() { db.close(); resolve(true); };
                     tx.onerror = function() { db.close(); reject(tx.error || new Error('Erro a gravar')); };
                 });
+            }).catch(function(err) {
+                warnVaultDbUnavailable();
+                throw err;
             });
         }
 
@@ -5948,6 +6872,9 @@
                     req.onsuccess = function() { db.close(); resolve(req.result || null); };
                     req.onerror = function() { db.close(); reject(req.error || new Error('Erro a ler')); };
                 });
+            }).catch(function(err) {
+                warnVaultDbUnavailable();
+                throw err;
             });
         }
 
@@ -5959,6 +6886,9 @@
                     tx.oncomplete = function() { db.close(); resolve(true); };
                     tx.onerror = function() { db.close(); reject(tx.error || new Error('Erro a apagar')); };
                 });
+            }).catch(function(err) {
+                warnVaultDbUnavailable();
+                throw err;
             });
         }
 
@@ -6264,9 +7194,15 @@
         }
 
         if (searchInput && !searchInput.hasAttribute('data-bound')) {
+            var searchRenderTimer = null;
             var searchTrackTimer = null;
             searchInput.addEventListener('input', function() {
-                renderAll();
+                if (searchRenderTimer) clearTimeout(searchRenderTimer);
+                searchRenderTimer = setTimeout(function() {
+                    renderRecords();
+                    renderMeds();
+                    renderDocs();
+                }, 90);
                 if (searchTrackTimer) clearTimeout(searchTrackTimer);
                 var value = this.value ? this.value.trim() : '';
                 searchTrackTimer = setTimeout(function() {
@@ -6290,7 +7226,7 @@
         }
 
         loadProfile();
-        saveAll();
+        if (vaultNeedsInitialSave) saveAll();
         renderAll();
     }
 
@@ -6299,11 +7235,48 @@
     initDashboardActions();
     initContraceptiveTracking();
     initPWAInstall();
-    initCycleTracker();
-    initHealthVault();
+
+    window.portalState = window.portalState || {};
+    if (!window.portalState.cycle) {
+        window.portalState.cycle = {
+            hasCycleData: false,
+            irregular: false,
+            regularity: 'Sem dados',
+            currentDay: 0,
+            delayThreshold: 35,
+            phaseLabel: 'Sem registo',
+            isFertileWindow: false,
+            nextPeriod: null,
+            todayPain: 0,
+            todayUnusualCount: 0
+        };
+    }
+    if (!window.portalState.vault) {
+        window.portalState.vault = {
+            recordsCount: 0,
+            activeMeds: 0,
+            docsCount: 0,
+            notTakenToday: 0,
+            hasProfile: false
+        };
+    }
+
+    function prewarmMobileModules() {
+        requestIdleCallback(function() {
+            ensureFeatureModules('calendario');
+            updateMainDashboard();
+        }, { timeout: 1200 });
+        requestIdleCallback(function() {
+            ensureFeatureModules('cofre');
+            updateMainDashboard();
+        }, { timeout: 2400 });
+    }
+
+    prewarmMobileModules();
     updateMainDashboard();
 
 })();
 </script>
 </body>
 </html>
+
