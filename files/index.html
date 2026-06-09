@@ -1,0 +1,1899 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portal interativo de triagem e educação sobre saúde reprodutiva e Infeções Sexualmente Transmissíveis (ISTs). Projeto de saúde pública — Benj Carhl.">
+    <meta name="keywords" content="Saúde íntima, ISTs, Moçambique, Triagem de sintomas, Vaginose, Gonorreia, Sífilis, Saúde Reprodutiva, PrEP injetável, Lenacapavir, Cofre de Saúde">
+    <meta name="author" content="Benj Carhl">
+
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' https://www.googletagmanager.com 'unsafe-inline';
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com;
+        connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com;
+        frame-ancestors 'none';
+        base-uri 'self';
+        form-action 'self';
+        object-src 'none';
+    ">
+
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=(), payment=()">
+    <meta name="theme-color" content="#0c0e16">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Saúde Íntima">
+
+    <title>Saúde Íntima | Portal de Triagem — Benj Carhl</title>
+
+    <link rel="manifest" href="manifest.webmanifest">
+    <script src="pwa-additions.js" defer></script>
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+    <!-- CSS Separado -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CLMQGQVDK5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-CLMQGQVDK5', {
+        page_title: 'Portal de Saúde Íntima',
+        page_location: window.location.href,
+        anonymize_ip: true
+      });
+
+      var ANALYTICS_PRIVACY_MODE = true;
+      var REDACT_LABEL_ACTIONS = {
+        symptom_toggle: true,
+        generate_report: true,
+        diagnosis_result: true,
+        cycle_daily_toggle: true,
+        vault_search: true,
+        contraceptive_card_click: true,
+        contraceptive_faq_open: true
+      };
+
+      function normalizeAnalyticsLabel(action, label, value) {
+        if (!ANALYTICS_PRIVACY_MODE || !REDACT_LABEL_ACTIONS[action]) return label;
+        if (action === 'generate_report') return 'count_' + String(value || 0);
+        if (action === 'diagnosis_result') return 'match_score_' + String(value || 0);
+        if (action === 'cycle_daily_toggle') return 'daily_tag_toggle';
+        if (action === 'vault_search') return label === 'clear' ? 'clear' : 'query';
+        if (action === 'symptom_toggle') return (String(label || '').indexOf('_checked') !== -1) ? 'checked' : 'unchecked';
+        if (action === 'contraceptive_card_click') return 'method_card';
+        if (action === 'contraceptive_faq_open') return 'faq_item';
+        return 'redacted';
+      }
+
+      function gaEvent(action, category, label, value) {
+        if (typeof gtag !== 'function') return;
+        var safeLabel = normalizeAnalyticsLabel(action, label, value);
+        gtag('event', action, {
+          event_category: category,
+          event_label: safeLabel,
+          value: value || 0
+        });
+      }
+    </script>
+</head>
+<body>
+
+<button id="back-to-top" aria-label="Voltar ao topo da página" title="Voltar ao topo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M18 15l-6-6-6 6"/>
+    </svg>
+</button>
+
+<div id="page-top" aria-hidden="true"></div>
+
+<nav class="topnav" role="navigation" aria-label="Navegação principal">
+    <div class="topnav-inner">
+        <a href="#page-top" class="nav-logo">Saúde<span>Íntima</span></a>
+        <button id="mobile-menu-btn" type="button" class="mobile-menu-btn" aria-label="Abrir menu móvel" aria-expanded="false" aria-controls="mobile-nav">☰ Menu</button>
+        <ul class="nav-links" id="mobile-nav">
+            <li><a href="#triagem" data-nav-tab="triagem">Triagem</a></li>
+            <li><a href="#guia" data-nav-tab="guia">Guia ISTs & Prevenção</a></li>
+            <li><a href="#calendario" data-nav-tab="calendario">Diário do Ciclo</a></li>
+            <li><a href="#contracetivos" data-nav-tab="contracetivos">Contracetivos</a></li>
+            <li><a href="#cofre" data-nav-tab="cofre">Cofre de Saúde</a></li>
+            <li><a href="#triagem" class="nav-cta" data-nav-tab="triagem">Fazer Triagem →</a></li>
+        </ul>
+        <button id="install-app-btn" type="button" class="install-btn" aria-label="Instalar aplicação no dispositivo">📲 Instalar App</button>
+    </div>
+</nav>
+
+<header class="hero" role="banner" id="hero-section">
+    <div class="container">
+        <span class="hero-badge">Projeto de Saúde Pública · Moçambique 🇲🇿</span>
+        <h1>O seu guia para<br>uma saúde <em>íntima</em> informada</h1>
+        <p class="hero-sub">Portal seguro de triagem clínica e educação sobre saúde reprodutiva e ISTs, baseado em protocolos internacionais da OMS e CDC. Acesso livre, confidencial e cientificamente fundamentado.</p>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-num"><span>13</span></div>
+                <div class="hero-stat-label">Patologias na base</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-num"><span>24</span></div>
+                <div class="hero-stat-label">Sintomas mapeados</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-num"><span>+1M</span></div>
+                <div class="hero-stat-label">Casos ISTs/ano em Moz.</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-num"><span>100%</span></div>
+                <div class="hero-stat-label">Gratuito & privado</div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="main-content" id="main-content">
+    <div class="container">
+
+        <div class="stats-band reveal">
+            <div class="stat-box">
+                <div class="stat-box-num">374M</div>
+                <div class="stat-box-label">Novas ISTs curáveis por ano no mundo (OMS, 2022)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box-num">~70%</div>
+                <div class="stat-box-label">Das ISTs são assintomáticas em alguma fase</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box-num">3×</div>
+                <div class="stat-box-label">Risco de contrair HIV com IST ativa e não tratada</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box-num">95%</div>
+                <div class="stat-box-label">Das ISTs bacterianas são curáveis com tratamento correto</div>
+            </div>
+        </div>
+
+        <section id="main-dashboard" class="card reveal" aria-labelledby="dashboard-title" style="padding:1.6rem 1.75rem;">
+            <p class="eyebrow">Dashboard Principal</p>
+            <h2 id="dashboard-title" style="font-size:clamp(1.35rem,3vw,2rem);margin-bottom:0.8rem;">Ações do Dia e Alertas Prioritários</h2>
+            <p class="lead" style="font-size:0.95rem;margin-bottom:1rem;">Painel rápido para orientar o que deve ser feito hoje, com prioridade clínica e estado da gravação local dos seus dados.</p>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:0.9rem;">
+                <div class="stat-box"><div class="stat-box-num" id="dash-actions-count">0</div><div class="stat-box-label">Ações recomendadas hoje</div></div>
+                <div class="stat-box"><div class="stat-box-num" id="dash-priority-level">Baixa</div><div class="stat-box-label">Prioridade clínica</div></div>
+                <div class="stat-box"><div class="stat-box-num" id="dash-alert-count">0</div><div class="stat-box-label">Alertas prioritários</div></div>
+                <div class="stat-box"><div class="stat-box-num" id="dash-data-status">OK</div><div class="stat-box-label">Gravação local de dados</div></div>
+            </div>
+
+            <div id="dash-priority-alert" style="display:none;background:var(--rose-light);border:1px solid rgba(192,52,74,0.22);border-left:4px solid var(--rose);border-radius:0 var(--r-xs) var(--r-xs) 0;padding:0.8rem 1rem;margin-bottom:0.9rem;font-size:0.86rem;color:#7a1828;"></div>
+
+            <div class="action-row" style="margin-top:0;">
+                <button type="button" class="btn btn-primary" data-dashboard-tab="calendario" style="flex:1 1 190px;">Registar ciclo/sintomas</button>
+                <button type="button" class="btn btn-ghost" data-dashboard-tab="cofre" style="flex:1 1 190px;">Atualizar cofre de saúde</button>
+                <button type="button" class="btn btn-ghost" data-dashboard-tab="contracetivos" style="flex:1 1 190px;">Rever contracetivos</button>
+                <button type="button" class="btn btn-ghost" data-dashboard-tab="triagem" style="flex:1 1 190px;">Fazer triagem rápida</button>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:1rem;">
+                <div style="background:var(--paper-warm);border:1px solid var(--border);border-radius:var(--r-xs);padding:0.9rem;">
+                    <h4 style="font-size:0.83rem;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:6px;">Ações do dia</h4>
+                    <div id="dash-actions-list" style="font-size:0.84rem;color:var(--ink-80);line-height:1.6;"></div>
+                </div>
+                <div style="background:var(--paper-warm);border:1px solid var(--border);border-radius:var(--r-xs);padding:0.9rem;">
+                    <h4 style="font-size:0.83rem;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:6px;">Alertas prioritários</h4>
+                    <div id="dash-alerts-list" style="font-size:0.84rem;color:var(--ink-80);line-height:1.6;"></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-tabs" role="tablist" aria-label="Secções do portal" id="tabs-container">
+            <button class="tab-btn active" role="tab" aria-selected="true"  data-tab="triagem">🔬 Triagem Clínica</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="guia">📖 Guia de ISTs & Prevenção</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="calendario">📅 Diário do Ciclo</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="contracetivos">💊 Contracetivos</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="cofre">🔐 Cofre de Saúde</button>
+            <button class="tab-btn" role="tab" aria-selected="false" data-tab="glossario">📚 Glossário</button>
+        </div>
+
+        <div id="tab-triagem" class="tab-panel active" role="tabpanel">
+            <section class="card reveal" aria-labelledby="visao-titulo">
+                <p class="eyebrow">Missão do Projeto</p>
+                <h2 id="visao-titulo">A Visão por Detrás da Plataforma</h2>
+                <div class="callout">
+                    <p>"A maioria das infeções sexualmente transmissíveis são silenciosas — não causam sintomas, mas continuam a causar danos e a transmitir-se. O diagnóstico e tratamento precoces são a única forma de travá-las."</p>
+                    <cite>— OMS, Global Health Sector Strategy on STIs (2022–2030)</cite>
+                </div>
+                <p class="lead">Desenvolvida como ferramenta de saúde pública, esta plataforma cruza os seus sintomas com protocolos médicos internacionais. O objetivo é desmistificar as infeções do trato genital e ISTs sistémicas, orientando o paciente na busca precoce por tratamento adequado. <strong>O diagnóstico definitivo requer sempre exames laboratoriais.</strong></p>
+
+                <div class="infobox">
+                    <div class="infobox-item">
+                        <div class="infobox-icon ib-teal">🔒</div>
+                        <div class="infobox-text">
+                            <h4>100% Privado</h4>
+                            <p>Nenhum dado é enviado ou guardado. A triagem é feita apenas no seu dispositivo.</p>
+                        </div>
+                    </div>
+                    <div class="infobox-item">
+                        <div class="infobox-icon ib-rose">🧬</div>
+                        <div class="infobox-text">
+                            <h4>Base Científica</h4>
+                            <p>Algoritmo baseado em diretrizes OMS, CDC e Ministério da Saúde de Moçambique.</p>
+                        </div>
+                    </div>
+                    <div class="infobox-item">
+                        <div class="infobox-icon ib-gold">⚡</div>
+                        <div class="infobox-text">
+                            <h4>Resultado Imediato</h4>
+                            <p>Triagem interativa em menos de 2 minutos, com protocolo de tratamento.</p>
+                        </div>
+                    </div>
+                    <div class="infobox-item">
+                        <div class="infobox-icon ib-purple">🏥</div>
+                        <div class="infobox-text">
+                            <h4>Orientação Local</h4>
+                            <p>Indicação de unidades de saúde em Maputo para seguimento clínico.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="triagem-form" class="card reveal" aria-labelledby="triagem-titulo">
+                <p class="eyebrow">Triagem Clínica Interativa</p>
+                <h2 id="triagem-titulo">Sistema Integrado de Triagem de Sintomas</h2>
+                <p class="lead" style="margin-bottom: 0.5rem;">Assinale <strong>todos</strong> os sintomas que apresenta atualmente. Quanto mais sintomas marcar, mais precisa será a análise.</p>
+
+                <div id="symptoms-form">
+                    <div class="category-label">
+                        <div class="cat-icon cat-blue" aria-hidden="true">💧</div>
+                        Corrimentos, Fluxos e Odores
+                    </div>
+                    <div class="symptoms-grid" role="group" aria-label="Sintomas de corrimentos">
+                        <label class="symptom-item">
+                            <input type="checkbox" value="odor-peixe">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Odor fétido (tipo peixe)</span>
+                                <span class="s-hint">Piora após relação sexual ou menstruação</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="corrimento-cinza">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Corrimento acinzentado</span>
+                                <span class="s-hint">Fluido fino e homogéneo, branco-acinzentado</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="branco-espesso">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Corrimento branco grumoso</span>
+                                <span class="s-hint">Aspeto de coalho ou queijo fresco</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="purulento">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Corrimento amarelado/verde (pus)</span>
+                                <span class="s-hint">Abundante, com consistência espessa</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="espumoso">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Corrimento espumoso</span>
+                                <span class="s-hint">Bolhas visíveis, verde-amarelado</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="sangramento">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Sangramento fora da menstruação</span>
+                                <span class="s-hint">Spotting, sangramento pós-coital ou irregular</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="corrimento-transparente">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Corrimento transparente aumentado</span>
+                                <span class="s-hint">Mais abundante que o habitual, sem odor</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="category-label">
+                        <div class="cat-icon cat-red" aria-hidden="true">🔥</div>
+                        Dores, Desconforto e Sintomas Gerais
+                    </div>
+                    <div class="symptoms-grid" role="group" aria-label="Sintomas gerais">
+                        <label class="symptom-item">
+                            <input type="checkbox" value="prurido">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Prurido (coceira) intenso</span>
+                                <span class="s-hint">Comichão na vulva, vagina ou pénis</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="dor-urinar">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Dor ou ardor ao urinar</span>
+                                <span class="s-hint">Sensação de queimadura durante a micção</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="dor-pelvica">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Dor pélvica ou abdominal intensa</span>
+                                <span class="s-hint">Dor baixa persistente, piora com movimentos</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="febre">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Febre ou mal-estar geral</span>
+                                <span class="s-hint">Temperatura > 38°C, calafrios, suores noturnos</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="fadiga">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Fadiga extrema constante</span>
+                                <span class="s-hint">Cansaço inexplicável mesmo após descanso</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="ictericia">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Pele ou olhos amarelados</span>
+                                <span class="s-hint">Coloração ictérica, urina escura (cor de chá)</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="dor-coito">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Dor durante a relação sexual</span>
+                                <span class="s-hint">Dispareunia — dor superficial ou profunda</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="urinario-freq">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Urinar com frequência elevada</span>
+                                <span class="s-hint">Necessidade urgente e frequente de urinar</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="category-label">
+                        <div class="cat-icon cat-green" aria-hidden="true">🦠</div>
+                        Lesões Genitais e Alterações da Pele
+                    </div>
+                    <div class="symptoms-grid" role="group" aria-label="Sintomas de lesões">
+                        <label class="symptom-item">
+                            <input type="checkbox" value="vesiculas">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Bolhas pequenas e dolorosas</span>
+                                <span class="s-hint">Vesículas agrupadas que rebentam e criam feridas</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="ferida-indolor">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Ferida única que NÃO dói</span>
+                                <span class="s-hint">Úlcera de base endurecida (cancro duro)</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="ferida-dolorosa">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Úlcera dolorosa com pus</span>
+                                <span class="s-hint">Múltiplas feridas moles, bordos irregulares</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="verrugas">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Verrugas genitais ("crista de galo")</span>
+                                <span class="s-hint">Excrescências carnosas, não dolorosas</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="ganglios">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Ínguas (gânglios) na virilha</span>
+                                <span class="s-hint">Nódulos palpáveis, sensíveis ao toque</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="vermelhidao">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Vermelhidão e irritação genital</span>
+                                <span class="s-hint">Eritema e inflamação vulvar ou peniana</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="category-label">
+                        <div class="cat-icon cat-orange" aria-hidden="true">🌐</div>
+                        Sintomas Sistémicos (Corpo em Geral)
+                    </div>
+                    <div class="symptoms-grid" role="group" aria-label="Sintomas sistémicos">
+                        <label class="symptom-item">
+                            <input type="checkbox" value="erupcao-cutanea">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Erupção cutânea no corpo</span>
+                                <span class="s-hint">Manchas avermelhadas, esp. palmas e plantas</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="ganglios-generalizados">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Gânglios em múltiplas regiões</span>
+                                <span class="s-hint">Pescoço, axilas, virilha — linfadenopatia generalizada</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="perda-peso">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Perda de peso inexplicável</span>
+                                <span class="s-hint">Emagrecimento sem alteração de dieta ou exercício</span>
+                            </div>
+                        </label>
+                        <label class="symptom-item">
+                            <input type="checkbox" value="dor-garganta">
+                            <div class="s-check" aria-hidden="true"></div>
+                            <div class="s-label">
+                                <span class="s-name">Dor de garganta persistente</span>
+                                <span class="s-hint">Faringite após exposição sexual oral</span>
+                            </div>
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="selection-bar">
+                    <div class="sel-count">
+                        Sintomas selecionados: <span id="sel-count-num">0</span>
+                    </div>
+                    <div style="font-size:0.82rem; color:var(--teal-dark);">
+                        💡 Selecione todos os sintomas que sente para melhor precisão
+                    </div>
+                </div>
+
+                <div class="action-row">
+                    <button type="button" id="btn-gerar" class="btn btn-primary" aria-label="Gerar relatório de triagem preliminar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        Gerar Relatório Preliminar
+                    </button>
+                    <button type="button" id="btn-limpar" class="btn btn-ghost" aria-label="Limpar todas as seleções">
+                        ✕ Limpar Seleções
+                    </button>
+                </div>
+
+                <div id="results-area" aria-live="polite" aria-atomic="false">
+                    <div class="results-header">
+                        <div>
+                            <p class="eyebrow">Análise gerada</p>
+                            <p class="results-title">Relatório de Triagem Clínica</p>
+                            <p class="results-subtitle" id="results-meta"></p>
+                        </div>
+                    </div>
+                    <div class="disclaimer-bar" role="alert">
+                        <span style="font-size:1rem;flex-shrink:0;" aria-hidden="true">⚠️</span>
+                        <span><strong>Aviso clínico importante:</strong> Esta análise é meramente educativa e <strong>não substitui exames laboratoriais</strong> (VDRL, PCR, cultura, etc.) nem a consulta médica presencial. Procure sempre um profissional de saúde para confirmação diagnóstica e tratamento.</span>
+                    </div>
+                    <div id="diagnosticos-container"></div>
+                </div>
+            </section>
+        </div>
+
+        <div id="tab-guia" class="tab-panel" role="tabpanel">
+            <section class="card reveal" aria-labelledby="guia-titulo">
+                <p class="eyebrow">Enciclopédia Clínica</p>
+                <h2 id="guia-titulo">Guia Completo de ISTs e Infeções Genitais</h2>
+                <p class="lead">Uma referência baseada em evidências científicas internacionais. Cada entrada inclui o agente etiológico, mecanismo de transmissão, apresentação clínica e protocolo de tratamento recomendado.</p>
+
+                <div class="guide-grid">
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg,#7a1828,#c0344a);">
+                            <div>
+                                <p class="guide-card-name">Gonorreia</p>
+                                <span class="guide-tag gt-ist" style="background:rgba(255,255,255,0.15);color:#fff;">IST Bacteriana</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Agente:</span><span>Neisseria gonorrhoeae (diplococo Gram-negativo)</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Transmissão:</span><span>Sexual (vaginal, oral, anal); vertical (mãe-filho)</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Clínica:</span><span>Corrimento purulento, disúria; 50% das mulheres assintomáticas</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Tratamento:</span><span>Ceftriaxona 500 mg IM + Azitromicina 1 g oral (CDC 2021)</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Complicações:</span><span>DIP, infertilidade, artrite gonocócica, resistência antimicrobiana</span></div>
+                            </div>
+                            <div class="guide-cite">Workowski et al. (2021). CDC STI Treatment Guidelines. MMWR, 70(4).</div>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg,#1a5c9e,#2980b9);">
+                            <div>
+                                <p class="guide-card-name">Clamídia</p>
+                                <span class="guide-tag gt-ist" style="background:rgba(255,255,255,0.15);color:#fff;">IST Bacteriana</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Agente:</span><span>Chlamydia trachomatis (bactéria intracelular obrigatória)</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Transmissão:</span><span>Sexual; vertical. IST bacteriana mais comum no mundo</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Clínica:</span><span>70-80% assintomática. Cervicite, uretrite, salpingite</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Tratamento:</span><span>Doxiciclina 100 mg 2x/dia por 7 dias (1.ª linha)</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Risco:</span><span>Principal causa de infertilidade por fator tubário</span></div>
+                            </div>
+                            <div class="guide-cite">WHO (2021). Global guidelines for the management of STIs.</div>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg,#5c3a00,#a06000);">
+                            <div>
+                                <p class="guide-card-name">Sífilis</p>
+                                <span class="guide-tag gt-ist" style="background:rgba(255,255,255,0.15);color:#fff;">IST Bacteriana</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Agente:</span><span>Treponema pallidum (espiroqueta)</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Fases:</span><span>Primária (cancro), Secundária (rash), Latente, Terciária (neurossífilis)</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Clínica:</span><span>Úlcera indolor (cancro duro) fase primária; rash palmo-plantar</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Tratamento:</span><span>Penicilina Benzatina 2,4 MU IM — altamente eficaz</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Risco grave:</span><span>Sífilis congénita: morte fetal ou malformações graves</span></div>
+                            </div>
+                            <div class="guide-cite">MISAU (2021). Protocolo de tratamento de ISTs. Moçambique.</div>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg,#1d4a1d,#2e7d2e);">
+                            <div>
+                                <p class="guide-card-name">Vaginose Bacteriana</p>
+                                <span class="guide-tag gt-flora" style="background:rgba(255,255,255,0.15);color:#fff;">Flora Vaginal</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Mecanismo:</span><span>Disbiose: redução de Lactobacillus, proliferação de Gardnerella e anaeróbios</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Critérios:</span><span>Critérios de Amsel: corrimento, pH > 4.5, clue cells, odor positivo</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Clínica:</span><span>Odor a peixe, corrimento cinzento fino; 50% assintomática</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Tratamento:</span><span>Metronidazol 500 mg 2x/dia por 7 dias ou gel vaginal</span></div>
+                            </div>
+                            <div class="guide-cite">Muzny & Schwebke (2016). Pathogenesis of BV. J Infect Dis, 214(S1).</div>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg,#5c3a80,#8b5fb8);">
+                            <div>
+                                <p class="guide-card-name">Herpes Genital</p>
+                                <span class="guide-tag gt-viral" style="background:rgba(255,255,255,0.15);color:#fff;">Vírus</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Agente:</span><span>Herpes Simplex Vírus tipo 2 (HSV-2), maioritariamente</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Latência:</span><span>Vírus permanece nos gânglios sacrais para sempre</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Clínica:</span><span>Vesículas dolorosas agrupadas; febre e adenopatia no 1.º episódio</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Tratamento:</span><span>Aciclovir 400 mg 3x/dia por 5-10 dias (sem cura, controla crises)</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Nota:</span><span>Transmissão possível mesmo sem lesões visíveis (excreção assintomática)</span></div>
+                            </div>
+                            <div class="guide-cite">Looker et al. (2015). Global estimates of HSV-2. PLOS One.</div>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg,#1a3a5c,#1e6091);">
+                            <div>
+                                <p class="guide-card-name">HIV / SIDA</p>
+                                <span class="guide-tag gt-viral" style="background:rgba(255,255,255,0.15);color:#fff;">Vírus</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Agente:</span><span>Vírus da Imunodeficiência Humana (retrovírus)</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Alvo:</span><span>Células T-CD4+; destruição progressiva do sistema imunológico</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Clínica:</span><span>Fase aguda: febre, ínguas, fadiga. Depois anos assintomático</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Tratamento:</span><span>TARV (Tenofovir + Lamivudina + Dolutegravir, 1.ª linha em Moz.)</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">I=I:</span><span>Indetectável = Intransmissível (com TARV eficaz)</span></div>
+                            </div>
+                            <div class="guide-cite">UNAIDS (2023). Global AIDS Update. Moçambique: ~2.1M a viver com HIV.</div>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg,#4a3500,#8b6914);">
+                            <div>
+                                <p class="guide-card-name">HPV</p>
+                                <span class="guide-tag gt-viral" style="background:rgba(255,255,255,0.15);color:#fff;">Vírus</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Agente:</span><span>Papilomavírus Humano — &gt;200 subtipos</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Oncogénicos:</span><span>Serotipos 16 e 18 responsáveis por ~70% dos cancros cervicais</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Clínica:</span><span>Verrugas genitais (serotipos 6 e 11) ou assintomático (alto risco)</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Tratamento:</span><span>Remoção de lesões; vigilância citológica (Pap anual)</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Prevenção:</span><span>Vacina HPV (Gardasil/Cervarix) — altamente eficaz antes da exposição</span></div>
+                            </div>
+                            <div class="guide-cite">Bruni et al. (2023). Global HPV Vaccination: current status. Lancet Oncol.</div>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg,#2d4a00,#4a7d00);">
+                            <div>
+                                <p class="guide-card-name">Tricomoníase</p>
+                                <span class="guide-tag gt-ist" style="background:rgba(255,255,255,0.15);color:#fff;">Protozoário</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Agente:</span><span>Trichomonas vaginalis (protozoário flagelado)</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Prevalência:</span><span>IST não viral mais comum no mundo (~156M casos/ano)</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Clínica:</span><span>Corrimento espumoso verde-amarelado, odor fétido, prurido</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Tratamento:</span><span>Metronidazol 2 g dose única — tratar parceiro obrigatoriamente</span></div>
+                            </div>
+                            <div class="guide-cite">Kissinger (2015). Epidemiology of Trichomonas vaginalis. Sex Transm Infect, 91(1).</div>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg,#4a1a5c,#7b2a99);">
+                            <div>
+                                <p class="guide-card-name">Candidíase Vaginal</p>
+                                <span class="guide-tag gt-flora" style="background:rgba(255,255,255,0.15);color:#fff;">Fúngica</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Agente:</span><span>Candida albicans (75%) ou C. glabrata</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Fatores:</span><span>Antibioterapia, diabetes, gravidez, imunossupressão</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Clínica:</span><span>Prurido intenso, corrimento branco grumoso, eritema vulvar</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Tratamento:</span><span>Fluconazol 150 mg oral dose única; ou Clotrimazol creme 7 dias</span></div>
+                            </div>
+                            <div class="guide-cite">Sobel (2016). Vulvovaginal candidosis. Lancet, 369(9577).</div>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg,#5c1a1a,#a03030);">
+                            <div>
+                                <p class="guide-card-name">Hepatite B</p>
+                                <span class="guide-tag gt-viral" style="background:rgba(255,255,255,0.15);color:#fff;">Vírus Hepático</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Agente:</span><span>Vírus da Hepatite B (VHB) — hepadnavirus</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Transmissão:</span><span>Sexual, parenteral (sangue), vertical. 50-100x mais infecioso que HIV</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Clínica:</span><span>Icterícia, fadiga, urina escura; 90% dos adults resolvem espontaneamente</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Crónica:</span><span>Cirrose hepática e carcinoma hepatocelular em casos não tratados</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Prevenção:</span><span>Vacinação (3 doses) — eficácia >95%. Incluída no PNV em Moçambique</span></div>
+                            </div>
+                            <div class="guide-cite">WHO (2022). Hepatitis B Fact Sheet. Global Hepatitis Programme.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CONTEÚDO MOVIDO: PREVENÇÃO -->
+            <section class="card reveal" aria-labelledby="prev-titulo" style="margin-top: 2rem;">
+                <p class="eyebrow">Prevenção Baseada em Evidências</p>
+                <h2 id="prev-titulo">Como Proteger a Sua Saúde Sexual</h2>
+                <p class="lead">A prevenção eficaz requer uma abordagem combinada. Nenhuma medida isolada é 100% eficaz, mas a combinação das seguintes estratégias reduz o risco em mais de 90% (CDC, 2023).</p>
+
+                <div class="callout">
+                    <p>"A abordagem de prevenção combinada — preservativos, testagem regular, tratamento de parceiros e vacinação — é a estratégia mais eficaz disponível atualmente para controlo das ISTs."</p>
+                    <cite>— CDC STI Prevention Guidelines, 2023</cite>
+                </div>
+
+                <div class="prevention-grid">
+                    <div class="prev-item">
+                        <div class="prev-num">1</div>
+                        <div class="prev-text">
+                            <h4>Uso consistente do preservativo</h4>
+                            <p>O preservativo masculino de látex reduz o risco de transmissão de HIV em 80-95% e de outras ISTs em 50-90% quando usado corretamente em todas as relações.</p>
+                        </div>
+                    </div>
+                    <div class="prev-item">
+                        <div class="prev-num">2</div>
+                        <div class="prev-text">
+                            <h4>Testagem regular para ISTs</h4>
+                            <p>Recomenda-se testagem anual para HIV, Sífilis e Hepatites. Indivíduos com múltiplos parceiros devem testar a cada 3-6 meses. Gratuito no SNS.</p>
+                        </div>
+                    </div>
+                    <div class="prev-item">
+                        <div class="prev-num">3</div>
+                        <div class="prev-text">
+                            <h4>Vacinação preventiva</h4>
+                            <p>Vacinas disponíveis para HPV (previne cancro cervical) e Hepatite B (prevenção altamente eficaz). Consulte o seu centro de saúde.</p>
+                        </div>
+                    </div>
+                    <div class="prev-item">
+                        <div class="prev-num">4</div>
+                        <div class="prev-text">
+                            <h4>Profilaxia Pré-Exposição (PrEP)</h4>
+                            <p>Medicação (oral diária ou injetável semestral) que reduz o risco de contrair HIV em quase 100% em indivíduos de alto risco. Disponível em Moçambique.</p>
+                        </div>
+                    </div>
+                    <div class="prev-item">
+                        <div class="prev-num">5</div>
+                        <div class="prev-text">
+                            <h4>Notificação e tratamento de parceiros</h4>
+                            <p>Em caso de diagnóstico de IST, o(s) parceiro(s) sexual(is) deve(m) ser notificados e tratados para evitar reinfecção e quebrar a cadeia de transmissão.</p>
+                        </div>
+                    </div>
+                    <div class="prev-item">
+                        <div class="prev-num">6</div>
+                        <div class="prev-text">
+                            <h4>Comunicação aberta com parceiros</h4>
+                            <p>Discutir o estado de saúde sexual com o/a parceiro/a antes de relações sexuais é essencial. A comunicação reduz comportamentos de risco.</p>
+                        </div>
+                    </div>
+                    <div class="prev-item">
+                        <div class="prev-num">7</div>
+                        <div class="prev-text">
+                            <h4>Evitar duchas vaginais</h4>
+                            <p>As duchas vaginais perturbam a microbiota natural, aumentando o risco de VB, candidíase e cervicite. A vagina tem capacidade de autolimpeza.</p>
+                        </div>
+                    </div>
+                    <div class="prev-item">
+                        <div class="prev-num">8</div>
+                        <div class="prev-text">
+                            <h4>Profilaxia Pós-Exposição (PEP)</h4>
+                            <p>Em caso de exposição de risco ao HIV (relação desprotegida, violação), o PEP deve ser iniciado nas primeiras 72 horas. Dirija-se urgentemente ao hospital.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notice-green">
+                    ✔ Em Moçambique, os testes para HIV, Sífilis e Hepatites são gratuitos em qualquer unidade sanitária do Sistema Nacional de Saúde. O sigilo médico é garantido pela Lei n.º 14/2002.
+                </div>
+            </section>
+
+            <!-- CONTEÚDO MOVIDO: PrEP INJETÁVEL -->
+            <div class="prep-hero reveal" style="margin-top: 2rem;">
+                <span class="prep-badge">Inovação em Prevenção · Lenacapavir</span>
+                <div class="prep-hero-eyebrow">PrEP Injetável Semestral</div>
+                <h2>A revolução na prevenção<br>do <em>HIV</em> já chegou</h2>
+                <p class="prep-hero-sub">O Lenacapavir é uma inovadora injeção semestral que demonstrou eficácia superior à PrEP oral diária, com ensaios recentes em África evidenciando 100% de proteção em mulheres jovens. A prevenção agora necessita de apenas duas administrações por ano.</p>
+                <div class="prep-stats-row">
+                    <div class="prep-stat">
+                        <div class="prep-stat-num">100%</div>
+                        <div class="prep-stat-label">Eficácia no Ensaio Purpose 1</div>
+                    </div>
+                    <div class="prep-stat">
+                        <div class="prep-stat-num">6 meses</div>
+                        <div class="prep-stat-label">Entre injeções</div>
+                    </div>
+                    <div class="prep-stat">
+                        <div class="prep-stat-num">2</div>
+                        <div class="prep-stat-label">Injeções por ano</div>
+                    </div>
+                    <div class="prep-stat">
+                        <div class="prep-stat-num">0</div>
+                        <div class="prep-stat-label">Comprimidos por dia</div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="card reveal" aria-labelledby="cab-titulo">
+                <p class="eyebrow">Farmacologia e Mecanismo</p>
+                <h2 id="cab-titulo">O que é o Lenacapavir Injetável?</h2>
+                <p class="lead">O Lenacapavir é o primeiro inibidor da cápside do HIV de ação prolongada. Administrado através de injeções a cada <strong>6 meses</strong>, este medicamento representa um marco global histórico, tendo demonstrado recentemente proteção total na prevenção da infeção por HIV em ensaios com mulheres jovens em África, incluindo em Moçambique.</p>
+
+                <div class="callout" style="border-color: var(--prep-blue-bright); background: var(--prep-blue-light);">
+                    <p style="color: var(--prep-blue-dark);">"Os resultados do ensaio clínico PURPOSE 1 demonstraram que o Lenacapavir semestral teve 100% de eficácia na prevenção do HIV, superando de forma significativa a eficácia da PrEP oral diária."</p>
+                    <cite style="color: var(--prep-blue-bright);">— Ensaios Clínicos PURPOSE (2024)</cite>
+                </div>
+
+                <div class="infobox">
+                    <div class="infobox-item">
+                        <div class="infobox-icon ib-blue">💉</div>
+                        <div class="infobox-text">
+                            <h4>Injeção Semestral</h4>
+                            <p>Administração de longa duração a cada 6 meses (duas vezes por ano). Substitui integralmente a necessidade da toma diária de comprimidos.</p>
+                        </div>
+                    </div>
+                    <div class="infobox-item">
+                        <div class="infobox-icon ib-teal">🛡️</div>
+                        <div class="infobox-text">
+                            <h4>Inibidor da Cápside</h4>
+                            <p>Atua bloqueando a proteção proteica (cápside) do HIV, interferindo em múltiplas etapas vitais do ciclo de replicação do vírus no organismo.</p>
+                        </div>
+                    </div>
+                    <div class="infobox-item">
+                        <div class="infobox-icon ib-gold">⚗️</div>
+                        <div class="infobox-text">
+                            <h4>Ação Ultra Prolongada</h4>
+                            <p>Graças ao seu perfil farmacocinético único, o medicamento permanece ativo e em níveis de proteção máxima durante 24 semanas.</p>
+                        </div>
+                    </div>
+                    <div class="infobox-item">
+                        <div class="infobox-icon ib-rose">📊</div>
+                        <div class="infobox-text">
+                            <h4>Ensaios de Alto Impacto</h4>
+                            <p>Os ensaios clínicos PURPOSE foram desenvolvidos ativamente em África do Sul e Uganda, comprovando adequação à realidade subsaariana.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card reveal" aria-labelledby="beneficios-titulo">
+                <p class="eyebrow">Evidência Científica</p>
+                <h2 id="beneficios-titulo">Benefícios do Lenacapavir</h2>
+                <p class="lead">O Lenacapavir resolve o maior desafio histórico da prevenção do HIV: a dificuldade na toma regular de comprimidos, oferecendo uma proteção praticamente invulnerável com um esforço logístico mínimo.</p>
+
+                <div class="prep-benefits-grid">
+                    <div class="prep-benefit-card">
+                        <div class="prep-benefit-icon">✓</div>
+                        <div class="prep-benefit-text">
+                            <h4>Eficácia Máxima Comprovada</h4>
+                            <p>Nos ensaios de fase III (PURPOSE 1), obteve-se o registo de zero infeções no grupo de estudo, estabelecendo uma eficácia de proteção ímpar em relação aos métodos orais.</p>
+                        </div>
+                    </div>
+                    <div class="prep-benefit-card">
+                        <div class="prep-benefit-icon">📅</div>
+                        <div class="prep-benefit-text">
+                            <h4>Apenas 2 Vezes por Ano</h4>
+                            <p>Elimina o peso mental e prático da toma diária. Com uma injeção a cada semestre, a adesão ao tratamento deixa de ser a principal barreira para o sucesso profilático.</p>
+                        </div>
+                    </div>
+                    <div class="prep-benefit-card">
+                        <div class="prep-benefit-icon">🔒</div>
+                        <div class="prep-benefit-text">
+                            <h4>Discrição e Privacidade</h4>
+                            <p>Totalmente invisível. Não sendo necessários frascos de comprimidos em casa, minimiza o risco de estigmatização por parte de parceiros, família ou comunidade.</p>
+                        </div>
+                    </div>
+                    <div class="prep-benefit-card">
+                        <div class="prep-benefit-icon">🌍</div>
+                        <div class="prep-benefit-text">
+                            <h4>Otimizado para a Nossa Realidade</h4>
+                            <p>Estudado especificamente na população mais afetada da África Subsaariana (mulheres e jovens raparigas), focando em contextos onde a negociação do preservativo é difícil.</p>
+                        </div>
+                    </div>
+                    <div class="prep-benefit-card">
+                        <div class="prep-benefit-icon">🤝</div>
+                        <div class="prep-benefit-text">
+                            <h4>Empoderamento Individual</h4>
+                            <p>Um método preventivo e profilático sob o controlo estrito do utente, garantindo saúde e segurança sem depender do consentimento da parceria sexual.</p>
+                        </div>
+                    </div>
+                    <div class="prep-benefit-card">
+                        <div class="prep-benefit-icon">⚡</div>
+                        <div class="prep-benefit-text">
+                            <h4>Eficácia Constante</h4>
+                            <p>Sem flutuações. Protege o paciente contra riscos súbitos, não previstos ou violência, com a segurança de um fármaco robusto ativo no corpo em qualquer instante dos 6 meses.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card reveal" aria-labelledby="compare-titulo">
+                <p class="eyebrow">Comparação Clínica</p>
+                <h2 id="compare-titulo">PrEP Oral vs. Lenacapavir</h2>
+                <p class="lead">Ambas as formas de profilaxia são aprovadas e oferecem proteção. A escolha deverá assentar no conforto, estilo de vida e nas diretrizes nacionais e disponibilidade atual.</p>
+
+                <div class="prep-compare">
+                    <div class="prep-compare-card">
+                        <div class="prep-compare-header oral">
+                            <div>
+                                <div class="prep-compare-title">💊 PrEP Oral Clássica</div>
+                                <div class="prep-compare-sub">Tenofovir/Emtricitabina · Toma Diária</div>
+                            </div>
+                        </div>
+                        <div class="prep-compare-body">
+                            <ul class="prep-compare-list">
+                                <li><span class="check">✓</span> Ampla disponibilidade no SNS em Moçambique</li>
+                                <li><span class="check">✓</span> Eficácia &gt;99% mas APENAS com adesão diária rigorosa</li>
+                                <li><span class="check">✓</span> Pode ser descontinuado imediatamente em casa</li>
+                                <li><span class="cross">✗</span> Toma obrigatória todos os 365 dias do ano</li>
+                                <li><span class="cross">✗</span> Alta taxa de abandono clínico por fadiga da medicação</li>
+                                <li><span class="cross">✗</span> Quebra a privacidade em domicílios partilhados</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="prep-compare-card">
+                        <div class="prep-compare-header inj">
+                            <div>
+                                <div class="prep-compare-title">💉 PrEP Injetável (Lenacapavir)</div>
+                                <div class="prep-compare-sub">Lenacapavir · Injeção Semestral (A cada 6 meses)</div>
+                            </div>
+                        </div>
+                        <div class="prep-compare-body">
+                            <ul class="prep-compare-list">
+                                <li><span class="check">✓</span> Injeção espaçada a cada 6 meses</li>
+                                <li><span class="check">✓</span> Demonstrou superioridade de eficácia (Purpose 1)</li>
+                                <li><span class="check">✓</span> Requer apenas 2 visitas por ano ao centro clínico</li>
+                                <li><span class="check">✓</span> Privacidade garantida — método invisível a parceiros</li>
+                                <li><span class="cross">✗</span> Necessita da presença física de técnico de saúde na toma</li>
+                                <li><span class="cross">✗</span> Em processo faseado de disponibilidade generalizada no país</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prep-alert">
+                    <span style="font-size:1.1rem; flex-shrink:0;">ℹ️</span>
+                    <span><strong>Cobertura Prolongada:</strong> Devido à elevada persistência farmacológica, se não desejar renovar a dose após o fim dos 6 meses do Lenacapavir, o seu médico planeará a transição correta e rastreio para assegurar que continua em segurança. O acompanhamento contínuo é fundamental.</span>
+                </div>
+            </section>
+
+            <section class="card reveal" aria-labelledby="protocolo-titulo">
+                <p class="eyebrow">Protocolo Clínico</p>
+                <h2 id="protocolo-titulo">Dinâmica de Início com Lenacapavir</h2>
+                <p class="lead">Para assegurar os índices de 100% de eficácia dos ensaios clínicos, o Lenacapavir deve ser sempre administrado por profissionais qualificados, com despistes essenciais de rotina.</p>
+
+                <div class="prep-timeline">
+                    <div class="prep-timeline-item">
+                        <div class="prep-timeline-dot">1</div>
+                        <div class="prep-timeline-content">
+                            <h4>Aconselhamento e Rastreio</h4>
+                            <p>Teste rápido de HIV (obrigatoriamente negativo) e avaliação médica. A PrEP exige garantias de ausência prévia da infeção, prevenindo a criação de resistências virais.</p>
+                        </div>
+                    </div>
+                    <div class="prep-timeline-item">
+                        <div class="prep-timeline-dot">2</div>
+                        <div class="prep-timeline-content">
+                            <h4>Primeira Injeção (Mês 0)</h4>
+                            <p>Após o rastreio, procede-se à administração injetável controlada. Esta dose começa a construir o escudo protetor semestral.</p>
+                        </div>
+                    </div>
+                    <div class="prep-timeline-item">
+                        <div class="prep-timeline-dot">3</div>
+                        <div class="prep-timeline-content">
+                            <h4>Injeção de Manutenção (Mês 6 em diante)</h4>
+                            <p>Ao final exato de 24 semanas (6 meses), fará um novo teste HIV de controlo rápido e receberá a injeção renovadora de proteção. O ciclo simples repete-se de 6 em 6 meses.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card reveal" aria-labelledby="elig-titulo">
+                <p class="eyebrow">Critérios de Elegibilidade</p>
+                <h2 id="elig-titulo">Quem Pode Usar o Lenacapavir?</h2>
+                <p class="lead">O Lenacapavir é desenhado para adultos ou jovens com atividade sexual frequente, sem HIV, especialmente em cenários onde os métodos orais ou de barreira tradicionalmente falham.</p>
+
+                <div class="prep-eligibility">
+                    <div class="prep-elig-item">
+                        <div class="prep-elig-icon">✓</div>
+                        <div class="prep-elig-text">
+                            <strong>Mulheres Jovens Africanas</strong>
+                            Foi clinicamente validado como altamente eficaz nesta população específica (onde reside o maior fardo das novas infeções em Moçambique).
+                        </div>
+                    </div>
+                    <div class="prep-elig-item">
+                        <div class="prep-elig-icon">✓</div>
+                        <div class="prep-elig-text">
+                            <strong>Relações Serodiscordantes</strong>
+                            Para prevenir que parceiros soronegativos adquiram o vírus de parcerias com HIV que ainda não atingiram o nível "indetectável" (I=I).
+                        </div>
+                    </div>
+                    <div class="prep-elig-item">
+                        <div class="prep-elig-icon">✓</div>
+                        <div class="prep-elig-text">
+                            <strong>Intolerância Oral</strong>
+                            Para doentes com problemas ou fortes aversões à terapêutica oral contínua ou reações adversas diárias ao Tenofovir.
+                        </div>
+                    </div>
+                    <div class="prep-elig-item">
+                        <div class="prep-elig-icon">✓</div>
+                        <div class="prep-elig-text">
+                            <strong>Profissionais em Risco</strong>
+                            Trabalhadores do sexo e populações cuja vulnerabilidade impossibilita uma negociação sexual segura regular.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prep-alert" style="margin-top: 1.5rem;">
+                    <span style="font-size:1.1rem; flex-shrink:0;">⚠️</span>
+                    <span><strong>Aviso:</strong> A administração do Lenacapavir em utentes portadores de HIV (mesmo que com diagnóstico recente ou tardio) de forma monoterápica (sozinho sem TARV complementar) pode potenciar vírus resistentes, pelo que o teste pré-PrEP e durante as visitas aos 6 meses é lei intransigente.</span>
+                </div>
+
+                <div class="notice-green" style="margin-top: 1rem;">
+                    ✔ <strong>Situação em Moçambique:</strong> Graças a pressões científicas e parcerias, medicamentos de longa duração como o Lenacapavir constam das grelhas de expansão acelerada do Ministério da Saúde para unidades de saúde chave.
+                </div>
+            </section>
+        </div>
+        <div id="tab-calendario" class="tab-panel" role="tabpanel">
+            <section class="card reveal cycle-modern" aria-labelledby="cal-titulo">
+                <p class="eyebrow">Acompanhamento Diário</p>
+                <h2 id="cal-titulo">Calendário Inteligente do Ciclo</h2>
+                <p class="lead">Registe o seu ciclo menstrual e acompanhe previsões de menstruação, ovulação, janela fértil, sintomas e humor com alertas automáticos para padrões irregulares.</p>
+
+                <div class="cycle-metrics-grid" role="list" aria-label="Resumo rápido do ciclo">
+                    <div class="stat-box" role="listitem"><div class="stat-box-num" id="cycle-metric-avg">--</div><div class="stat-box-label">Média do ciclo (dias)</div></div>
+                    <div class="stat-box" role="listitem"><div class="stat-box-num" id="cycle-metric-bleeding">--</div><div class="stat-box-label">Média da menstruação (dias)</div></div>
+                    <div class="stat-box" role="listitem"><div class="stat-box-num" id="cycle-metric-regularity">--</div><div class="stat-box-label">Regularidade do ciclo</div></div>
+                    <div class="stat-box" role="listitem"><div class="stat-box-num" id="cycle-metric-accuracy">--%</div><div class="stat-box-label">Precisão das previsões</div></div>
+                    <div class="stat-box" role="listitem"><div class="stat-box-num" id="cycle-metric-status">--</div><div class="stat-box-label">Estado clínico atual</div></div>
+                </div>
+
+                <div id="cycle-dynamic-dashboard" class="cycle-dashboard" style="display:none;">
+                    <div class="cycle-dashboard-hero">
+                        <div class="cycle-day-core">
+                            <p class="cycle-kicker">Dia atual do ciclo</p>
+                            <p class="cycle-day-number">#<span id="cycle-current-day">--</span></p>
+                            <p id="cycle-current-phase" class="cycle-phase-text">A calcular...</p>
+                        </div>
+                        <div class="cycle-date-cards">
+                            <div class="cycle-date-card">
+                                <p class="cycle-date-label">Próxima menstruação</p>
+                                <p id="cycle-next-period" class="cycle-date-value">--/--/----</p>
+                            </div>
+                            <div class="cycle-date-card">
+                                <p class="cycle-date-label">Ovulação prevista</p>
+                                <p id="cycle-next-ovulation" class="cycle-date-value">--/--/----</p>
+                            </div>
+                            <div class="cycle-date-card">
+                                <p class="cycle-date-label">Janela fértil</p>
+                                <p id="cycle-fertile-window" class="cycle-date-value">--</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cycle-smart-alerts" class="cycle-alert-strip" style="display:none;"></div>
+
+                    <div class="cycle-notify-wrap">
+                        <div id="cycle-notification-banner" class="cycle-notification-banner" style="display:none;"></div>
+                        <div class="cycle-notify-actions">
+                            <button type="button" id="cycle-enable-notifications" class="btn btn-ghost">Ativar notificações</button>
+                            <button type="button" id="cycle-test-notification" class="btn btn-primary">Enviar lembrete agora</button>
+                            <button type="button" id="cycle-subscribe-push" class="btn btn-ghost">Inscrever notificações push</button>
+                        </div>
+                    </div>
+
+                    <div class="cycle-tracker-shell">
+                        <h4 class="cycle-section-title">Rastreamento de sintomas, humor e emoções (hoje)</h4>
+
+                        <div class="tracker-group">
+                            <p class="tracker-group-title">Sintomas físicos</p>
+                            <div class="tracker-group-buttons">
+                                <button type="button" class="tracker-btn" data-group="physical" data-value="colicas">Cólicas</button>
+                                <button type="button" class="tracker-btn" data-group="physical" data-value="dor-cabeca">Dor de cabeça</button>
+                                <button type="button" class="tracker-btn" data-group="physical" data-value="fadiga">Fadiga</button>
+                                <button type="button" class="tracker-btn" data-group="physical" data-value="inchaco">Inchaço</button>
+                                <button type="button" class="tracker-btn" data-group="physical" data-value="acne">Acne</button>
+                                <button type="button" class="tracker-btn" data-group="physical" data-value="dor-seios">Dor mamária</button>
+                            </div>
+                        </div>
+
+                        <div class="tracker-group">
+                            <p class="tracker-group-title">Humor e emoções</p>
+                            <div class="tracker-group-buttons">
+                                <button type="button" class="tracker-btn" data-group="mood" data-value="calma">Calma</button>
+                                <button type="button" class="tracker-btn" data-group="mood" data-value="ansiosa">Ansiosa</button>
+                                <button type="button" class="tracker-btn" data-group="mood" data-value="irritada">Irritada</button>
+                                <button type="button" class="tracker-btn" data-group="mood" data-value="triste">Triste</button>
+                                <button type="button" class="tracker-btn" data-group="mood" data-value="energica">Enérgica</button>
+                                <button type="button" class="tracker-btn" data-group="mood" data-value="focada">Focada</button>
+                            </div>
+                        </div>
+
+                        <div class="tracker-group">
+                            <p class="tracker-group-title">Sintomas incomuns</p>
+                            <div class="tracker-group-buttons">
+                                <button type="button" class="tracker-btn" data-group="unusual" data-value="sangramento-intenso">Sangramento muito intenso</button>
+                                <button type="button" class="tracker-btn" data-group="unusual" data-value="coagulos">Coágulos frequentes</button>
+                                <button type="button" class="tracker-btn" data-group="unusual" data-value="dor-incapacitante">Dor incapacitante</button>
+                                <button type="button" class="tracker-btn" data-group="unusual" data-value="tontura">Tontura / desmaio</button>
+                                <button type="button" class="tracker-btn" data-group="unusual" data-value="atraso-importante">Atraso menstrual importante</button>
+                            </div>
+                        </div>
+
+                        <div class="cycle-inputs-grid">
+                            <div class="cycle-input-card">
+                                <label for="cycle-pain">Intensidade da dor (0-10)</label>
+                                <input id="cycle-pain" type="range" min="0" max="10" value="0">
+                                <p class="range-readout">Valor: <strong id="cycle-pain-value">0</strong></p>
+                            </div>
+                            <div class="cycle-input-card">
+                                <label for="cycle-energy">Nível de energia (0-10)</label>
+                                <input id="cycle-energy" type="range" min="0" max="10" value="5">
+                                <p class="range-readout">Valor: <strong id="cycle-energy-value">5</strong></p>
+                            </div>
+                            <div class="cycle-input-card cycle-input-card-note">
+                                <label for="cycle-day-note">Observação do dia</label>
+                                <textarea id="cycle-day-note" class="form-control" placeholder="Ex: dor pélvica mais forte de manhã, stress elevado..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="action-row cycle-action-row">
+                            <button type="button" id="cycle-save-day" class="btn btn-primary">Guardar registo do dia</button>
+                            <button type="button" id="btn-pregnant-mode" class="btn btn-cycle-gold">Descobri que estou grávida</button>
+                        </div>
+                    </div>
+
+                    <div class="cycle-nutrition-shell">
+                        <h4 class="cycle-section-title">Nutrição Feminina Inteligente (hoje)</h4>
+                        <ul id="cycle-nutrition-list" class="cycle-nutrition-list"></ul>
+                    </div>
+                </div>
+
+                <div id="cycle-calendar-view" class="cycle-calendar-shell" style="display:none;">
+                    <div class="cycle-calendar-top">
+                        <button id="cal-prev-month" class="cycle-calendar-nav" aria-label="Mês anterior">&lt;</button>
+                        <div class="cycle-calendar-title-wrap">
+                            <p class="cycle-kicker">Painel mensal inteligente</p>
+                            <h3 id="calendar-month-title" class="cycle-calendar-title">Mês atual</h3>
+                        </div>
+                        <button id="cal-next-month" class="cycle-calendar-nav" aria-label="Mês seguinte">&gt;</button>
+                    </div>
+
+                    <p class="cycle-calendar-sub">Calendário menstrual com previsão de menstruação, ovulação e janela fértil. A precisão aumenta com mais registos.</p>
+
+                    <div class="cycle-legend" role="list" aria-label="Legenda do calendário">
+                        <span class="legend-chip" role="listitem"><span class="legend-dot recorded"></span>Menstruação</span>
+                        <span class="legend-chip" role="listitem"><span class="legend-dot predicted"></span>Menstruação prevista</span>
+                        <span class="legend-chip" role="listitem"><span class="legend-dot fertile"></span>Janela fértil</span>
+                        <span class="legend-chip" role="listitem"><span class="legend-dot ovulation"></span>Ovulação</span>
+                        <span class="legend-chip" role="listitem"><span class="legend-dot today"></span>Hoje</span>
+                    </div>
+
+                    <div class="cycle-weekdays" aria-hidden="true">
+                        <div>Seg</div>
+                        <div>Ter</div>
+                        <div>Qua</div>
+                        <div>Qui</div>
+                        <div>Sex</div>
+                        <div>Sáb</div>
+                        <div>Dom</div>
+                    </div>
+
+                    <div id="calendar-days-grid" class="calendar-days-grid"></div>
+
+                    <div id="cycle-upcoming-overview" class="cycle-upcoming-overview"></div>
+
+                    <div class="cycle-months-shell">
+                        <h4 class="cycle-months-title">Visão dos próximos meses</h4>
+                        <div id="cycle-multi-month-view" class="cycle-multi-month-view"></div>
+                    </div>
+                </div>
+
+                <div class="cycle-form-shell" style="margin-top:2rem;">
+                    <div class="cycle-form-head">
+                        <div class="cycle-form-title">Registo da Menstruação</div>
+                        <div class="cycle-form-sub">Adicione cada início de menstruação para melhorar automaticamente as previsões.</div>
+                    </div>
+                    <div class="cycle-form-body">
+                        <form id="cycle-form" style="display:flex;flex-direction:column;gap:14px;">
+                            <div class="cycle-reg-grid">
+                                <div>
+                                    <label for="period-start" style="font-size:0.85rem;font-weight:700;color:var(--ink);">Data de início</label>
+                                    <input type="date" id="period-start" required class="form-control">
+                                </div>
+                                <div>
+                                    <label for="period-length" style="font-size:0.85rem;font-weight:700;color:var(--ink);">Dias de sangramento</label>
+                                    <input type="number" id="period-length" min="1" max="15" value="5" required class="form-control">
+                                </div>
+                                <div>
+                                    <label for="flow-intensity" style="font-size:0.85rem;font-weight:700;color:var(--ink);">Fluxo</label>
+                                    <select id="flow-intensity" class="form-control">
+                                        <option value="Leve">Leve</option>
+                                        <option value="Normal" selected>Normal</option>
+                                        <option value="Intenso">Intenso</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width:100%;">Guardar novo ciclo</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="history-container" class="cycle-history-shell">
+                    <div class="cycle-history-head">
+                        <h3 class="cycle-history-title">Histórico de ciclos</h3>
+                        <button id="btn-clear-history" type="button" class="cycle-clear-history" style="display:none;">Limpar histórico</button>
+                    </div>
+                    <ul id="cycle-history-list" class="cycle-history-list"></ul>
+                </div>
+
+                <div class="cycle-daily-summary-shell">
+                    <h4 class="cycle-section-title">Resumo dos últimos registos diários</h4>
+                    <div id="cycle-daily-insights" class="cycle-daily-insights"></div>
+                    <div id="cycle-daily-history" class="cycle-daily-history"></div>
+                </div>
+            </section>
+        </div>
+
+
+
+        <div id="tab-contracetivos" class="tab-panel" role="tabpanel">
+            <section class="card reveal" aria-labelledby="contra-titulo">
+                <p class="eyebrow">Planeamento Familiar</p>
+                <h2 id="contra-titulo">Guia de Métodos Contracetivos</h2>
+                
+                <p class="lead">O uso de métodos contracetivos permite-lhe ter o controlo sobre o seu corpo, decidindo quando e se deseja ter filhos. Cada método funciona de uma maneira diferente: alguns usam hormonas para impedir que o corpo liberte óvulos, outros criam uma barreira física ou tornam o útero um ambiente onde os espermatozoides não sobrevivem.</p>
+                <p class="lead" style="margin-top: -10px; margin-bottom: 2rem;"><strong>Lembre-se:</strong> Com exceção do preservativo, nenhum destes métodos protege contra o HIV ou outras ISTs. O uso combinado (Preservativo + Outro método) é a melhor escolha.</p>
+
+                <div class="guide-grid">
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg, var(--teal-dark), var(--teal));">
+                            <div>
+                                <p class="guide-card-name">Pílula Anticoncecional</p>
+                                <span class="guide-tag" style="background:rgba(255,255,255,0.15);color:#fff;">Comprimido Diário</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Eficácia:</span><span>91% a 99% (depende de não esquecer de tomar todos os dias).</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Vantagens:</span><span>Torna a menstruação mais regular e diminui muito as cólicas e a quantidade de sangue.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Desvantagens:</span><span>Exige muita disciplina. Se vomitar ou tiver diarreia, pode perder o efeito.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Efeitos Col.:</span><span>
+                                    1. Dor de cabeça<br>
+                                    2. Peito sensível ou dorido<br>
+                                    3. Enjoos ligeiros nos primeiros meses<br>
+                                    4. Pequenas alterações de humor<br>
+                                    5. Risco muito pequeno de problemas de circulação
+                                </span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg, var(--prep-blue-dark), var(--prep-blue));">
+                            <div>
+                                <p class="guide-card-name">Injeção Trimestral</p>
+                                <span class="guide-tag" style="background:rgba(255,255,255,0.15);color:#fff;">Acetato de Medroxiprogesterona</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Eficácia:</span><span>Mais de 96%. Muito alta porque não precisa de se lembrar diariamente.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Vantagens:</span><span>Toma-se apenas 1 vez a cada 3 meses. Ninguém nota que está a usar.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Desvantagens:</span><span>Tem de ir ao centro de saúde para tomar. Se quiser engravidar, pode demorar alguns meses após parar.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Efeitos Col.:</span><span>
+                                    1. Falta total de menstruação (o que é normal)<br>
+                                    2. Ligeiro aumento de peso<br>
+                                    3. Pingos de sangue fora de época<br>
+                                    4. Dor de cabeça<br>
+                                    5. Ligeira fraqueza nos ossos (recupera ao parar)
+                                </span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg, var(--purple), #8b5fb8);">
+                            <div>
+                                <p class="guide-card-name">Implante (Pauzinho)</p>
+                                <span class="guide-tag" style="background:rgba(255,255,255,0.15);color:#fff;">Hormonal de Longo Prazo</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Eficácia:</span><span>Mais de 99.9%. É um dos métodos mais seguros que existem.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Vantagens:</span><span>Dura entre 3 a 5 anos. Depois de colocado debaixo da pele do braço, pode esquecer-se dele.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Desvantagens:</span><span>Precisa de uma pequena anestesia local para ser colocado e retirado pela enfermeira.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Efeitos Col.:</span><span>
+                                    1. Menstruação muito desregulada no início<br>
+                                    2. Ficar meses sem menstruar<br>
+                                    3. Dor de cabeça<br>
+                                    4. Variações de humor<br>
+                                    5. Pode piorar espinhas/acne
+                                </span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg, var(--gold), #a0801a);">
+                            <div>
+                                <p class="guide-card-name">DIU (Aparelho)</p>
+                                <span class="guide-tag" style="background:rgba(255,255,255,0.15);color:#fff;">Intrauterino de Cobre ou Hormonal</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Eficácia:</span><span>Mais de 99%. Seguro e dura muito tempo (5 a 10 anos).</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Vantagens:</span><span>A versão de Cobre não tem nenhuma hormona. Se retirar o aparelho, pode engravidar logo no mês seguinte.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Desvantagens:</span><span>A colocação é feita dentro do útero, o que pode ser um pouco desconfortável.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Efeitos Col.:</span><span>
+                                    1. Cólicas mais fortes (no DIU de Cobre)<br>
+                                    2. Menstruação mais abundante (no DIU de Cobre)<br>
+                                    3. Pequenos sangramentos (no DIU Hormonal)<br>
+                                    4. Dor no pé da barriga nos primeiros dias após colocação<br>
+                                    5. Pequeno risco de infeção nas primeiras semanas
+                                </span></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-card">
+                        <div class="guide-card-header" style="background: linear-gradient(135deg, var(--rose), #7a1828);">
+                            <div>
+                                <p class="guide-card-name">Preservativo (Camisinha)</p>
+                                <span class="guide-tag" style="background:rgba(255,255,255,0.15);color:#fff;">Masculino e Feminino</span>
+                            </div>
+                        </div>
+                        <div class="guide-card-body">
+                            <div class="guide-row">
+                                <div class="guide-fact"><span class="guide-fact-label">Eficácia:</span><span>82% a 98% (se usado do princípio ao fim sem romper).</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Vantagens:</span><span>O ÚNICO método que protege contra gravidez não desejada e doenças (ISTs e HIV) ao mesmo tempo. Não mexe com o corpo.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Desvantagens:</span><span>Tem de ter sempre um à mão e colocar antes da relação.</span></div>
+                                <div class="guide-fact"><span class="guide-fact-label">Efeitos Col.:</span><span>
+                                    1. Alergia, comichão ou vermelhidão (apenas em quem tem alergia ao látex)<br>
+                                    2. Irritação na pele se não houver boa lubrificação<br>
+                                    3. Ligeira diminuição da sensibilidade
+                                </span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="notice-green" style="margin-top: 1.5rem;">
+                    ✔ <strong>Dica Clínica (A Dupla Proteção):</strong> Para estar 100% segura, o Ministério da Saúde recomenda usar um método muito eficaz para não engravidar (como a Pílula, Injeção, DIU ou Implante) acompanhado SEMPRE do Preservativo para evitar doenças.
+                </div>
+
+                <div style="margin-top: 3.5rem;">
+                    <p class="eyebrow">Dúvidas Comuns</p>
+                    <h3 style="font-family: var(--font-d); font-size: 1.6rem; font-weight: 800; color: var(--ink); margin-bottom: 1rem;">Perguntas Frequentes sobre Contracetivos</h3>
+                    
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                Qual método contracetivo posso usar?
+                                <span class="faq-chevron" aria-hidden="true">▼</span>
+                            </button>
+                            <div class="faq-answer">
+                                Não existe um método que seja o melhor para todas as pessoas. A escolha certa depende da sua idade, do seu estado de saúde, se sofre de pressão alta, se fuma e até do seu estilo de vida (se tem facilidade em lembrar-se de tomar um comprimido todos os dias, por exemplo). O ideal é dirigir-se ao centro de saúde para uma consulta de planeamento familiar, onde uma enfermeira ou médico vai ajudá-la a encontrar a opção mais segura e confortável para o seu corpo.
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                Os métodos com hormonas fazem engordar?
+                                <span class="faq-chevron" aria-hidden="true">▼</span>
+                            </button>
+                            <div class="faq-answer">
+                                Na maioria dos casos, não. A pílula e o implante não têm calorias. O que pode acontecer nos primeiros meses é uma ligeira retenção de líquidos (o corpo fica um pouco mais inchado) ou um pequeno aumento de apetite. A exceção é a Injeção Trimestral, que em algumas mulheres pode causar um aumento de peso mais notório ao longo do tempo. Se notar muito aumento de peso, pode pedir para trocar de método.
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                Ficar meses sem menstruar faz mal ou acumula sangue na barriga?
+                                <span class="faq-chevron" aria-hidden="true">▼</span>
+                            </button>
+                            <div class="faq-answer">
+                                Não faz mal nenhum e o sangue não se acumula. Métodos como o implante, a injeção ou a pílula contínua fazem com que o revestimento do útero fique muito fininho, por isso o corpo simplesmente não produz sangue para ser expulso. É uma pausa natural e saudável para o corpo, que até ajuda a curar casos de anemia (falta de ferro) e a evitar dores extremas.
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                O DIU ou o Implante podem causar infertilidade no futuro?
+                                <span class="faq-chevron" aria-hidden="true">▼</span>
+                            </button>
+                            <div class="faq-answer">
+                                Isto é um mito muito comum. O DIU e o Implante são métodos reversíveis. Assim que a enfermeira retirar o aparelho ou o pauzinho, o seu corpo volta a ovular normalmente. Muitas mulheres conseguem engravidar logo no primeiro mês após a retirada do DIU ou Implante.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+
+        <div id="tab-cofre" class="tab-panel" role="tabpanel">
+            <section class="card reveal" aria-labelledby="cofre-titulo">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;">
+                    <div>
+                        <p class="eyebrow">Gestão Clínica Pessoal</p>
+                        <h2 id="cofre-titulo">Cofre de Saúde Avançado</h2>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button type="button" class="btn btn-ghost" onclick="window.print()" style="flex:0 1 auto;">Exportar PDF</button>
+                        <button type="button" class="btn btn-ghost" id="btn-export-vault-json" style="flex:0 1 auto;">Exportar Backup (.json)</button>
+                        <button type="button" class="btn btn-ghost" id="btn-export-vault-report" style="flex:0 1 auto;">Exportar Relatório (.html)</button>
+                    </div>
+                </div>
+                <p class="lead">Registe o seu perfil completo, consultas, diagnósticos, exames, receitas, vacinas, cirurgias e medicamentos. Os dados ficam guardados localmente no dispositivo (localStorage + IndexedDB para ficheiros).</p>
+
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:1.5rem;">
+                    <div class="stat-box"><div class="stat-box-num" id="vault-kpi-records">0</div><div class="stat-box-label">Registos clínicos</div></div>
+                    <div class="stat-box"><div class="stat-box-num" id="vault-kpi-exams">0</div><div class="stat-box-label">Exames guardados</div></div>
+                    <div class="stat-box"><div class="stat-box-num" id="vault-kpi-consultas">0</div><div class="stat-box-label">Consultas registadas</div></div>
+                    <div class="stat-box"><div class="stat-box-num" id="vault-kpi-docs">0</div><div class="stat-box-label">Documentos anexados</div></div>
+                    <div class="stat-box"><div class="stat-box-num" id="vault-kpi-meds">0</div><div class="stat-box-label">Medicamentos ativos</div></div>
+                </div>
+
+                <div style="margin-top:1rem;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;">
+                    <div>
+                        <label for="vault-search" style="font-size:0.83rem;font-weight:700;color:var(--ink);">Busca inteligente no cofre</label>
+                        <input id="vault-search" class="form-control" type="search" placeholder="Pesquisar por consulta, exame, diagnóstico, medicamento...">
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                        <input id="vault-import-file" type="file" accept="application/json" class="form-control" style="max-width:220px;">
+                        <button type="button" id="btn-import-vault" class="btn btn-ghost" style="flex:0 1 auto;">Importar Backup</button>
+                    </div>
+                </div>
+
+                <div class="vault-grid" style="margin-top:1.75rem;">
+                    <div style="background:var(--prep-blue-light);border:1px solid rgba(13,79,143,0.15);border-radius:var(--r-sm);padding:1.5rem;">
+                        <h3 style="font-family:var(--font-d);font-size:1.25rem;font-weight:800;color:var(--prep-blue-dark);margin-bottom:1rem;">Perfil da Paciente</h3>
+                        <form id="vault-profile-form">
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;">
+                                <div class="form-group"><label for="v-name">Nome</label><input id="v-name" class="form-control" type="text" placeholder="Nome completo"></div>
+                                <div class="form-group"><label for="v-age">Idade</label><input id="v-age" class="form-control" type="number" min="10" max="99"></div>
+                                <div class="form-group"><label for="v-weight">Peso (kg)</label><input id="v-weight" class="form-control" type="number" min="20" max="250" step="0.1"></div>
+                                <div class="form-group"><label for="v-height">Altura (cm)</label><input id="v-height" class="form-control" type="number" min="100" max="220"></div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
+                                <div class="form-group"><label for="v-phone">Contacto</label><input id="v-phone" class="form-control" type="text" placeholder="Telefone"></div>
+                                <div class="form-group"><label for="v-emergency">Contacto de emergência</label><input id="v-emergency" class="form-control" type="text" placeholder="Nome e telefone"></div>
+                                <div class="form-group"><label for="v-pregnant">Estado de gravidez</label><select id="v-pregnant" class="form-control"><option value="nao">Não</option><option value="sim">Sim</option><option value="suspeita">Suspeita</option></select></div>
+                                <div class="form-group"><label for="v-blood">Grupo sanguíneo</label><select id="v-blood" class="form-control"><option value="">Não sei</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+                            </div>
+
+                            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
+                                <div class="form-group"><label for="v-pressure">Pressão arterial habitual</label><input id="v-pressure" class="form-control" type="text" placeholder="Ex: 110/70"></div>
+                                <div class="form-group"><label for="v-menarche">Menarca (idade)</label><input id="v-menarche" class="form-control" type="number" min="8" max="25"></div>
+                                <div class="form-group"><label for="v-gravida">Gestações</label><input id="v-gravida" class="form-control" type="number" min="0" max="20"></div>
+                                <div class="form-group"><label for="v-para">Partos</label><input id="v-para" class="form-control" type="number" min="0" max="20"></div>
+                                <div class="form-group"><label for="v-abortions">Abortos</label><input id="v-abortions" class="form-control" type="number" min="0" max="20"></div>
+                                <div class="form-group"><label for="v-contraception">Método contracetivo atual</label><input id="v-contraception" class="form-control" type="text" placeholder="Ex: preservativo, implante"></div>
+                            </div>
+
+                            <div class="form-group"><label for="v-allergies">Alergias</label><textarea id="v-allergies" class="form-control" placeholder="Medicamentos, alimentos, látex..."></textarea></div>
+                            <div class="form-group"><label for="v-diseases">Doenças crónicas / antecedentes</label><textarea id="v-diseases" class="form-control" placeholder="Hipertensão, diabetes, asma, etc."></textarea></div>
+                            <div class="form-group"><label for="v-surgeries">Cirurgias prévias</label><textarea id="v-surgeries" class="form-control" placeholder="Data e tipo de cirurgia"></textarea></div>
+                            <div class="form-group"><label for="v-vaccines">Vacinas relevantes</label><textarea id="v-vaccines" class="form-control" placeholder="HPV, Hepatite B, Tétano..."></textarea></div>
+                            <div class="form-group"><label for="v-meds">Medicamentos de uso contínuo</label><textarea id="v-meds" class="form-control" placeholder="Nome, dose e frequência"></textarea></div>
+                            <div class="form-group"><label for="v-gyneco">Histórico ginecológico</label><textarea id="v-gyneco" class="form-control" placeholder="Último Papanicolau, SOP, endometriose, miomas, etc."></textarea></div>
+
+                            <button type="button" id="btn-save-profile" class="btn btn-primary" style="width:100%;">Guardar perfil</button>
+                            <span id="profile-save-msg" style="display:none;color:var(--teal-dark);font-size:0.8rem;font-weight:700;text-align:center;margin-top:8px;">Perfil guardado com sucesso!</span>
+                        </form>
+                    </div>
+
+                    <div style="display:flex;flex-direction:column;gap:1rem;">
+                        <div style="background:var(--paper-card);border:1px solid var(--border-strong);border-radius:var(--r-sm);padding:1.25rem;">
+                            <h3 style="font-family:var(--font-d);font-size:1.2rem;font-weight:800;color:var(--ink);margin-bottom:1rem;">Novo Registo Clínico</h3>
+                            <form id="vault-record-form">
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
+                                    <div class="form-group"><label for="r-category">Categoria</label><select id="r-category" class="form-control" required><option value="consulta">Consulta</option><option value="diagnostico">Diagnóstico</option><option value="exame">Exame</option><option value="receita">Receita médica</option><option value="vacina">Vacina</option><option value="cirurgia">Cirurgia</option><option value="ginecologico">Histórico ginecológico</option><option value="doenca">Doença / condição</option><option value="outro">Outro</option></select></div>
+                                    <div class="form-group"><label for="r-title">Título</label><input id="r-title" class="form-control" type="text" required placeholder="Ex: Consulta de ginecologia"></div>
+                                    <div class="form-group"><label for="r-date">Data</label><input id="r-date" class="form-control" type="date" required></div>
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
+                                    <div class="form-group"><label for="r-professional">Profissional / Unidade</label><input id="r-professional" class="form-control" type="text" placeholder="Ex: HCM - Dra. Ana"></div>
+                                    <div class="form-group"><label for="r-status">Estado</label><select id="r-status" class="form-control"><option value="ativo">Ativo</option><option value="concluido">Concluído</option><option value="seguimento">Seguimento</option></select></div>
+                                    <div class="form-group"><label for="r-tags">Tags</label><input id="r-tags" class="form-control" type="text" placeholder="Ex: urgência, fertilidade"></div>
+                                </div>
+                                <div class="form-group"><label for="r-notes">Notas clínicas</label><textarea id="r-notes" class="form-control" placeholder="Resultados, conduta, orientações..."></textarea></div>
+                                <button type="submit" class="btn btn-primary" style="width:100%;">Adicionar registo</button>
+                            </form>
+                        </div>
+
+                        <div style="background:var(--paper-card);border:1px solid var(--border-strong);border-radius:var(--r-sm);padding:1.25rem;">
+                            <h3 style="font-family:var(--font-d);font-size:1.2rem;font-weight:800;color:var(--ink);margin-bottom:1rem;">Controle de Medicamentos</h3>
+                            <form id="vault-med-form">
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;">
+                                    <div class="form-group"><label for="m-name">Medicamento</label><input id="m-name" class="form-control" type="text" required></div>
+                                    <div class="form-group"><label for="m-dose">Dose</label><input id="m-dose" class="form-control" type="text" placeholder="Ex: 500 mg"></div>
+                                    <div class="form-group"><label for="m-frequency">Frequência</label><input id="m-frequency" class="form-control" type="text" placeholder="Ex: 1x/dia"></div>
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;">
+                                    <div class="form-group"><label for="m-start">Início</label><input id="m-start" class="form-control" type="date"></div>
+                                    <div class="form-group"><label for="m-end">Fim</label><input id="m-end" class="form-control" type="date"></div>
+                                    <div class="form-group"><label for="m-notes">Instruções</label><input id="m-notes" class="form-control" type="text" placeholder="Antes/depois das refeições"></div>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="width:100%;">Guardar medicamento</button>
+                            </form>
+                            <div id="vault-med-list" style="margin-top:1rem;"></div>
+                        </div>
+
+                        <div style="background:var(--paper-card);border:1px solid var(--border-strong);border-radius:var(--r-sm);padding:1.25rem;">
+                            <h3 style="font-family:var(--font-d);font-size:1.2rem;font-weight:800;color:var(--ink);margin-bottom:0.5rem;">Upload de Documentos</h3>
+                            <p style="font-size:0.83rem;color:var(--slate);margin-bottom:0.75rem;">Aceita imagens e PDF. Ficheiros guardados localmente no dispositivo.</p>
+                            <input id="vault-doc-upload" class="form-control" type="file" multiple accept="image/*,application/pdf">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.8rem;">
+                                <strong style="font-size:0.82rem;color:var(--ink);">Documentos</strong>
+                                <span id="vault-doc-count" style="font-size:0.8rem;color:var(--slate);">0 anexos</span>
+                            </div>
+                            <div id="vault-doc-list" style="margin-top:0.6rem;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:2rem;">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:1rem;gap:10px;flex-wrap:wrap;">
+                        <h3 style="font-family:var(--font-d);font-size:1.4rem;font-weight:800;color:var(--ink);">Timeline de Registos Clínicos</h3>
+                        <span id="vault-record-count" style="font-size:0.85rem;font-weight:700;color:var(--teal);">0 registos</span>
+                    </div>
+                    <div id="vault-records-list"></div>
+                </div>
+            </section>
+        </div>
+
+        <div id="tab-faq" class="tab-panel" role="tabpanel">
+            <section class="card reveal" aria-labelledby="faq-titulo">
+                <p class="eyebrow">Perguntas Frequentes</p>
+                <h2 id="faq-titulo">Esclareça as Suas Dúvidas</h2>
+                <p class="lead">Respostas baseadas em evidências científicas para as questões mais comuns sobre saúde sexual e ISTs.</p>
+
+                <div class="faq-list" id="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Posso ter uma IST sem apresentar nenhum sintoma?
+                            <span class="faq-chevron" aria-hidden="true">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            Sim — e isto é extremamente comum. A clamídia é assintomática em 70-80% das mulheres infetadas. O HIV pode ser assintomático durante anos. A gonorreia não apresenta sintomas em cerca de 50% das mulheres. Este facto torna a testagem regular fundamental, independentemente da ausência de sintomas. A OMS estima que a grande maioria das ISTs não é diagnosticada precisamente por serem silenciosas. (OMS, 2022)
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            O preservativo protege contra todas as ISTs?
+                            <span class="faq-chevron" aria-hidden="true">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            O preservativo masculino de látex é altamente eficaz contra ISTs transmitidas por fluidos corporais (HIV, gonorreia, clamídia, tricomoníase), reduzindo o risco em 80-95% quando usado corretamente e consistentemente. No entanto, oferece proteção parcial contra ISTs transmitidas por contacto de pele (herpes, HPV, sífilis), porque estas lesões podem estar em áreas não cobertas. A combination de preservativo + testagem regular é a estratégia mais eficaz. (CDC, 2023)
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Corrimento vaginal é sempre sinal de infeção?
+                            <span class="faq-chevron" aria-hidden="true">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            Não. Corrimento vaginal é fisiologicamente normal e varia ao longo do ciclo menstrual, durante a ovulação (mais transparente e elástico), gravidez (maior volume), ou com o uso de anticoncepcionais. O corrimento normal é geralmente branco-transparente ou leitoso, sem odor forte, e não causa irritação. Corrimento anormal apresenta: odor fétido, coloração cinzenta, amarelada ou esverdeada, consistência espumosa ou grumosa, associado a prurido ou ardor. Nesses casos, deve procurar avaliação médica. (Sobel, 2016)
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            O que devo fazer se um parceiro me diz ter uma IST?
+                            <span class="faq-chevron" aria-hidden="true">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            Deve procurar um profissional de saúde imediatamente para avaliação, testagem e eventual tratamento profilático. Não espere pelo aparecimento de sintomas. Em Moçambique, pode dirigir-se a qualquer Unidade Sanitária para testagem gratuita e confidencial. Evite relações sexuais até ambos os parceiros serem avaliados e tratados. A notificação e tratamento de parceiros é fundamental para quebrar a cadeia de transmissão. (MISAU, 2021)
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            A vaginose bacteriana pode voltar depois de tratada?
+                            <span class="faq-chevron" aria-hidden="true">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            Sim. A VB tem uma taxa de recorrência elevada — cerca de 50-70% das mulheres têm recorrência nos 12 meses após tratamento. Isso acontece porque o tratamento elimina as bactérias causadoras mas não restaura definitivamente a microbiota de lactobacilos protetores. Fatores que aumentam o risco de recorrência incluem: duchas vaginais, novos parceiros sexuais, uso de produtos perfumados na área íntima, e tabagismo. Probióticos vaginais (Lactobacillus) podem ajudar na prevenção de recorrências. (Muzny & Schwebke, 2016)
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Posso transmitir herpes mesmo sem ter bolhas visíveis?
+                            <span class="faq-chevron" aria-hidden="true">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            Sim. Este é um dos aspetos mais importantes do herpes genital. A excreção viral assintomática — quando o vírus está presente na superfície da pele sem causar lesões visíveis — é responsável por uma proporção significativa das transmissões. Estima-se que 70% das transmissões de HSV-2 ocorram durante períodos sem lesões aparentes. O uso consistente do preservativo reduz (mas não elimina) este risco. A terapia supressiva com aciclovir diário também reduz a excreção viral. (Tronstein et al., 2011)
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            O sexo oral pode transmitir ISTs?
+                            <span class="faq-chevron" aria-hidden="true">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            Sim. Múltiplas ISTs podem ser transmitidas por sexo oral: gonorreia (frequentemente assintomática na garganta), sífilis (cancro oral possível), herpes (HSV-1 pode causar herpes genital via sexo oral), HPV (cancro da orofaringe associado), e HIV (risco muito baixo mas não nulo). O uso de preservativo masculino ou barreira dental (dental dam) durante o sexo oral oferece proteção. A gonorreia faríngea muitas vezes é assintomática e pode ser fonte de reinfecção. (CDC, 2023)
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            Qual a diferença entre IST e DST?
+                            <span class="faq-chevron" aria-hidden="true">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            IST (Infeção Sexualmente Transmissível) é o termo científico mais moderno e abrangente, adotado pela OMS e CDC. DST (Doença Sexualmente Transmissível) é o termo mais antigo. A mudança é significativa: nem toda IST é uma "doença" no sentido clínico imediato — muitas infeções são assintomáticas durante longos períodos. O termo IST é mais preciso porque enfatiza que a pessoa está infetada (e pode transmitir) mesmo sem sintomas de doença manifesta.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false">
+                            A PrEP injetável (Lenacapavir) protege contra outras ISTs para além do HIV?
+                            <span class="faq-chevron" aria-hidden="true">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            Não. O Lenacapavir é estritamente específico para impedir a infeção viral do HIV. Ele não fornece nenhuma camada imunitária ou antibiótica contra a sífilis, clamídia, gonorreia, HPV ou tricomoníase. É obrigatório manter o uso contínuo de preservativo para cobrir esse amplo espetro de outras infeções transmitidas pelo sexo. A rotina de PrEP é apenas uma camada complementar (e eficaz) focada exclusivamente no vírus HIV.
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="tab-glossario" class="tab-panel" role="tabpanel">
+            <section class="card reveal" aria-labelledby="gloss-titulo">
+                <p class="eyebrow">Terminologia Médica</p>
+                <h2 id="gloss-titulo">Glossário de Saúde Sexual</h2>
+                <p class="lead">Definições dos termos médicos mais utilizados na área da saúde sexual e reprodutiva, para que possa compreender melhor o seu estado de saúde e as informações fornecidas pelos profissionais.</p>
+
+                <div class="glossary-grid">
+                    <div class="gloss-item">
+                        <div class="gloss-term">Assintomático/a</div>
+                        <div class="gloss-def">Sem sintomas visíveis ou percetíveis, embora com infeção ativa. Muito comum nas ISTs.</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">Cervicite</div>
+                        <div class="gloss-def">Inflamação do colo do útero, frequentemente causada por gonorreia ou clamídia.</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">Disúria</div>
+                        <div class="gloss-def">Dor, ardor ou desconforto durante a micção (urinar). Sinal comum de uretrite ou cistite.</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">Dispareunia</div>
+                        <div class="gloss-def">Dor sentida durante ou após a relação sexual. Pode ser superficial ou profunda.</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">Microbiota vaginal</div>
+                        <div class="gloss-def">Conjunto de microrganismos naturais da vagina, dominados por Lactobacillus sp., que mantêm o pH ácido protetor (3.8–4.5).</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">Disbiose</div>
+                        <div class="gloss-def">Desequilíbrio da microbiota normal. Na vagina, resulta em redução de lactobacilos e proliferação de bactérias patogénicas.</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">TARV</div>
+                        <div class="gloss-def">Terapia Antirretroviral. Combinação de medicamentos que suprimem a replicação do HIV, permitindo vida longa e saudável.</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">PrEP</div>
+                        <div class="gloss-def">Profilaxia Pré-Exposição. Pode ser oral diária (TDF/FTC) ou injetável de ação prolongada, usada preventivamente.</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">Lenacapavir</div>
+                        <div class="gloss-def">Inibidor de cápside para o HIV usado como profilaxia (PrEP). Exige administração apenas 2 vezes por ano, ou seja, a cada 6 meses.</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">PEP</div>
+                        <div class="gloss-def">Profilaxia Pós-Exposição. Tratamento de emergência iniciado até 72h após exposição de risco ao HIV. Altamente eficaz.</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">Seroconversão</div>
+                        <div class="gloss-def">Momento em que o organismo produz anticorpos detetáveis contra uma infeção (ex: HIV), tornando o teste positivo.</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">Linfadenopatia</div>
+                        <div class="gloss-def">Aumento do volume dos gânglios linfáticos (ínguas), frequentemente sinal de infeção ativa ou sistémica.</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">Condiloma acuminado</div>
+                        <div class="gloss-def">Verrugas genitais causadas pelo HPV (serotipos 6 e 11). Lesões benignas mas contagiosas.</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">Colposcopia</div>
+                        <div class="gloss-def">Exame do colo do útero com lupa (colposcópio) para detetar lesões, especialmente as causadas por HPV.</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">VDRL</div>
+                        <div class="gloss-def">Teste sanguíneo de rastreio para sífilis. Positivo em infeção ativa; deve ser confirmado com TPHA/FTA-ABS.</div>
+                    </div>
+                    <div class="gloss-item">
+                        <div class="gloss-term">DIP (Doença Inflamatória Pélvica)</div>
+                        <div class="gloss-def">Infeção grave do aparelho reprodutor feminino superior (útero, trompas, ovários). Pode causar infertilidade.</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section id="recursos" class="card reveal" aria-labelledby="ajuda-titulo">
+            <p class="eyebrow">Recursos em Maputo</p>
+            <h2 id="ajuda-titulo">Onde Procurar Ajuda Profissional</h2>
+            <p class="lead">Se identificou sintomas ou teve uma relação sexual desprotegida, procure acompanhamento clínico. Em Maputo, pode dirigir-se a:</p>
+
+            <div class="hospitals-grid">
+                <div class="hospital-item">
+                    <div class="hospital-dot" aria-hidden="true"></div>
+                    <div>
+                        <p class="hospital-name">Hospital Central de Maputo</p>
+                        <p class="hospital-sub">Dermatologia · Urologia · Ginecologia</p>
+                    </div>
+                </div>
+                <div class="hospital-item">
+                    <div class="hospital-dot" aria-hidden="true"></div>
+                    <div>
+                        <p class="hospital-name">Centro de Saúde de Albazine</p>
+                        <p class="hospital-sub">Serviços de saúde reprodutiva</p>
+                    </div>
+                </div>
+                <div class="hospital-item">
+                    <div class="hospital-dot" aria-hidden="true"></div>
+                    <div>
+                        <p class="hospital-name">Unidades ATV</p>
+                        <p class="hospital-sub">Aconselhamento e Testagem Voluntária para HIV</p>
+                    </div>
+                </div>
+                <div class="hospital-item">
+                    <div class="hospital-dot" aria-hidden="true"></div>
+                    <div>
+                        <p class="hospital-name">Hospital Geral José Macamo</p>
+                        <p class="hospital-sub">Consultas de saúde reprodutiva · TARV · PrEP</p>
+                    </div>
+                </div>
+                <div class="hospital-item">
+                    <div class="hospital-dot" aria-hidden="true"></div>
+                    <div>
+                        <p class="hospital-name">Clínica de Casais</p>
+                        <p class="hospital-sub">Testagem e aconselhamento para casais</p>
+                    </div>
+                </div>
+                <div class="hospital-item">
+                    <div class="hospital-dot" aria-hidden="true"></div>
+                    <div>
+                        <p class="hospital-name">Hospital de Mavalane</p>
+                        <p class="hospital-sub">Ginecologia · Saúde da mulher · PrEP injetável</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="notice-green">
+                ✔ Todos os testes para HIV, Sífilis e Hepatites são <strong>rápidos e gratuitos</strong> no Sistema Nacional de Saúde. O sigilo médico é garantido pela Lei n.º 14/2002. Em caso de emergência (PEP), dirija-se urgentemente às urgências do Hospital Central.
+            </div>
+        </section>
+
+        <div class="bottom-grid">
+            <div class="support-card">
+                <h3>Apoie o Projeto</h3>
+                <p class="sub">Este portal foi criado com dedicação para servir a comunidade. Se o considera útil, apoie o seu desenvolvimento.</p>
+                <div class="payment-item">
+                    <span class="pay-label mpesa">M-Pesa</span>
+                    <span class="pay-number">+258 85 072 75 07</span>
+                </div>
+                <div class="payment-item">
+                    <span class="pay-label emola">E-Mola</span>
+                    <span class="pay-number">+258 86 346 02 82</span>
+                </div>
+            </div>
+
+            <div class="contact-card">
+                <div>
+                    <h3>Dúvidas ou Sugestões?</h3>
+                    <p class="sub">Tem sugestões de melhoria ou precisa de mais informações sobre o projeto? Entre em contacto direto com o desenvolvedor.</p>
+                </div>
+                <a href="https://wa.me/258850727507" class="btn-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp — abre em nova janela" onclick="gaEvent('contact_click', 'engagement', 'whatsapp_button')">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="wa-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    WhatsApp · 85 072 75 07
+                </a>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<footer role="contentinfo">
+    <div class="footer-inner">
+        <div class="footer-top">
+            <div>
+                <p class="footer-logo">Saúde<span>Íntima</span></p>
+                <p class="footer-tagline">Por Benj Carhl · Projeto de Saúde Pública · Moçambique</p>
+                <p class="footer-desc">Portal educativo de triagem e informação sobre saúde reprodutiva e ISTs. Desenvolvido para democratizar o acesso a informação médica de qualidade em Moçambique, baseado em protocolos internacionais da OMS e CDC.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Secções</h4>
+                <ul class="footer-links">
+                    <li><a href="#tabs-container" data-nav-tab="triagem">Triagem Clínica</a></li>
+                    <li><a href="#tabs-container" data-nav-tab="guia">Guia de ISTs (Prev. & PrEP)</a></li>
+                    <li><a href="#tabs-container" data-nav-tab="calendario">Diário do Ciclo</a></li>
+                    <li><a href="#tabs-container" data-nav-tab="contracetivos">Contracetivos</a></li>
+                    <li><a href="#tabs-container" data-nav-tab="cofre">Cofre de Saúde</a></li>
+                    <li><a href="#faq" data-nav-tab="guia">Perguntas Frequentes</a></li>
+                    <li><a href="#tabs-container" data-nav-tab="glossario">Glossário Médico</a></li>
+                    <li><a href="#recursos">Recursos em Maputo</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Apoio</h4>
+                <ul class="footer-links">
+                    <li><a href="https://wa.me/258850727507" target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
+                    <li><span class="footer-text-link" aria-label="M-Pesa: mais 258 85 072 75 07">M-Pesa: +258 85 072 75 07</span></li>
+                    <li><span class="footer-text-link" aria-label="E-Mola: mais 258 86 346 02 82">E-Mola: +258 86 346 02 82</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p class="refs-title">Base Científica e Referências Bibliográficas</p>
+            <div class="refs-grid">
+                <div class="ref-item">
+                    <div class="ref-num">[1] OMS · 2022</div>
+                    <div class="ref-text"><strong>World Health Organization.</strong> Global Health Sector Strategy on Sexually Transmitted Infections 2022–2030. Geneva: WHO Press.</div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-num">[2] CDC · 2021</div>
+                    <div class="ref-text"><strong>Workowski KA, et al.</strong> Sexually Transmitted Infections Treatment Guidelines. MMWR Recomm Rep. 2021;70(4):1-187.</div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-num">[3] MISAU · 2021</div>
+                    <div class="ref-text"><strong>Ministério da Saúde de Moçambique.</strong> Protocolos de Aconselhamento, Testagem e Tratamento de ISTs. Maputo: MISAU.</div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-num">[4] Muzny & Schwebke · 2016</div>
+                    <div class="ref-text"><strong>Muzny CA, Schwebke JR.</strong> Pathogenesis of Bacterial Vaginosis. J Infect Dis. 2016;214(S1):S1–S5.</div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-num">[5] Sobel · 2016</div>
+                    <div class="ref-text"><strong>Sobel JD.</strong> Vulvovaginal candidosis. Lancet. 2007;369(9577):1961–1971. (Atualizado 2016)</div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-num">[6] UNAIDS · 2023</div>
+                    <div class="ref-text"><strong>UNAIDS.</strong> Global AIDS Update 2023. Moçambique: estimativa de 2.1 milhões de pessoas a viver com HIV.</div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-num">[7] Looker et al. · 2015</div>
+                    <div class="ref-text"><strong>Looker KJ, et al.</strong> Global estimates of HSV-1 and HSV-2. PLOS ONE. 2015.</div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-num">[8] Bruni et al. · 2023</div>
+                    <div class="ref-text"><strong>Bruni L, et al.</strong> Global HPV prevalence and vaccination. Lancet Glob Health. 2023.</div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-num">[9] Kissinger · 2015</div>
+                    <div class="ref-text"><strong>Kissinger PJ.</strong> Epidemiology and treatment of trichomoniasis. Curr Infect Dis Rep. 2015;17(6):484.</div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-num">[10] WHO · 2022b</div>
+                    <div class="ref-text"><strong>World Health Organization.</strong> Hepatitis B Fact Sheet. Global Hepatitis Programme. Geneva: WHO, 2022.</div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-num">[11] PURPOSE 1 Trial · 2024</div>
+                    <div class="ref-text"><strong>Bekker L-G, et al.</strong> Twice-Yearly Lenacapavir or Daily F/TAF for HIV Prevention in Cisgender Women. N Engl J Med. 2024.</div>
+                </div>
+                <div class="ref-item">
+                    <div class="ref-num">[12] UNAIDS · 2024</div>
+                    <div class="ref-text"><strong>UNAIDS.</strong> Statement on the results of the PURPOSE 1 trial of twice-yearly lenacapavir for HIV prevention. Geneva, 2024.</div>
+                </div>
+            </div>
+            <p class="footer-copy">© 2026 Benj Carhl · Portal de Saúde Pública · Moçambique · Informação educativa — não substitui consulta médica</p>
+        </div>
+    </div>
+</footer>
+
+<script src="app.js" defer></script>
+</body>
+</html>
